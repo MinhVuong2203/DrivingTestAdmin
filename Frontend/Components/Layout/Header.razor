@@ -1,0 +1,87 @@
+﻿<header class="main-header">
+
+    <!-- LEFT -->
+    <div class="header-left">
+        <button class="sidebar-toggle" type="button" @onclick="ToggleSidebar">
+            <span></span><span></span><span></span>
+        </button>
+
+        <div class="header-breadcrumb">
+            <span class="breadcrumb-icon"></span>
+            <span class="breadcrumb-text">@CurrentPage</span>
+        </div>
+    </div>
+
+    <!-- CENTER -->
+    <div class="header-center">
+        <div class="header-search">
+            <input class="search-input" type="text" placeholder="Tìm kiếm..." />
+        </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="header-right">
+
+        <!-- Theme -->
+        <button class="header-btn" type="button" title="Đổi giao diện" @onclick="ToggleTheme">
+            <span class="icon-moon">🌙</span>
+            <span class="icon-sun">☀️</span>
+        </button>
+
+        <!-- Notification -->
+        <button class="header-btn notif-btn" type="button">
+            🔔 <span class="notif-badge">3</span>
+        </button>
+
+        <!-- User -->
+        <div class="header-user" @onclick="ToggleDropdown">
+            <div class="user-avatar">A</div>
+            <div class="user-info">
+                <span class="user-name">Admin</span>
+                <span class="user-role">Quản trị viên</span>
+            </div>
+
+            @if (showDropdown)
+            {
+                <div class="user-dropdown">
+                    <a href="#">Hồ sơ</a>
+                    <a href="#">Cài đặt</a>
+                    <hr />
+                    <a href="#" @onclick="Logout">Đăng xuất</a>
+                </div>
+            }
+        </div>
+
+    </div>
+
+</header>
+
+@code {
+    [CascadingParameter] public MainLayout? Layout { get; set; }
+
+    bool showDropdown = false;
+
+    string CurrentPage = "Trang chủ";
+
+    void ToggleSidebar()
+    {
+        Console.WriteLine("CLICK SIDEBAR");
+        Layout?.ToggleSidebar();
+    }
+
+    void ToggleTheme()
+    {
+        Console.WriteLine("CLICK THEME");
+        Layout?.ToggleTheme();
+    }
+
+    void ToggleDropdown()
+    {
+        showDropdown = !showDropdown;
+    }
+
+    void Logout()
+    {
+        Console.WriteLine("Logout");
+    }
+}

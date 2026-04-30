@@ -1,23 +1,47 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<!-- LOADING TOÀN CỤC -->
+<div class="app-loading" id="app-loading" hidden>
+    <div class="app-loading-inner">
+        <svg class="app-loading-wheel" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="200" cy="200" r="100" stroke-width="5" />
+            <path d="M12 2a10 10 0 0 1 10 10" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <span>Đang tải...</span>
     </div>
+</div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+<CascadingValue Value="this">
+    <div class="app-shell @(SidebarCollapsed ? "sidebar-collapsed" : string.Empty)"
+         data-theme="@(IsDarkTheme ? "dark" : "light")">
+        <NavMenu />
+
+        <div class="app-content">
+            <Header />
+            <!-- PAGE -->
+            <main class="page-main">
+                @Body
+            </main>
+            <Footer />
+
         </div>
+    </div>
+</CascadingValue>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+@code {
+    public bool SidebarCollapsed { get; set; }
+    public bool IsDarkTheme { get; set; }
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+    public void ToggleSidebar()
+    {
+        SidebarCollapsed = !SidebarCollapsed;
+        StateHasChanged();
+    }
+
+    public void ToggleTheme()
+    {
+        IsDarkTheme = !IsDarkTheme;
+        StateHasChanged();
+    }
+
+}
