@@ -1,3 +1,15 @@
+using Google.Cloud.Firestore;
+
+var path = Path.Combine(
+    Directory.GetCurrentDirectory(),
+    "firebase-key.json"
+);
+
+Environment.SetEnvironmentVariable(
+    "GOOGLE_APPLICATION_CREDENTIALS",
+    path
+);
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,14 +19,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Firestore (Singleton)
+builder.Services.AddSingleton(provider =>
+{
+    return FirestoreDb.Create("myapp-8fb3f");
+});
+
+// Auto register
 builder.Services.Scan(scan => scan
     .FromAssemblyOf<Program>()
-    //Register Services (có interface)
-    .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Service")))
+    .AddClasses(c => c.Where(t => t.Name.EndsWith("Service")))
         .AsImplementedInterfaces()
         .WithScopedLifetime()
-    // Register Repositories (không interface)
-    .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Repository")))
+    .AddClasses(c => c.Where(t => t.Name.EndsWith("Repository")))
         .AsSelf()
         .WithScopedLifetime()
 );
