@@ -1,0 +1,15 @@
+﻿namespace Backend.Service.Interface
+{
+    public interface IUserService
+    {
+        public Task<List<User>> GetAll();
+
+        public Task<User?> GetById(string id);
+
+        public Task Create(User user);
+
+        public Task Update(string id, User user);
+
+        public Task Delete(string id);
+    }
+}
