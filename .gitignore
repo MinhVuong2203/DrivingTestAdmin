@@ -403,3 +403,4 @@ FodyWeavers.xsd
 # Ignore config nhạy cảm
 appsettings.json
 appsettings.Development.json
+firebase-key.json
