@@ -7,6 +7,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.Scan(scan => scan
+    .FromAssemblyOf<Program>()
+    //Register Services (có interface)
+    .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Service")))
+        .AsImplementedInterfaces()
+        .WithScopedLifetime()
+    // Register Repositories (không interface)
+    .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Repository")))
+        .AsSelf()
+        .WithScopedLifetime()
+);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
