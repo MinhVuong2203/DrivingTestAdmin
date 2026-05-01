@@ -54,5 +54,31 @@ namespace Backend.Repository
         {
             await _db.Collection("posts").Document(id).DeleteAsync();
         }
+
+        public async Task LikePost(string postId, string userId)
+        {
+            var postRef = _db.Collection("posts").Document(postId);
+            var likeRef = postRef.Collection("likes").Document(userId);
+
+            var likeSnap = await likeRef.GetSnapshotAsync();
+            if (likeSnap.Exists) return; // đã like thì bỏ qua
+
+            await likeRef.SetAsync(new { userId, createdAt = Timestamp.GetCurrentTimestamp() });
+            await postRef.UpdateAsync("likeCount", FieldValue.Increment(1));
+            await postRef.UpdateAsync("updatedAt", Timestamp.GetCurrentTimestamp());
+        }
+
+        public async Task UnlikePost(string postId, string userId)
+        {
+            var postRef = _db.Collection("posts").Document(postId);
+            var likeRef = postRef.Collection("likes").Document(userId);
+
+            var likeSnap = await likeRef.GetSnapshotAsync();
+            if (!likeSnap.Exists) return; // chưa like thì bỏ qua
+
+            await likeRef.DeleteAsync();
+            await postRef.UpdateAsync("likeCount", FieldValue.Increment(-1));
+            await postRef.UpdateAsync("updatedAt", Timestamp.GetCurrentTimestamp());
+        }
     }
 }
