@@ -76,5 +76,30 @@ namespace Backend.Controllers
             return NoContent();
         }
 
+        [HttpPost("{postId}/like")]
+        public async Task<IActionResult> LikePost(string postId, string userId)
+        {
+            var existingPost = await _postService.GetById(postId);
+            if (existingPost == null)
+            {
+                return NotFound();
+            }
+
+            await _postService.LikePost(postId, userId);
+            return NoContent();
+        }
+
+        [HttpPost("{postId}/unlike")]
+        public async Task<IActionResult> UnlikePost(string postId, string userId)
+        {
+            var existingPost = await _postService.GetById(postId);
+            if (existingPost == null)
+            {
+                return NotFound();
+            }
+
+            await _postService.UnlikePost(postId, userId);
+            return NoContent();
+        }
     }
 }
