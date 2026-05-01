@@ -8,5 +8,7 @@
         public Task Create(Post post);
         public Task Update(string id, Post post);
         public Task Delete(string id);
+        public Task LikePost(string postId, string userId);
+        public Task UnlikePost(string postId, string userId);
     }
 }

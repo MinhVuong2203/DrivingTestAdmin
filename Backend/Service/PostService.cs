@@ -41,5 +41,15 @@ namespace Backend.Service
         {
             return _repo.Update(id, post);
         }
+
+        public Task LikePost(string postId, string userId)
+        {
+            return _repo.LikePost(postId, userId);
+        }
+
+        public Task UnlikePost(string postId, string userId)
+        {
+            return _repo.UnlikePost(postId, userId);
+        }
     }
 }
