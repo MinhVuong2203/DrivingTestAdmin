@@ -51,5 +51,10 @@ namespace Backend.Service
         {
             return _repo.UnlikePost(postId, userId);
         }
+
+        public Task<bool> IsLiked(string postId, string userId)
+        {
+            return _repo.IsLiked(postId, userId);
+        }
     }
 }
