@@ -60,12 +60,26 @@ namespace Backend.Repository
             var postRef = _db.Collection("posts").Document(postId);
             var likeRef = postRef.Collection("likes").Document(userId);
 
-            var likeSnap = await likeRef.GetSnapshotAsync();
-            if (likeSnap.Exists) return; // đã like thì bỏ qua
+            await _db.RunTransactionAsync(async transaction =>
+            {
+                var postSnap = await transaction.GetSnapshotAsync(postRef);
+                if (!postSnap.Exists) throw new Exception("Post not found");
 
-            await likeRef.SetAsync(new { userId, createdAt = Timestamp.GetCurrentTimestamp() });
-            await postRef.UpdateAsync("likeCount", FieldValue.Increment(1));
-            await postRef.UpdateAsync("updatedAt", Timestamp.GetCurrentTimestamp());
+                var likeSnap = await transaction.GetSnapshotAsync(likeRef);
+                if (likeSnap.Exists) return;
+
+                transaction.Set(likeRef, new Dictionary<string, object>
+        {
+            { "userId", userId },
+            { "createdAt", Timestamp.GetCurrentTimestamp() }
+        });
+
+                transaction.Update(postRef, new Dictionary<string, object>
+        {
+            { "likeCount", FieldValue.Increment(1) },
+            { "updatedAt", Timestamp.GetCurrentTimestamp() }
+        });
+            });
         }
 
         public async Task UnlikePost(string postId, string userId)
@@ -73,12 +87,34 @@ namespace Backend.Repository
             var postRef = _db.Collection("posts").Document(postId);
             var likeRef = postRef.Collection("likes").Document(userId);
 
-            var likeSnap = await likeRef.GetSnapshotAsync();
-            if (!likeSnap.Exists) return; // chưa like thì bỏ qua
+            await _db.RunTransactionAsync(async transaction =>
+            {
+                var postSnap = await transaction.GetSnapshotAsync(postRef);
+                if (!postSnap.Exists) throw new Exception("Post not found");
 
-            await likeRef.DeleteAsync();
-            await postRef.UpdateAsync("likeCount", FieldValue.Increment(-1));
-            await postRef.UpdateAsync("updatedAt", Timestamp.GetCurrentTimestamp());
+                var likeSnap = await transaction.GetSnapshotAsync(likeRef);
+                if (!likeSnap.Exists) return;
+
+                transaction.Delete(likeRef);
+
+                transaction.Update(postRef, new Dictionary<string, object>
+        {
+            { "likeCount", FieldValue.Increment(-1) },
+            { "updatedAt", Timestamp.GetCurrentTimestamp() }
+        });
+            });
+        }
+
+        public async Task<bool> IsLiked(string postId, string userId)
+        {
+            var likeRef = _db
+                .Collection("posts")
+                .Document(postId)
+                .Collection("likes")
+                .Document(userId);
+
+            var snap = await likeRef.GetSnapshotAsync();
+            return snap.Exists;
         }
     }
 }

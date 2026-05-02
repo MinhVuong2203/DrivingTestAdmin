@@ -77,29 +77,41 @@ namespace Backend.Controllers
         }
 
         [HttpPost("{postId}/like")]
-        public async Task<IActionResult> LikePost(string postId, string userId)
+        public async Task<IActionResult> LikePost(string postId, [FromQuery] string userId)
         {
+            if (string.IsNullOrWhiteSpace(userId))
+                return BadRequest("userId is required");
+
             var existingPost = await _postService.GetById(postId);
             if (existingPost == null)
-            {
-                return NotFound();
-            }
+                return NotFound("Post not found");
 
             await _postService.LikePost(postId, userId);
-            return NoContent();
+            return Ok(new { message = "Liked successfully" });
         }
 
         [HttpPost("{postId}/unlike")]
-        public async Task<IActionResult> UnlikePost(string postId, string userId)
+        public async Task<IActionResult> UnlikePost(string postId, [FromQuery] string userId)
         {
+            if (string.IsNullOrWhiteSpace(userId))
+                return BadRequest("userId is required");
+
             var existingPost = await _postService.GetById(postId);
             if (existingPost == null)
-            {
-                return NotFound();
-            }
+                return NotFound("Post not found");
 
             await _postService.UnlikePost(postId, userId);
-            return NoContent();
+            return Ok(new { message = "Unliked successfully" });
+        }
+
+        [HttpGet("{postId}/liked")]
+        public async Task<IActionResult> IsLiked(string postId, [FromQuery] string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                return BadRequest("userId is required");
+
+            var isLiked = await _postService.IsLiked(postId, userId);
+            return Ok(new { isLiked });
         }
     }
 }
