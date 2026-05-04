@@ -1,4 +1,5 @@
 ﻿using Google.Cloud.Firestore;
+namespace Frontend.Models;
 [FirestoreData]
 public class VipUser
 {

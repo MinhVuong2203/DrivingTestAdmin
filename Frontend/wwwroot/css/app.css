@@ -51,6 +51,10 @@
     --shadow-lg: 0 10px 40px rgba(0, 0, 0, .12);
     --scrollbar-thumb: #cbd5e1;
     --input-bg: #f1f5f9;
+    --bg-toast: #e5f1ff;
+    --bg-loading1: rgba(0, 0, 0, 0.4);
+    --bg-loading2: rgba(0, 0, 0, 0.2);
+    --bg-loading3: rgba(0, 0, 0, 0.01);
 }
 
 /* ── CHẾ ĐỘ TỐI ── */
@@ -78,6 +82,10 @@
     --shadow-lg: 0 10px 40px rgba(0, 0, 0, .5);
     --scrollbar-thumb: #2d3f5e;
     --input-bg: #1a2236;
+    --bg-toast: #111827;
+    --bg-loading1: rgba(255, 255, 255, 0.4);
+    --bg-loading2: rgba(255, 255, 255, 0.2);
+    --bg-loading3: rgba(255, 255, 255, 0.01);
 }
 
 /* ── RESET & CƠ BẢN ── */
@@ -104,65 +112,186 @@ body {
 }
 
 /* ============================================
-    LOADING TOÀN CỤC (SPA)
-    ============================================ */
-.app-loading {
+    Loading toàn cục
+   ============================================ */
+.loading {
     position: fixed;
     inset: 0;
-    background: var(--bg-overlay);
     display: flex;
-    align-items: center;
     justify-content: center;
-    z-index: 1000;
+    align-items: center;
+    background: radial-gradient(circle at center, 
+        var(--bg-loading3) 0%, /* màu sáng ở giữa */
+        var(--bg-loading2) 20%, /* chuyển dần */
+        var(--bg-loading1) 100% /* tối ở 4 góc */
+        );
+    z-index: 9999;
+    pointer-events: none;
 }
 
-.app-loading[hidden] {
-    display: none;
+
+.loader {
+    width: 80px; 
 }
 
-.app-loading-inner {
-    display: inline-flex;
+.loader-wrapper {
+    display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 12px;
-    padding: 12px 14px;
-    border: 1px solid var(--border);
-    background: var(--bg-surface);
-    border-radius: 999px;
-    box-shadow: var(--shadow-sm);
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    user-select: none;
 }
 
-/* Icon vô lăng xoay */
-.app-loading-wheel {
-    width: 20px;
-    height: 20px;
-    color: var(--accent);
-    animation: appSpin 0.8s linear infinite;
-    flex-shrink: 0;
+/* Con đường */
+.road {
+    width: 120px;
+    height: 6px;
+    border-radius: 4px;
+    background: repeating-linear-gradient( 90deg, #fff 0 10px, #000 10px 20px );
+    animation: roadMove 0.2s linear infinite;
 }
 
-@keyframes appSpin {
+/* Animation chạy */
+@keyframes roadMove {
     from {
-        transform: rotate(0deg);
+        background-position: 0 0;
     }
 
     to {
-        transform: rotate(360deg);
+        background-position: -20px 0;
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .app-loading-wheel {
-        animation: none;
-    }
+
+/* ============================================
+    THÔNG BÁO TOÀN CỤC
+   ============================================ */
+.toast-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+    min-width: 320px; /* Thêm dòng này để container luôn có width */
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
+.toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 320px;
+    max-width: 420px;
+    padding: 16px;
+    background: var(--bg-toast);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    pointer-events: auto;
+    transform: translateX(calc(100% + 40px));
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+    .toast.show {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+.toast-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .toast-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+.toast-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.toast-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+}
+
+.toast-message {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.toast-close {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    color: #737373;
+    transition: color 0.2s;
+}
+
+    .toast-close:hover {
+        color: #1a1a1a;
+    }
+
+    .toast-close svg {
+        width: 16px;
+        height: 16px;
+    }
+
+/* Success */
+.toast-success {
+    border-left: 4px solid #16a34a;
+}
+
+    .toast-success .toast-icon {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+/* Error */
+.toast-error {
+    border-left: 4px solid #dc2626;
+}
+
+    .toast-error .toast-icon {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+/* Warning */
+.toast-warning {
+    border-left: 4px solid #f59e0b;
+}
+
+    .toast-warning .toast-icon {
+        background: #fef3c7;
+        color: #f59e0b;
+    }
+
+/* Info */
+.toast-info {
+    border-left: 4px solid #3b82f6;
+}
+
+    .toast-info .toast-icon {
+        background: #dbeafe;
+        color: #3b82f6;
+    }
+
 
 /* ── THANH CUỘN ── */
 ::-webkit-scrollbar {
