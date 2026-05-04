@@ -2,6 +2,8 @@
 using Backend.Service.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace Backend.Controllers
 {
@@ -10,10 +12,19 @@ namespace Backend.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
+        private readonly Cloudinary _cloudinary;
 
-        public PostController(IPostService postService)
+        public PostController(IPostService postService, IConfiguration configuration)
         {
             _postService = postService;
+
+            var account = new Account(
+                configuration["Cloudinary:CloudName"],
+                configuration["Cloudinary:ApiKey"],
+                configuration["Cloudinary:ApiSecret"]
+            );
+
+            _cloudinary = new Cloudinary(account);
         }
 
         [HttpGet]
@@ -112,6 +123,32 @@ namespace Backend.Controllers
 
             var isLiked = await _postService.IsLiked(postId, userId);
             return Ok(new { isLiked });
+        }
+
+        [HttpPost("upload-image")]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("File không hợp lệ");
+
+            await using var stream = file.OpenReadStream();
+
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, stream),
+                Folder = "posts"
+            };
+
+            var result = await _cloudinary.UploadAsync(uploadParams);
+
+            if (result.Error != null)
+                return BadRequest(result.Error.Message);
+
+            return Ok(new
+            {
+                imageUrl = result.SecureUrl.ToString(),
+                publicId = result.PublicId
+            });
         }
     }
 }
