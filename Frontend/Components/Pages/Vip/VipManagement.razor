@@ -1,0 +1,232 @@
+﻿@page "/admin/vip-management"
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+<link href="" rel="stylesheet" />
+
+<div class="vip-management">
+    <!-- HEADER -->
+    <div class="vip-header">
+        <div class="vip-header-left">
+            <h1>Quản Lý Gói VIP</h1>
+            <p>Tạo và quản lý các gói VIP cho người dùng của bạn</p>
+        </div>
+        <div class="vip-header-actions">
+            <button class="btn btn-primary" @onclick="OpenCreateModal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Tạo Gói VIP Mới
+            </button>
+        </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="vip-toolbar">
+        <div class="vip-search">
+            <div class="vip-search-inner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text"
+                       placeholder="Tìm kiếm gói VIP..."
+                       @bind="searchKeyword"
+                       @bind:event="oninput"
+                       @onkeyup="HandleSearch" />
+            </div>
+        </div>
+
+        <div class="vip-filter-group">
+            <button class="filter-btn @(filterStatus == "all" ? "active" : "")"
+                    @onclick="() => FilterByStatus(\" all\")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                </svg>
+                Tất cả
+            </button>
+            <button class="filter-btn @(filterStatus == "active" ? "active" : "")"
+                    @onclick="() => FilterByStatus(\" active\")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                Đang hoạt động
+            </button>
+            <button class="filter-btn @(filterStatus == "inactive" ? "active" : "")"
+                    @onclick="() => FilterByStatus(\" inactive\")">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+                Không hoạt động
+            </button>
+        </div>
+    </div>
+
+    <!-- LOADING STATE -->
+    @if (isLoading)
+    {
+        <div class="vip-loading">
+            <div class="vip-spinner"></div>
+        </div>
+    }
+    else if (filteredPackages == null || filteredPackages.Count == 0)
+    {
+        <!-- EMPTY STATE -->
+        <div class="vip-empty">
+            <svg class="vip-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 7h-9"></path>
+                <path d="M14 17H5"></path>
+                <circle cx="17" cy="17" r="3"></circle>
+                <circle cx="7" cy="7" r="3"></circle>
+            </svg>
+            <h3 class="vip-empty-title">Chưa có gói VIP nào</h3>
+            <p class="vip-empty-text">
+                @if (string.IsNullOrEmpty(searchKeyword))
+                {
+                    <text>Bắt đầu bằng cách tạo gói VIP đầu tiên của bạn</text>
+                }
+                else
+                {
+                    <text>Không tìm thấy gói VIP phù hợp với "@searchKeyword"</text>
+                }
+            </p>
+            @if (string.IsNullOrEmpty(searchKeyword))
+            {
+                <button class="btn btn-primary" @onclick="OpenCreateModal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Tạo Gói VIP Đầu Tiên
+                </button>
+            }
+        </div>
+    }
+    else
+    {
+        <!-- VIP CARDS GRID -->
+        <div class="vip-grid">
+            @foreach (var package in filteredPackages)
+            {
+                <div class="vip-card theme-@package.ColorTheme">
+                    <!-- Card Header -->
+                    <div class="vip-card-header">
+                        <div class="vip-card-title-section">
+                            <div class="vip-card-badge @(package.IsActive ? "active" : "inactive")">
+                                @if (package.IsActive)
+                                {
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                    <span>Hoạt động</span>
+                                }
+                                else
+                                {
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                    </svg>
+                                    <span>Tạm ngưng</span>
+                                }
+                            </div>
+                            <h3 class="vip-card-name">@package.VipName</h3>
+                            <p class="vip-card-desc">@package.Description</p>
+                        </div>
+                        <div class="vip-card-actions">
+                            <button class="vip-icon-btn" @onclick="() => OpenEditModal(package)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                            <button class="vip-icon-btn danger" @onclick="() => DeletePackage(package.Id)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Price Section -->
+                    <div class="vip-price-section">
+                        <div class="vip-price">
+                            @package.VipPrice.ToString("N0")
+                            <span class="vip-price-currency">VNĐ</span>
+                        </div>
+                        <div class="vip-duration">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span>@package.VipTime ngày</span>
+                        </div>
+                    </div>
+
+                    <!-- Features -->
+                    @if (package.Features != null && package.Features.Count > 0)
+                    {
+                        <div class="vip-features">
+                            <div class="vip-features-title">Tính năng</div>
+                            <ul class="vip-features-list">
+                                @foreach (var feature in package.Features)
+                                {
+                                    <li>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>@feature</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <!-- Card Footer -->
+                    <div class="vip-card-footer">
+                        <div class="vip-card-meta">
+                            <div class="vip-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span>Tạo: @package.CreatedAt.ToString("dd/MM/yyyy")</span>
+                            </div>
+                            <div class="vip-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                </svg>
+                                <span>Thứ tự: #@package.SortOrder</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" @onclick="() => ToggleActiveStatus(package.Id)">
+                            @if (package.IsActive)
+                            {
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                </svg>
+                                <span>Tắt</span>
+                            }
+                            else
+                            {
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                <span>Bật</span>
+                            }
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- Modal will continue in Part 2 -->

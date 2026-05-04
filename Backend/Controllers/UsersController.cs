@@ -50,5 +50,14 @@ namespace Backend.Controllers
             await _service.Delete(id);
             return Ok();
         }
+
+        [HttpPatch("{id}/status")]
+        public async Task<IActionResult> UpdateStatus(string id, [FromBody] string status)
+        {
+            await _service.UpdateStatus(id, status);
+            return Ok();
+        }
+
+
     }
 }

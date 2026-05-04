@@ -11,5 +11,7 @@
         public Task Update(string id, User user);
 
         public Task Delete(string id);
+
+        Task UpdateStatus(string id, string status);
     }
 }

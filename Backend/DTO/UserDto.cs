@@ -1,41 +1,19 @@
-﻿using Google.Cloud.Firestore;
-[FirestoreData]
-public class VipUser
+﻿namespace Backend.DTO;
+public class VipDto
 {
-    [FirestoreProperty]
     public string? name { get; set; }
-
-    [FirestoreProperty]
     public DateTime? startDate { get; set; }
-
-    [FirestoreProperty]
     public DateTime? endDate { get; set; }
 }
 
-[FirestoreData]
-public class User
+public class UserDto
 {
-    [FirestoreProperty]
     public string uid { get; set; } = "";
-
-    [FirestoreProperty]
     public string? displayName { get; set; }
-
-    [FirestoreProperty]
     public string? email { get; set; }
-
-    [FirestoreProperty]
     public string? role { get; set; }
-
-    [FirestoreProperty]
     public string? status { get; set; }
-
-    [FirestoreProperty]
     public string? photoURL { get; set; }
-
-    [FirestoreProperty]
     public DateTime? createdAt { get; set; }
-
-    [FirestoreProperty]
-    public VipUser? vipUser { get; set; }
+    public VipDto? vip { get; set; }
 }
