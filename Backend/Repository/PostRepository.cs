@@ -69,16 +69,16 @@ namespace Backend.Repository
                 if (likeSnap.Exists) return;
 
                 transaction.Set(likeRef, new Dictionary<string, object>
-        {
-            { "userId", userId },
-            { "createdAt", Timestamp.GetCurrentTimestamp() }
-        });
+                {
+                    { "userId", userId },
+                    { "createdAt", Timestamp.GetCurrentTimestamp() }
+                });
 
                 transaction.Update(postRef, new Dictionary<string, object>
-        {
-            { "likeCount", FieldValue.Increment(1) },
-            { "updatedAt", Timestamp.GetCurrentTimestamp() }
-        });
+                {
+                    { "likeCount", FieldValue.Increment(1) },
+                    { "updatedAt", Timestamp.GetCurrentTimestamp() }
+                });
             });
         }
 
@@ -98,10 +98,10 @@ namespace Backend.Repository
                 transaction.Delete(likeRef);
 
                 transaction.Update(postRef, new Dictionary<string, object>
-        {
-            { "likeCount", FieldValue.Increment(-1) },
-            { "updatedAt", Timestamp.GetCurrentTimestamp() }
-        });
+                {
+                    { "likeCount", FieldValue.Increment(-1) },
+                    { "updatedAt", Timestamp.GetCurrentTimestamp() }
+                });
             });
         }
 
