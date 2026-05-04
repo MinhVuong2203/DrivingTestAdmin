@@ -1,4 +1,5 @@
-﻿using Backend.Service.Interface;
+﻿using Backend.Repository;
+using Backend.Service.Interface;
 
 namespace Backend.Service
 {
@@ -33,6 +34,11 @@ namespace Backend.Service
         public Task Update(string id, User user)
         {
             return _repo.Update(id, user);
+        }
+
+        public Task UpdateStatus(string id, string status)
+        {
+            return _repo.UpdateStatus(id, status);
         }
     }
 }
