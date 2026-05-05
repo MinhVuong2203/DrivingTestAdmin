@@ -150,5 +150,14 @@ namespace Backend.Controllers
                 publicId = result.PublicId
             });
         }
+
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetPostsPaged(
+        [FromQuery] int limit = 10,
+        [FromQuery] DateTime? lastCreatedAt = null)
+        {
+            var posts = await _postService.GetPostsPaged(limit, lastCreatedAt);
+            return Ok(posts);
+        }
     }
 }

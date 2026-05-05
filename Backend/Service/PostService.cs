@@ -56,5 +56,10 @@ namespace Backend.Service
         {
             return _repo.IsLiked(postId, userId);
         }
+
+        public Task<List<Post>> GetPostsPaged(int limit, DateTime? lastCreatedAt)
+        {
+            return _repo.GetPostsPaged(limit, lastCreatedAt);
+        }
     }
 }
