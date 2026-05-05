@@ -11,5 +11,6 @@
         public Task LikePost(string postId, string userId);
         public Task UnlikePost(string postId, string userId);
         Task<bool> IsLiked(string postId, string userId);
+        Task<List<Post>> GetPostsPaged(int limit, DateTime? lastCreatedAt);
     }
 }

@@ -116,5 +116,33 @@ namespace Backend.Repository
             var snap = await likeRef.GetSnapshotAsync();
             return snap.Exists;
         }
+
+        public async Task<List<Post>> GetPostsPaged(int limit, DateTime? lastCreatedAt)
+        {
+            Query query = _db.Collection("posts")
+                .WhereEqualTo("isDeleted", false)
+                .OrderByDescending("createdAt")
+                .Limit(limit);
+
+            if (lastCreatedAt != null)
+            {
+                query = _db.Collection("posts")
+                    .WhereEqualTo("isDeleted", false)
+                    .OrderByDescending("createdAt")
+                    .WhereLessThan("createdAt", Timestamp.FromDateTime(lastCreatedAt.Value.ToUniversalTime()))
+                    .Limit(limit);
+            }
+
+            var snapshot = await query.GetSnapshotAsync();
+
+            return snapshot.Documents
+                .Select(doc =>
+                {
+                    var post = doc.ConvertTo<Post>();
+                    post.postId = doc.Id;
+                    return post;
+                })
+                .ToList();
+        }
     }
 }
