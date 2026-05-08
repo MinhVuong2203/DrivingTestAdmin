@@ -1,8 +1,10 @@
-﻿@page "/admin/vip-management"
+﻿@page "/vip-management"
+@using Frontend.Components.Layout
+@using Frontend.Models
 @inject HttpClient Http
 @inject IJSRuntime JS
 
-<link href="" rel="stylesheet" />
+<link href="css/vip/vip-css.css" rel="stylesheet" />
 
 <div class="vip-management">
     <!-- HEADER -->
@@ -40,14 +42,14 @@
 
         <div class="vip-filter-group">
             <button class="filter-btn @(filterStatus == "all" ? "active" : "")"
-                    @onclick="() => FilterByStatus(\" all\")">
+                    @onclick='() => FilterByStatus(" all")'>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                 </svg>
                 Tất cả
             </button>
             <button class="filter-btn @(filterStatus == "active" ? "active" : "")"
-                    @onclick="() => FilterByStatus(\" active\")">
+                    @onclick='() => FilterByStatus(" active")'>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
@@ -55,7 +57,7 @@
                 Đang hoạt động
             </button>
             <button class="filter-btn @(filterStatus == "inactive" ? "active" : "")"
-                    @onclick="() => FilterByStatus(\" inactive\")">
+                    @onclick='() => FilterByStatus(" inactive")'>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="15" y1="9" x2="9" y2="15"></line>
@@ -143,7 +145,7 @@
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>
                             </button>
-                            <button class="vip-icon-btn danger" @onclick="() => DeletePackage(package.Id)">
+                            <button class="vip-icon-btn danger" @onclick="() => ConfirmDelete(package)">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="3 6 5 6 21 6"></polyline>
                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -229,4 +231,510 @@
     }
 </div>
 
-<!-- Modal will continue in Part 2 -->
+<!-- CREATE/EDIT MODAL -->
+@if (showModal)
+{
+    <div class="vip-modal-overlay" @onclick="CloseModal">
+        <div class="vip-modal" @onclick:stopPropagation="true">
+            <!-- Modal Header -->
+            <div class="vip-modal-header">
+                <h2 class="vip-modal-title">
+                    @(isEditMode ? "Chỉnh Sửa Gói VIP" : "Tạo Gói VIP Mới")
+                </h2>
+                <button class="vip-modal-close" @onclick="CloseModal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="vip-modal-body">
+                <form>
+                    <!-- Tên gói VIP -->
+                    <div class="form-group">
+                        <label class="form-label required">Tên Gói VIP</label>
+                        <input type="text"
+                               class="form-input"
+                               placeholder="VD: Gói 6 tháng"
+                               @bind="currentPackage.VipName" />
+                        <div class="form-help">Tên hiển thị của gói VIP</div>
+                    </div>
+
+                    <!-- Mô tả -->
+                    <div class="form-group">
+                        <label class="form-label required">Mô Tả</label>
+                        <textarea class="form-textarea"
+                                  placeholder="Mô tả chi tiết về gói VIP này..."
+                                  @bind="currentPackage.Description"
+                                  rows="3"></textarea>
+                    </div>
+
+                    <!-- Giá và Thời gian -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label class="form-label required">Giá (VNĐ)</label>
+                            <input type="number"
+                                   class="form-input"
+                                   placeholder="250000"
+                                   @bind="currentPackage.VipPrice"
+                                   min="0" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required">Thời Gian (ngày)</label>
+                            <input type="number"
+                                   class="form-input"
+                                   placeholder="180"
+                                   @bind="currentPackage.VipTime"
+                                   min="1" />
+                        </div>
+                    </div>
+
+                    <!-- Theme màu và Sort Order -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label class="form-label">Theme Màu</label>
+                            <select class="form-select" @bind="currentPackage.ColorTheme">
+                                <option value="blue">Xanh Dương</option>
+                                <option value="purple">Tím</option>
+                                <option value="gold">Vàng</option>
+                                <option value="platinum">Bạc</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Thứ Tự Hiển Thị</label>
+                            <input type="number"
+                                   class="form-input"
+                                   @bind="currentPackage.SortOrder"
+                                   min="0" />
+                        </div>
+                    </div>
+
+                    <!-- Tính năng -->
+                    <div class="form-group">
+                        <label class="form-label">Tính Năng</label>
+                        <div class="features-input-group">
+                            <input type="text"
+                                   class="form-input"
+                                   placeholder="Nhập tính năng và nhấn Enter..."
+                                   @bind="newFeature"
+                                   @onkeydown="HandleFeatureKeyDown" />
+                            <button type="button" class="btn btn-primary" @onclick="AddFeature">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                Thêm
+                            </button>
+                        </div>
+
+                        @if (currentPackage.Features != null && currentPackage.Features.Count > 0)
+                        {
+                            <div class="features-list">
+                                @foreach (var feature in currentPackage.Features)
+                                {
+                                    <div class="feature-tag">
+                                        <span>@feature</span>
+                                        <button type="button" @onclick="() => RemoveFeature(feature)">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Trạng thái active -->
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" @bind="currentPackage.IsActive" />
+                            <span class="form-label" style="margin: 0;">Kích hoạt ngay</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="vip-modal-footer">
+                <button class="btn btn-secondary" @onclick="CloseModal">
+                    Hủy
+                </button>
+                <button class="btn btn-primary" @onclick="SavePackage" disabled="@isSaving">
+                    @if (isSaving)
+                    {
+                        <span>Đang lưu...</span>
+                    }
+                    else
+                    {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        <span>@(isEditMode ? "Cập Nhật" : "Tạo Mới")</span>
+                    }
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- DELETE CONFIRMATION MODAL -->
+@if (showDeleteConfirm)
+{
+    <div class="vip-modal-overlay" @onclick="CancelDelete">
+        <div class="vip-modal" @onclick:stopPropagation="true" style="max-width: 440px;">
+            <div class="vip-modal-header">
+                <h2 class="vip-modal-title">Xác Nhận Xóa</h2>
+                <button class="vip-modal-close" @onclick="CancelDelete">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="vip-modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                    Bạn có chắc chắn muốn xóa gói VIP <strong style="color: var(--text-primary);">@packageToDelete?.VipName</strong>?
+                </p>
+                <p style="color: var(--danger); font-size: 0.85rem;">
+                    ⚠️ Hành động này không thể hoàn tác!
+                </p>
+            </div>
+            <div class="vip-modal-footer">
+                <button class="btn btn-secondary" @onclick="CancelDelete">
+                    Hủy
+                </button>
+                <button class="btn btn-primary"
+                        style="background: var(--danger); border-color: var(--danger);"
+                        @onclick="DeletePackageConfirmed"
+                        disabled="@isDeleting">
+                    @if (isDeleting)
+                    {
+                        <span>Đang xóa...</span>
+                    }
+                    else
+                    {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        <span>Xóa Vĩnh Viễn</span>
+                    }
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    // Models
+    
+
+    // State variables
+    private List<VipPackage> allPackages = new();
+    private List<VipPackage> filteredPackages = new();
+    private string searchKeyword = string.Empty;
+    private string filterStatus = "all";
+    private bool isLoading = true;
+    private bool showModal = false;
+    private bool isEditMode = false;
+    private bool isSaving = false;
+    private bool showDeleteConfirm = false;
+    private bool isDeleting = false;
+
+    private VipPackage currentPackage = new();
+    private VipPackage? packageToDelete = null;
+    private string newFeature = string.Empty;
+
+    [CascadingParameter]
+    public MainLayout? Layout { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPackages();
+    }
+
+    // Load all packages
+    private async Task LoadPackages()
+    {
+        try
+        {
+            isLoading = true;
+            StateHasChanged();
+
+            var response = await Http.GetAsync("api/VipPackage");
+            if (response.IsSuccessStatusCode)
+            {
+                allPackages = await response.Content.ReadFromJsonAsync<List<VipPackage>>() ?? new();
+                ApplyFilters();
+            }
+        }
+        catch (Exception ex)
+        {
+            Layout?.ShowError($"Lỗi khi tải dữ liệu: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    // Apply search and filter
+    private void ApplyFilters()
+    {
+        filteredPackages = allPackages;
+
+        // Filter by status
+        if (filterStatus == "active")
+        {
+            filteredPackages = filteredPackages.Where(p => p.IsActive).ToList();
+        }
+        else if (filterStatus == "inactive")
+        {
+            filteredPackages = filteredPackages.Where(p => !p.IsActive).ToList();
+        }
+
+        // Search
+        if (!string.IsNullOrWhiteSpace(searchKeyword))
+        {
+            var keyword = searchKeyword.ToLower();
+            filteredPackages = filteredPackages.Where(p =>
+                p.VipName.ToLower().Contains(keyword) ||
+                p.Description.ToLower().Contains(keyword)
+            ).ToList();
+        }
+
+        StateHasChanged();
+    }
+
+    // Handle search
+    private void HandleSearch()
+    {
+        ApplyFilters();
+    }
+
+    // Filter by status
+    private void FilterByStatus(string status)
+    {
+        filterStatus = status;
+        ApplyFilters();
+    }
+
+    // Open create modal
+    private void OpenCreateModal()
+    {
+        isEditMode = false;
+        currentPackage = new VipPackage
+        {
+            IsActive = true,
+            SortOrder = allPackages.Count,
+            ColorTheme = "blue"
+        };
+        showModal = true;
+    }
+
+    // Open edit modal
+    private void OpenEditModal(VipPackage package)
+    {
+        isEditMode = true;
+        currentPackage = new VipPackage
+        {
+            Id = package.Id,
+            VipName = package.VipName,
+            VipPrice = package.VipPrice,
+            VipTime = package.VipTime,
+            Description = package.Description,
+            Features = new List<string>(package.Features),
+            IsActive = package.IsActive,
+            SortOrder = package.SortOrder,
+            ColorTheme = package.ColorTheme
+        };
+        showModal = true;
+    }
+
+    // Close modal
+    private void CloseModal()
+    {
+        showModal = false;
+        currentPackage = new();
+        newFeature = string.Empty;
+    }
+
+    // Add feature
+    private void AddFeature()
+    {
+        if (!string.IsNullOrWhiteSpace(newFeature) && !currentPackage.Features.Contains(newFeature.Trim()))
+        {
+            currentPackage.Features.Add(newFeature.Trim());
+            newFeature = string.Empty;
+            StateHasChanged();
+        }
+    }
+
+    // Handle Enter key for feature input
+    private void HandleFeatureKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            // e.PreventDefault();
+            AddFeature();
+        }
+    }
+
+    // Remove feature
+    private void RemoveFeature(string feature)
+    {
+        currentPackage.Features.Remove(feature);
+        StateHasChanged();
+    }
+
+    // Save package (Create or Update)
+    private async Task SavePackage()
+    {
+        try
+        {
+            // Validation
+            if (string.IsNullOrWhiteSpace(currentPackage.VipName))
+            {
+                Layout?.ShowWarning("Vui lòng nhập tên gói VIP");
+                return;
+            }
+
+            if (currentPackage.VipPrice <= 0)
+            {
+                Layout?.ShowWarning("Giá gói VIP phải lớn hơn 0");
+                return;
+            }
+
+            if (currentPackage.VipTime <= 0)
+            {
+                Layout?.ShowWarning("Thời gian hiệu lực phải lớn hơn 0");
+                return;
+            }
+
+            isSaving = true;
+            StateHasChanged();
+
+            HttpResponseMessage response;
+
+            if (isEditMode)
+            {
+                // Update
+                response = await Http.PutAsJsonAsync($"api/VipPackage/{currentPackage.Id}", currentPackage);
+            }
+            else
+            {
+                // Create
+                response = await Http.PostAsJsonAsync("api/VipPackage", currentPackage);
+            }
+
+            if (response.IsSuccessStatusCode)
+            {
+                Layout?.ShowSuccess(isEditMode ? "Cập nhật gói VIP thành công!" : "Tạo gói VIP thành công!");
+                CloseModal();
+                await LoadPackages();
+            }
+            else
+            {
+                var errorMsg = await response.Content.ReadAsStringAsync();
+                Layout?.ShowError($"Lỗi: {errorMsg}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Layout?.ShowError($"Lỗi khi lưu: {ex.Message}");
+        }
+        finally
+        {
+            isSaving = false;
+            StateHasChanged();
+        }
+    }
+
+    // Confirm delete
+    private void ConfirmDelete(VipPackage package)
+    {
+        packageToDelete = package;
+        showDeleteConfirm = true;
+    }
+
+    // Cancel delete
+    private void CancelDelete()
+    {
+        showDeleteConfirm = false;
+        packageToDelete = null;
+    }
+
+    // Delete package confirmed
+    private async Task DeletePackageConfirmed()
+    {
+        if (packageToDelete == null) return;
+
+        try
+        {
+            isDeleting = true;
+            StateHasChanged();
+
+            var response = await Http.DeleteAsync($"api/VipPackage/{packageToDelete.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                Layout?.ShowSuccess("Xóa gói VIP thành công!");
+                CancelDelete();
+                await LoadPackages();
+            }
+            else
+            {
+                Layout?.ShowError("Lỗi khi xóa gói VIP");
+            }
+        }
+        catch (Exception ex)
+        {
+            Layout?.ShowError($"Lỗi: {ex.Message}");
+        }
+        finally
+        {
+            isDeleting = false;
+            StateHasChanged();
+        }
+    }
+
+    // Toggle active status
+    private async Task ToggleActiveStatus(string? id)
+    {
+        if (string.IsNullOrEmpty(id)) return;
+
+        try
+        {
+            Layout?.ShowLoading();
+
+            var response = await Http.PatchAsync($"api/VipPackage/{id}/toggle-active", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Layout?.ShowSuccess("Cập nhật trạng thái thành công!");
+                await LoadPackages();
+            }
+            else
+            {
+                Layout?.ShowError("Lỗi khi cập nhật trạng thái");
+            }
+        }
+        catch (Exception ex)
+        {
+            Layout?.ShowError($"Lỗi: {ex.Message}");
+        }
+        finally
+        {
+            Layout?.HideLoading();
+        }
+    }
+}

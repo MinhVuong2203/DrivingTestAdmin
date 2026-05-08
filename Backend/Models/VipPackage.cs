@@ -12,7 +12,7 @@ namespace Backend.Models
         public string VipName { get; set; } = string.Empty;
 
         [FirestoreProperty("vip_price")]
-        public decimal VipPrice { get; set; }
+        public double VipPrice { get; set; }
 
         [FirestoreProperty("vip_time")]
         public int VipTime { get; set; } // Thời gian hiệu lực (ngày)

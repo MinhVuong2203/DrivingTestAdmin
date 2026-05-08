@@ -17,7 +17,7 @@ namespace Backend.Repository
         {
             var snapshot = await _db.Collection("vip_packages")
                 .OrderBy("sort_order")
-                .OrderBy("vip_price")
+                //.OrderBy("vip_price")
                 .GetSnapshotAsync();
 
             return snapshot.Documents.Select(doc =>
