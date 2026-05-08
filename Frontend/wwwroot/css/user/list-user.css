@@ -114,10 +114,10 @@
         content: "";
         position: absolute;
         inset: -50%;
-        background: conic-gradient( transparent, var(--accent), transparent, var(--accent) );
+        background: conic-gradient( transparent, #fa0f6d, transparent, #0fe7fa );
         opacity: 0;
         transition: opacity 0.3s;
-        animation: rotate 4s linear infinite;
+        animation: rotate 0.9s linear infinite;
     }
 
     /* lớp “che bên trong” → tạo viền */
