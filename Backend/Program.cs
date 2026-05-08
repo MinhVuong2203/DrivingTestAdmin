@@ -27,6 +27,17 @@ builder.Services.AddSingleton(provider =>
     return FirestoreDb.Create("myapp-8fb3f");
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 // Auto register
 builder.Services.Scan(scan => scan
     .FromAssemblyOf<Program>()
@@ -48,6 +59,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 
