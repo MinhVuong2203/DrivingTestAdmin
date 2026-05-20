@@ -1,4 +1,6 @@
 
+using Backend.Service;
+using Backend.Service.Interface;
 using Google.Cloud.Firestore;
 
 var path = Path.Combine(
@@ -16,7 +18,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -48,6 +49,8 @@ builder.Services.Scan(scan => scan
         .AsSelf()
         .WithScopedLifetime()
 );
+
+builder.Services.AddHttpClient<IDrivingCenterImportService, DrivingCenterImportService>();
 
 var app = builder.Build();
 
