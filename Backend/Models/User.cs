@@ -6,6 +6,9 @@ public class VipUser
     public string? name { get; set; }
 
     [FirestoreProperty]
+    public string? vipId { get; set; }
+
+    [FirestoreProperty]
     public DateTime? startDate { get; set; }
 
     [FirestoreProperty]

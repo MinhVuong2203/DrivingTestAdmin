@@ -25,20 +25,16 @@ namespace Backend.Controllers
             var user = doc.ToDictionary();
 
             // 1. CHECK VIP
-            if (user.ContainsKey("vip"))
+            var vip = GetVipUser(user);
+            if (vip != null)
             {
-                var vip = user["vip"] as Dictionary<string, object>;
+                if (!vip.ContainsKey("endDate"))
+                    return Ok(true);
 
-                if (vip != null)
-                {
-                    if (!vip.ContainsKey("endDate"))
-                        return Ok(true);
+                var endDate = ((Timestamp)vip["endDate"]).ToDateTime();
 
-                    var endDate = ((Timestamp)vip["endDate"]).ToDateTime();
-
-                    if (DateTime.Now < endDate)
-                        return Ok(true);
-                }
+                if (DateTime.UtcNow < endDate)
+                    return Ok(true);
             }
 
             // 2. USER THƯỜNG
@@ -91,20 +87,16 @@ namespace Backend.Controllers
             var user = doc.ToDictionary();
 
             // VIP
-            if (user.ContainsKey("vip"))
+            var vip = GetVipUser(user);
+            if (vip != null)
             {
-                var vip = user["vip"] as Dictionary<string, object>;
+                if (!vip.ContainsKey("endDate"))
+                    return Ok(-1);
 
-                if (vip != null)
-                {
-                    if (!vip.ContainsKey("endDate"))
-                        return Ok(-1);
+                var endDate = ((Timestamp)vip["endDate"]).ToDateTime();
 
-                    var endDate = ((Timestamp)vip["endDate"]).ToDateTime();
-
-                    if (DateTime.Now < endDate)
-                        return Ok(-1);
-                }
+                if (DateTime.UtcNow < endDate)
+                    return Ok(-1);
             }
 
             string today = DateTime.Now.ToString("yyyy-MM-dd");
@@ -129,5 +121,21 @@ namespace Backend.Controllers
             return Ok(Math.Max(0, 3 - used));
         }
 
+        private static Dictionary<string, object>? GetVipUser(Dictionary<string, object> user)
+        {
+            if (user.TryGetValue("vipUser", out var vipUserValue) &&
+                vipUserValue is Dictionary<string, object> vipUser)
+            {
+                return vipUser;
+            }
+
+            if (user.TryGetValue("vip", out var legacyVipValue) &&
+                legacyVipValue is Dictionary<string, object> legacyVip)
+            {
+                return legacyVip;
+            }
+
+            return null;
+        }
     }
 }
