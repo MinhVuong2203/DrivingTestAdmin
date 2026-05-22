@@ -1,19 +1,49 @@
-
 using Backend.Service;
 using Backend.Service.Interface;
 using Google.Cloud.Firestore;
 
-var path = Path.Combine(
-    Directory.GetCurrentDirectory(),
-    "firebase-key.json"
-);
-
-Environment.SetEnvironmentVariable(
-    "GOOGLE_APPLICATION_CREDENTIALS",
-    path
-);
-
 var builder = WebApplication.CreateBuilder(args);
+
+// Cấu hình Firebase key cho cả local dev và Railway / Production
+var firebaseKeyBase64 = Environment.GetEnvironmentVariable("FIREBASE_KEY_BASE64");
+
+if (!string.IsNullOrWhiteSpace(firebaseKeyBase64))
+{
+    // Railway / Production: đọc Firebase key từ biến môi trường base64
+    var jsonBytes = Convert.FromBase64String(firebaseKeyBase64);
+
+    var tempFirebaseKeyPath = Path.Combine(
+        Path.GetTempPath(),
+        "firebase-key.json"
+    );
+
+    File.WriteAllBytes(tempFirebaseKeyPath, jsonBytes);
+
+    Environment.SetEnvironmentVariable(
+        "GOOGLE_APPLICATION_CREDENTIALS",
+        tempFirebaseKeyPath
+    );
+}
+else
+{
+    // Local dev: đọc file firebase-key.json trong project
+    var localFirebaseKeyPath = Path.Combine(
+        Directory.GetCurrentDirectory(),
+        "firebase-key.json"
+    );
+
+    if (!File.Exists(localFirebaseKeyPath))
+    {
+        throw new FileNotFoundException(
+            "Không tìm thấy firebase-key.json ở local và cũng chưa cấu hình FIREBASE_KEY_BASE64 trên Railway."
+        );
+    }
+
+    Environment.SetEnvironmentVariable(
+        "GOOGLE_APPLICATION_CREDENTIALS",
+        localFirebaseKeyPath
+    );
+}
 
 // Add services to the container.
 
@@ -25,7 +55,12 @@ builder.Services.AddSwaggerGen();
 // Firestore (Singleton)
 builder.Services.AddSingleton(provider =>
 {
-    return FirestoreDb.Create("myapp-8fb3f");
+    var projectId =
+        builder.Configuration["Firebase:ProjectId"]
+        ?? Environment.GetEnvironmentVariable("FIREBASE_PROJECT_ID")
+        ?? "myapp-8fb3f";
+
+    return FirestoreDb.Create(projectId);
 });
 
 builder.Services.AddCors(options =>
@@ -69,7 +104,7 @@ app.UseSwaggerUI();
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
-//app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseCors();
 
