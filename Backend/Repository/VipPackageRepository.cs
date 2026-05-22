@@ -16,15 +16,12 @@ namespace Backend.Repository
         public async Task<List<VipPackage>> GetAllAsync()
         {
             var snapshot = await _db.Collection("vip_packages")
-                .OrderBy("sort_order")
-                //.OrderBy("vip_price")
+                .OrderByDescending("updated_at")
                 .GetSnapshotAsync();
 
             return snapshot.Documents.Select(doc =>
             {
-                var package = doc.ConvertTo<VipPackage>();
-                package.Id = doc.Id;
-                return package;
+                return MapDocument(doc);
             }).ToList();
         }
 
@@ -37,36 +34,29 @@ namespace Backend.Repository
 
             if (!doc.Exists) return null;
 
-            var package = doc.ConvertTo<VipPackage>();
-            package.Id = doc.Id;
-            return package;
+            return MapDocument(doc);
         }
 
         // GET ACTIVE
         public async Task<List<VipPackage>> GetActivePackagesAsync()
         {
-            var snapshot = await _db.Collection("vip_packages")
-                .WhereEqualTo("is_active", true)
-                .OrderBy("sort_order")
-                .OrderBy("vip_price")
-                .GetSnapshotAsync();
+            var packages = await GetAllAsync();
 
-            return snapshot.Documents.Select(doc =>
-            {
-                var package = doc.ConvertTo<VipPackage>();
-                package.Id = doc.Id;
-                return package;
-            }).ToList();
+            return packages
+                .Where(package => package.IsActive)
+                .OrderByDescending(package => package.UpdatedAt)
+                .ToList();
         }
 
         // CREATE
         public async Task<VipPackage> CreateAsync(VipPackage package)
         {
+            var docRef = _db.Collection("vip_packages").Document();
+            package.Id = docRef.Id;
             package.CreatedAt = DateTime.UtcNow;
             package.UpdatedAt = DateTime.UtcNow;
 
-            var docRef = await _db.Collection("vip_packages").AddAsync(package);
-            package.Id = docRef.Id;
+            await docRef.SetAsync(ToFirestoreData(package), SetOptions.Overwrite);
 
             return package;
         }
@@ -80,7 +70,7 @@ namespace Backend.Repository
 
                 await _db.Collection("vip_packages")
                     .Document(id)
-                    .SetAsync(package, SetOptions.Overwrite);
+                    .SetAsync(ToFirestoreData(package), SetOptions.Overwrite);
 
                 return true;
             }
@@ -119,7 +109,7 @@ namespace Backend.Repository
 
             return all.Where(p =>
                 (p.VipName ?? "").ToLower().Contains(keyword) ||
-                (p.Description ?? "").ToLower().Contains(keyword)
+                p.Descript.Any(description => (description ?? "").ToLower().Contains(keyword))
             ).ToList();
         }
 
@@ -161,6 +151,112 @@ namespace Backend.Repository
             {
                 return false;
             }
+        }
+
+        private static Dictionary<string, object> ToFirestoreData(VipPackage package)
+        {
+            var data = new Dictionary<string, object>
+            {
+                { "id", package.Id ?? string.Empty },
+                { "vip_name", package.VipName },
+                { "vip_price", package.VipPrice },
+                { "isPeriod", package.IsPeriod },
+                { "descript", package.Descript },
+                { "is_active", package.IsActive },
+                { "color_theme", package.ColorTheme },
+                { "created_at", package.CreatedAt },
+                { "updated_at", package.UpdatedAt }
+            };
+
+            if (package.PriceInline.HasValue && package.PriceInline > 0)
+            {
+                data["price_inline"] = package.PriceInline.Value;
+            }
+
+            if (!package.IsPeriod && package.VipTime.HasValue)
+            {
+                data["vip_time"] = package.VipTime.Value;
+            }
+
+            return data;
+        }
+
+        private static VipPackage MapDocument(DocumentSnapshot doc)
+        {
+            var data = doc.ToDictionary();
+
+            return new VipPackage
+            {
+                Id = doc.Id,
+                VipName = GetString(data, "vip_name"),
+                VipPrice = GetDouble(data, "vip_price"),
+                PriceInline = GetNullableDouble(data, "price_inline"),
+                IsPeriod = GetBool(data, "isPeriod"),
+                VipTime = GetNullableInt(data, "vip_time"),
+                Descript = GetStringList(data, "descript"),
+                IsActive = !data.ContainsKey("is_active") || GetBool(data, "is_active"),
+                ColorTheme = GetString(data, "color_theme", "blue"),
+                CreatedAt = GetDateTime(data, "created_at", DateTime.UtcNow),
+                UpdatedAt = GetDateTime(data, "updated_at", DateTime.UtcNow)
+            };
+        }
+
+        private static string GetString(Dictionary<string, object> data, string key, string defaultValue = "")
+        {
+            return data.TryGetValue(key, out var value) ? value?.ToString() ?? defaultValue : defaultValue;
+        }
+
+        private static double GetDouble(Dictionary<string, object> data, string key)
+        {
+            if (!data.TryGetValue(key, out var value) || value == null) return 0;
+
+            return Convert.ToDouble(value);
+        }
+
+        private static double? GetNullableDouble(Dictionary<string, object> data, string key)
+        {
+            if (!data.TryGetValue(key, out var value) || value == null) return null;
+
+            return Convert.ToDouble(value);
+        }
+
+        private static int? GetNullableInt(Dictionary<string, object> data, string key)
+        {
+            if (!data.TryGetValue(key, out var value) || value == null) return null;
+
+            return Convert.ToInt32(value);
+        }
+
+        private static bool GetBool(Dictionary<string, object> data, string key)
+        {
+            return data.TryGetValue(key, out var value) && value != null && Convert.ToBoolean(value);
+        }
+
+        private static DateTime GetDateTime(Dictionary<string, object> data, string key, DateTime defaultValue)
+        {
+            if (!data.TryGetValue(key, out var value) || value == null) return defaultValue;
+
+            return value switch
+            {
+                Timestamp timestamp => timestamp.ToDateTime(),
+                DateTime dateTime => dateTime,
+                _ => defaultValue
+            };
+        }
+
+        private static List<string> GetStringList(Dictionary<string, object> data, string key)
+        {
+            if (!data.TryGetValue(key, out var value) || value == null) return new List<string>();
+
+            if (value is IEnumerable<object> items)
+            {
+                return items.Select(item => item?.ToString() ?? string.Empty)
+                    .Where(item => !string.IsNullOrWhiteSpace(item))
+                    .ToList();
+            }
+
+            var legacyValue = value.ToString();
+            return string.IsNullOrWhiteSpace(legacyValue) ? new List<string>() : new List<string> { legacyValue };
         }
     }
 }
