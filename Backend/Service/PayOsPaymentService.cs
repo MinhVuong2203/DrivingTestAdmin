@@ -189,15 +189,15 @@ namespace Backend.Service
         private async Task ActivateVipAsync(long orderCode)
         {
             var order = await _paymentOrderRepository.GetByOrderCodeAsync(orderCode);
-            if (order == null || order.Status == "PAID") return;
+            if (order == null) return;
 
             var package = await _vipPackageRepository.GetByIdAsync(order.PackageId);
             if (package == null) return;
 
             var startDate = DateTime.UtcNow;
-            var vipData = new Dictionary<string, object>
+            var vipUserData = new Dictionary<string, object>
             {
-                { "packageId", order.PackageId },
+                { "vipId", order.PackageId },
                 { "name", order.PackageName },
                 { "startDate", startDate }
             };
@@ -205,14 +205,14 @@ namespace Backend.Service
             if (!package.IsPeriod)
             {
                 var vipDays = package.VipTime.GetValueOrDefault();
-                vipData["endDate"] = startDate.AddDays(vipDays);
+                vipUserData["endDate"] = startDate.AddDays(vipDays);
             }
 
             await _db.Collection("users")
                 .Document(order.UserId)
                 .SetAsync(new Dictionary<string, object>
                 {
-                    { "vip", vipData }
+                    { "vipUser", vipUserData }
                 }, SetOptions.MergeAll);
 
             await _paymentOrderRepository.MarkPaidAsync(orderCode);
