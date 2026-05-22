@@ -15,4 +15,5 @@ public class Post
     [FirestoreProperty] public bool status { get; set; }
     [FirestoreProperty] public DateTime createdAt { get; set; }
     [FirestoreProperty] public DateTime updatedAt { get; set; }
+    [FirestoreProperty] public string address { get; set; } = "";
 }
