@@ -56,10 +56,17 @@ namespace Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Post post)
+        public async Task<IActionResult> Create([FromBody] Post post)
         {
+            post.address ??= "";
+            post.createdAt = DateTime.UtcNow;
+            post.updatedAt = DateTime.UtcNow;
+            post.status = true;
+            post.isDeleted = false;
+
             await _postService.Create(post);
-            return Ok();
+
+            return Ok(post);
         }
 
         [HttpPut("{id}")]
