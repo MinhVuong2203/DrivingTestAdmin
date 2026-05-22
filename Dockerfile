@@ -3,7 +3,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN dotnet publish DrivingTestAdmin/Backend/Backend.csproj -c Release -o out
+RUN dotnet publish Backend/Backend.csproj -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
