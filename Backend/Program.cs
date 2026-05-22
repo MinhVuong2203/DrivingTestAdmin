@@ -51,6 +51,7 @@ builder.Services.Scan(scan => scan
 );
 
 builder.Services.AddHttpClient<IDrivingCenterImportService, DrivingCenterImportService>();
+builder.Services.AddHttpClient<IPayOsPaymentService, PayOsPaymentService>();
 
 var app = builder.Build();
 
@@ -61,7 +62,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Port deloy
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://0.0.0.0:{port}");
+
+//app.UseHttpsRedirection();
 
 app.UseCors();
 

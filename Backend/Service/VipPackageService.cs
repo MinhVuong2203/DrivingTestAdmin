@@ -7,6 +7,13 @@ namespace Backend.Service
     public class VipPackageService : IVipPackageService
     {
         private readonly VipPackageRepository _repository;
+        private static readonly List<string> DefaultDescript = new()
+        {
+            "Không hiển thị quảng cáo",
+            "Không giới hạn truy cập nhận diện biển báo",
+            "Mở full bộ đề",
+            "Gắn sao trên diễn đàn"
+        };
 
         public VipPackageService(VipPackageRepository repository)
         {
@@ -40,9 +47,10 @@ namespace Backend.Service
             if (package.VipPrice <= 0)
                 throw new ArgumentException("Giá gói VIP phải lớn hơn 0");
 
-            if (package.VipTime <= 0)
+            if (!package.IsPeriod && (!package.VipTime.HasValue || package.VipTime <= 0))
                 throw new ArgumentException("Thời gian hiệu lực phải lớn hơn 0");
 
+            NormalizePackage(package);
             return await _repository.CreateAsync(package);
         }
 
@@ -58,10 +66,11 @@ namespace Backend.Service
             if (package.VipPrice <= 0)
                 throw new ArgumentException("Giá gói VIP phải lớn hơn 0");
 
-            if (package.VipTime <= 0)
+            if (!package.IsPeriod && (!package.VipTime.HasValue || package.VipTime <= 0))
                 throw new ArgumentException("Thời gian hiệu lực phải lớn hơn 0");
 
             package.Id = id; // Đảm bảo ID không bị thay đổi
+            NormalizePackage(package);
             return await _repository.UpdateAsync(id, package);
         }
 
@@ -91,6 +100,16 @@ namespace Backend.Service
                 return false;
 
             return await _repository.UpdateActiveStatusAsync(id, !package.IsActive);
+        }
+
+        private static void NormalizePackage(VipPackage package)
+        {
+            package.Descript = new List<string>(DefaultDescript);
+
+            if (package.IsPeriod)
+            {
+                package.VipTime = null;
+            }
         }
     }
 }

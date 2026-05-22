@@ -14,20 +14,20 @@ namespace Backend.Models
         [FirestoreProperty("vip_price")]
         public double VipPrice { get; set; }
 
+        [FirestoreProperty("price_inline")]
+        public double? PriceInline { get; set; }
+
+        [FirestoreProperty("isPeriod")]
+        public bool IsPeriod { get; set; }
+
         [FirestoreProperty("vip_time")]
-        public int VipTime { get; set; } // Thời gian hiệu lực (ngày)
+        public int? VipTime { get; set; } // Thời gian hiệu lực (ngày), chỉ dùng khi IsPeriod = false
 
         [FirestoreProperty("descript")]
-        public string Description { get; set; } = string.Empty;
-
-        [FirestoreProperty("features")]
-        public List<string> Features { get; set; } = new List<string>();
+        public List<string> Descript { get; set; } = new List<string>();
 
         [FirestoreProperty("is_active")]
         public bool IsActive { get; set; } = true;
-
-        [FirestoreProperty("sort_order")]
-        public int SortOrder { get; set; } = 0;
 
         [FirestoreProperty("color_theme")]
         public string ColorTheme { get; set; } = "blue"; // blue, purple, gold, platinum
