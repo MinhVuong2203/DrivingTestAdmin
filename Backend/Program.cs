@@ -1,3 +1,4 @@
+using Backend.Repository;
 using Backend.Service;
 using Backend.Service.Interface;
 using Google.Cloud.Firestore;
@@ -88,6 +89,9 @@ builder.Services.Scan(scan => scan
 builder.Services.AddHttpClient<IDrivingCenterImportService, DrivingCenterImportService>();
 builder.Services.AddHttpClient<IPayOsPaymentService, PayOsPaymentService>();
 
+builder.Services.AddScoped<ModerationRepository>();
+builder.Services.AddScoped<IModerationService, ModerationService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -101,10 +105,10 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 // Port deloy
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Urls.Add($"http://0.0.0.0:{port}");
+//var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+//app.Urls.Add($"http://0.0.0.0:{port}");
 
-// app.UseHttpsRedirection();
+ app.UseHttpsRedirection();
 
 app.UseCors();
 
