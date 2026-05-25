@@ -1,14 +1,19 @@
-﻿using Google.Cloud.Firestore;
+﻿using Backend.Service.Interface;
+using Google.Cloud.Firestore;
 
 namespace Backend.Repository
 {
     public class PostRepository
     {
         private readonly FirestoreDb _db;
+        private readonly IModerationService _moderationService;
 
-        public PostRepository(FirestoreDb db)
+        public PostRepository(
+        FirestoreDb db,
+        IModerationService moderationService)
         {
             _db = db;
+            _moderationService = moderationService;
         }
 
         public async Task<List<Post>> GetAll()
@@ -42,7 +47,34 @@ namespace Backend.Repository
 
         public async Task Create(Post post)
         {
-            await _db.Collection("posts").Document(post.postId).SetAsync(post);
+            post.isDeleted = false;
+            post.status = true;
+            post.createdAt = DateTime.UtcNow;
+            post.updatedAt = DateTime.UtcNow;
+
+            var postRef = _db.Collection("posts").Document(post.postId);
+
+            // 1. Lưu bài viết trước
+            await postRef.SetAsync(post);
+
+            // 2. Kiểm tra sau khi đã đăng
+            var violated = await _moderationService.IsPostViolated(post.content);
+
+            // 3. Nếu vi phạm thì đánh dấu đã xóa
+            if (violated)
+            {
+                await postRef.UpdateAsync(new Dictionary<string, object>
+        {
+            { "isDeleted", true },
+            { "status", false },
+            { "moderationReason", "Nội dung chứa keyword vi phạm" },
+            { "moderatedAt", DateTime.UtcNow },
+            { "updatedAt", DateTime.UtcNow }
+        });
+
+                post.isDeleted = true;
+                post.status = false;
+            }
         }
 
         public async Task Update(string id, Post post)
@@ -52,7 +84,20 @@ namespace Backend.Repository
 
         public async Task Delete(string id)
         {
-            await _db.Collection("posts").Document(id).DeleteAsync();
+            var postRef = _db.Collection("posts").Document(id);
+
+            var snapshot = await postRef.GetSnapshotAsync();
+            if (!snapshot.Exists)
+            {
+                throw new Exception("Post not found");
+            }
+
+            await postRef.UpdateAsync(new Dictionary<string, object>
+            {
+                { "isDeleted", true },
+                { "status", false },
+                { "updatedAt", DateTime.UtcNow }
+            });
         }
 
         public async Task LikePost(string postId, string userId)

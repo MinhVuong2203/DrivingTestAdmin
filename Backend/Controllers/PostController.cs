@@ -61,8 +61,8 @@ namespace Backend.Controllers
             post.address ??= "";
             post.createdAt = DateTime.UtcNow;
             post.updatedAt = DateTime.UtcNow;
-            post.status = true;
-            post.isDeleted = false;
+            //post.status = true;
+            //post.isDeleted = false;
 
             await _postService.Create(post);
 

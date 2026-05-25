@@ -16,4 +16,6 @@ public class Post
     [FirestoreProperty] public DateTime createdAt { get; set; }
     [FirestoreProperty] public DateTime updatedAt { get; set; }
     [FirestoreProperty] public string address { get; set; } = "";
+    [FirestoreProperty] public string moderationReason { get; set; } = "";
+    [FirestoreProperty] public DateTime? moderatedAt { get; set; }
 }
