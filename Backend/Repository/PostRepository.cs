@@ -45,7 +45,7 @@ namespace Backend.Repository
                 .ToList();
         }
 
-        public async Task Create(Post post)
+        public async Task<Post> Create(Post post)
         {
             post.isDeleted = false;
             post.status = true;
@@ -54,27 +54,33 @@ namespace Backend.Repository
 
             var postRef = _db.Collection("posts").Document(post.postId);
 
-            // 1. Lưu bài viết trước
             await postRef.SetAsync(post);
 
-            // 2. Kiểm tra sau khi đã đăng
-            var violated = await _moderationService.IsPostViolated(post.content);
-
-            // 3. Nếu vi phạm thì đánh dấu đã xóa
-            if (violated)
+            _ = Task.Run(async () =>
             {
-                await postRef.UpdateAsync(new Dictionary<string, object>
-        {
-            { "isDeleted", true },
-            { "status", false },
-            { "moderationReason", "Nội dung chứa keyword vi phạm" },
-            { "moderatedAt", DateTime.UtcNow },
-            { "updatedAt", DateTime.UtcNow }
-        });
+                try
+                {
+                    var violated = await _moderationService.IsPostViolatedByAiFirst(post.content);
 
-                post.isDeleted = true;
-                post.status = false;
-            }
+                    if (violated)
+                    {
+                        await postRef.UpdateAsync(new Dictionary<string, object>
+                {
+                    { "isDeleted", true },
+                    { "status", false },
+                    { "moderationReason", "AI hoặc keyword phát hiện nội dung vi phạm" },
+                    { "moderatedAt", DateTime.UtcNow },
+                    { "updatedAt", DateTime.UtcNow }
+                });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Moderation error: {ex.Message}");
+                }
+            });
+
+            return post;
         }
 
         public async Task Update(string id, Post post)
