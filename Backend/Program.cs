@@ -91,6 +91,7 @@ builder.Services.AddHttpClient<IPayOsPaymentService, PayOsPaymentService>();
 
 builder.Services.AddScoped<ModerationRepository>();
 builder.Services.AddScoped<IModerationService, ModerationService>();
+builder.Services.AddHttpClient<IAiModerationService, AiModerationService>();
 
 var app = builder.Build();
 
@@ -105,10 +106,10 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 // Port deloy
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Urls.Add($"http://0.0.0.0:{port}");
+//var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+//app.Urls.Add($"http://0.0.0.0:{port}");
 
-//  app.UseHttpsRedirection();
+  app.UseHttpsRedirection();
 
 app.UseCors();
 

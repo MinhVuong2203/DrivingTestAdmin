@@ -12,7 +12,11 @@ namespace Backend.Service
             _repo = repo;
         }
 
-        public Task Create(Post post)
+        //public Task Create(Post post)
+        //{
+        //    return _repo.Create(post);
+        //}
+        public Task<Post> Create(Post post)
         {
             return _repo.Create(post);
         }

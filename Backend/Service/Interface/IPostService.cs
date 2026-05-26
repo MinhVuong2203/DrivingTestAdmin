@@ -5,7 +5,8 @@
         public Task<List<Post>> GetAll();
         public Task<Post> GetById(string id);
         public Task<List<Post>> GetByAuthorID(string authorId);
-        public Task Create(Post post);
+        //public Task Create(Post post);
+        Task<Post> Create(Post post);
         public Task Update(string id, Post post);
         public Task Delete(string id);
         public Task LikePost(string postId, string userId);

@@ -1,4 +1,5 @@
 ﻿using Backend.Models;
+using Backend.Service;
 using Backend.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,14 @@ namespace Backend.Controllers
     public class ModerationController : ControllerBase
     {
         private readonly IModerationService _moderationService;
+        private readonly IAiModerationService _aiModerationService;
 
-        public ModerationController(IModerationService moderationService)
+        public ModerationController(
+        IModerationService moderationService,
+        IAiModerationService aiModerationService)
         {
             _moderationService = moderationService;
+            _aiModerationService = aiModerationService;
         }
 
         // GET: api/Moderation/keywords
@@ -122,6 +127,14 @@ namespace Backend.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost("check-ai")]
+        public async Task<IActionResult> CheckAi([FromBody] string content)
+        {
+            var result = await _aiModerationService.CheckPostByAi(content);
+
+            return Ok(result);
         }
     }
 }
