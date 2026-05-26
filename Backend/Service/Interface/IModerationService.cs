@@ -15,5 +15,7 @@ namespace Backend.Service.Interface
         Task ToggleKeyword(string keywordId, bool isActive);
 
         Task<bool> IsPostViolated(string content);
+
+        Task<bool> IsPostViolatedByAiFirst(string content);
     }
 }
