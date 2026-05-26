@@ -51,16 +51,13 @@ namespace Backend.Controllers
         // API Flutter gọi để tìm kiếm trung tâm
         // Ví dụ: /api/DrivingCenters/search?keyword=thu duc
         [HttpGet("search")]
-        public async Task<ActionResult<List<DrivingCenter>>> Search([FromQuery] string? keyword)
+        public async Task<IActionResult> Search(
+            [FromQuery] string? keyword,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
         {
-            var centers = await _drivingCenterService.Search(keyword);
-
-            return Ok(new
-            {
-                message = "Tìm kiếm trung tâm thành công.",
-                total = centers.Count,
-                data = centers
-            });
+            var result = await _drivingCenterService.SearchPaged(keyword, page, pageSize);
+            return Ok(result);
         }
 
         // API Flutter gọi để xem chi tiết 1 trung tâm
