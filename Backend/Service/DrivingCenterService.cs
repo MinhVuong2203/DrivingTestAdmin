@@ -1,4 +1,5 @@
-﻿using Backend.Models;
+using Backend.DTO;
+using Backend.Models;
 using Backend.Repository;
 using Backend.Service.Interface;
 
@@ -21,6 +22,11 @@ namespace Backend.Service
         public async Task<List<DrivingCenter>> Search(string? keyword)
         {
             return await _drivingCenterRepository.Search(keyword);
+        }
+
+        public async Task<DrivingCenterSearchResult> SearchPaged(string? keyword, int page, int pageSize)
+        {
+            return await _drivingCenterRepository.SearchPaged(keyword, page, pageSize);
         }
 
         public async Task<DrivingCenter?> GetById(string id)
