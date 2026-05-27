@@ -1,4 +1,5 @@
 ﻿using Backend.Models;
+using Backend.Service.Interface;
 using Google.Cloud.Firestore;
 
 namespace Backend.Repository
@@ -6,10 +7,14 @@ namespace Backend.Repository
     public class CommentRepository
     {
         private readonly FirestoreDb _db;
+        private readonly IModerationService _moderationService;
 
-        public CommentRepository(FirestoreDb db)
+        public CommentRepository(
+            FirestoreDb db,
+            IModerationService moderationService)
         {
             _db = db;
+            _moderationService = moderationService;
         }
 
         public async Task<List<Comment>> GetByPostId(string postId)
@@ -40,31 +45,48 @@ namespace Backend.Repository
             var postRef = _db.Collection("posts").Document(postId);
             var commentRef = postRef.Collection("comments").Document();
 
-            await _db.RunTransactionAsync(async transaction =>
+            comment.commentId = commentRef.Id;
+            comment.postId = postId;
+            comment.likeCount = 0;
+            comment.isDeleted = false;
+            comment.status = true;
+            comment.createdAt = DateTime.UtcNow;
+            comment.updatedAt = DateTime.UtcNow;
+
+            // 1. Lưu comment trước
+            await commentRef.SetAsync(comment);
+
+            // 2. Tăng số lượng bình luận
+            await postRef.UpdateAsync(new Dictionary<string, object>
             {
-                var postSnapshot = await transaction.GetSnapshotAsync(postRef);
+                { "commentCount", FieldValue.Increment(1) },
+                { "updatedAt", DateTime.UtcNow }
+            });
 
-                if (!postSnapshot.Exists)
+            // 3. Kiểm duyệt bằng AI Gemini trước, keyword fallback sau
+            var violated = await _moderationService.IsPostViolatedByAiFirst(comment.content);
+
+            // 4. Nếu vi phạm thì xóa mềm comment
+            if (violated)
+            {
+                await commentRef.UpdateAsync(new Dictionary<string, object>
                 {
-                    throw new Exception("Post not found");
-                }
-
-                comment.commentId = commentRef.Id;
-                comment.postId = postId;
-                comment.likeCount = 0;
-                comment.isDeleted = false;
-                comment.status = true;
-                comment.createdAt = DateTime.UtcNow;
-                comment.updatedAt = DateTime.UtcNow;
-
-                transaction.Set(commentRef, comment);
-
-                transaction.Update(postRef, new Dictionary<string, object>
-                {
-                    { "commentCount", FieldValue.Increment(1) },
+                    { "isDeleted", true },
+                    { "status", false },
+                    { "moderationReason", "AI hoặc keyword phát hiện bình luận vi phạm" },
+                    { "moderatedAt", DateTime.UtcNow },
                     { "updatedAt", DateTime.UtcNow }
                 });
-            });
+
+                await postRef.UpdateAsync(new Dictionary<string, object>
+                {
+                    { "commentCount", FieldValue.Increment(-1) },
+                    { "updatedAt", DateTime.UtcNow }
+                });
+
+                comment.isDeleted = true;
+                comment.status = false;
+            }
 
             return comment;
         }

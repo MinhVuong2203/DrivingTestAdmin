@@ -37,5 +37,7 @@ namespace Backend.Models
 
         [FirestoreProperty]
         public DateTime updatedAt { get; set; }
+        [FirestoreProperty] public string moderationReason { get; set; } = "";
+        [FirestoreProperty] public DateTime? moderatedAt { get; set; }
     }
 }
