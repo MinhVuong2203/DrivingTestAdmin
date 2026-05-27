@@ -1,11 +1,13 @@
 ﻿using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Http;
+using Backend.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [UserAuthorize]
     public class UsageController : ControllerBase
     {
         private readonly FirestoreDb _db;
@@ -17,6 +19,11 @@ namespace Backend.Controllers
         [HttpPost("can-use-recognition/{uid}")]
         public async Task<IActionResult> CanUseRecognition(string uid)
         {
+            if (!IsCurrentUser(uid))
+            {
+                return Forbid();
+            }
+
             var docRef = _db.Collection("users").Document(uid);
             var doc = await docRef.GetSnapshotAsync();
 
@@ -80,6 +87,11 @@ namespace Backend.Controllers
         [HttpGet("remaining/{uid}")]
         public async Task<IActionResult> GetRemaining(string uid)
         {
+            if (!IsCurrentUser(uid))
+            {
+                return Forbid();
+            }
+
             var doc = await _db.Collection("users").Document(uid).GetSnapshotAsync();
 
             if (!doc.Exists) return NotFound();
@@ -136,6 +148,11 @@ namespace Backend.Controllers
             }
 
             return null;
+        }
+
+        private bool IsCurrentUser(string uid)
+        {
+            return HttpContext.Items["UserUid"]?.ToString() == uid;
         }
     }
 }

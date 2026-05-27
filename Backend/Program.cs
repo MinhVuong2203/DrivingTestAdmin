@@ -2,6 +2,7 @@ using Backend.Repository;
 using Backend.Service;
 using Backend.Service.Interface;
 using Google.Cloud.Firestore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,7 +51,34 @@ else
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+
+    options.AddSecurityDefinition("FirebaseEmailPassword", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "basic",
+        In = ParameterLocation.Header,
+        Description = "Chi dung de test Swagger: nhap email Firebase vao username va password Firebase vao password."
+    });
+
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "FirebaseEmailPassword"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 
 // Firestore (Singleton)
@@ -88,6 +116,8 @@ builder.Services.Scan(scan => scan
 
 builder.Services.AddHttpClient<IDrivingCenterImportService, DrivingCenterImportService>();
 builder.Services.AddHttpClient<IPayOsPaymentService, PayOsPaymentService>();
+builder.Services.AddHttpClient<IUserAuthService, UserAuthService>();
+builder.Services.AddScoped<IAdminAuthService, AdminAuthService>();
 
 builder.Services.AddScoped<ModerationRepository>();
 builder.Services.AddScoped<IModerationService, ModerationService>();
@@ -109,7 +139,7 @@ app.UseSwaggerUI();
 //var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 //app.Urls.Add($"http://0.0.0.0:{port}");
 
-  app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseCors();
 

@@ -3,6 +3,7 @@ using Backend.Models;
 using Backend.Repository;
 using Backend.Service;
 using Backend.Service.Interface;
+using Backend.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("import")]
+        [AdminAuthorize]
         public async Task<IActionResult> Import([FromBody] ImportDrivingCenterRequest request)
         {
             try

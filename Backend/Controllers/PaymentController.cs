@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Backend.Filters;
 using Backend.DTO;
 using Backend.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +18,16 @@ namespace Backend.Controllers
         }
 
         [HttpPost("payos/create")]
+        [UserAuthorize]
         public async Task<ActionResult<PayOsPaymentResponse>> CreatePayOsPayment([FromBody] CreatePayOsPaymentRequest request)
         {
             try
             {
+                if (!IsCurrentUser(request.UserId))
+                {
+                    return Forbid();
+                }
+
                 var payment = await _payOsPaymentService.CreatePaymentAsync(request);
                 return Ok(payment);
             }
@@ -42,6 +49,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("payos-status/{orderCode:long}")]
+        [UserAuthorize]
         public async Task<IActionResult> SyncPayOsStatus(long orderCode)
         {
             var paid = await _payOsPaymentService.SyncPaymentStatusAsync(orderCode);
@@ -66,6 +74,11 @@ namespace Backend.Controllers
                 message = "Bạn đã hủy thanh toán PayOS.",
                 orderCode
             });
+        }
+
+        private bool IsCurrentUser(string? uid)
+        {
+            return HttpContext.Items["UserUid"]?.ToString() == uid;
         }
     }
 }
