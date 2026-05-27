@@ -1,5 +1,6 @@
 ﻿using Backend.Models;
 using Backend.Service.Interface;
+using Backend.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -17,6 +18,7 @@ namespace Backend.Controllers
 
         // GET: api/VipPackage
         [HttpGet]
+        [AdminAuthorize]
         public async Task<ActionResult<List<VipPackage>>> GetAll()
         {
             try
@@ -65,6 +67,7 @@ namespace Backend.Controllers
 
         // POST: api/VipPackage
         [HttpPost]
+        [AdminAuthorize]
         public async Task<ActionResult<VipPackage>> Create([FromBody] VipPackage package)
         {
             try
@@ -84,6 +87,7 @@ namespace Backend.Controllers
 
         // PUT: api/VipPackage/{id}
         [HttpPut("{id}")]
+        [AdminAuthorize]
         public async Task<ActionResult> Update(string id, [FromBody] VipPackage package)
         {
             try
@@ -106,6 +110,7 @@ namespace Backend.Controllers
 
         // DELETE: api/VipPackage/{id}
         [HttpDelete("{id}")]
+        [AdminAuthorize]
         public async Task<ActionResult> Delete(string id)
         {
             try
@@ -124,6 +129,7 @@ namespace Backend.Controllers
 
         // GET: api/VipPackage/search?keyword=abc
         [HttpGet("search")]
+        [AdminAuthorize]
         public async Task<ActionResult<List<VipPackage>>> Search([FromQuery] string keyword)
         {
             try
@@ -139,6 +145,7 @@ namespace Backend.Controllers
 
         // PATCH: api/VipPackage/{id}/toggle-active
         [HttpPatch("{id}/toggle-active")]
+        [AdminAuthorize]
         public async Task<ActionResult> ToggleActive(string id)
         {
             try

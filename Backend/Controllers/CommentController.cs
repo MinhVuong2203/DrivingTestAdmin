@@ -1,5 +1,6 @@
 ﻿using Backend.Models;
 using Backend.Service.Interface;
+using Backend.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -16,19 +17,34 @@ namespace Backend.Controllers
         }
 
         [HttpGet("{postId}")]
+        [UserAuthorize]
         public async Task<IActionResult> GetByPostId(string postId)
         {
             var comments = await _commentService.GetByPostId(postId);
             return Ok(comments);
         }
 
+        [HttpGet("admin/{postId}")]
+        [AdminAuthorize]
+        public async Task<IActionResult> GetByPostIdForAdmin(string postId)
+        {
+            var comments = await _commentService.GetByPostId(postId);
+            return Ok(comments);
+        }
+
         [HttpPost("{postId}")]
+        [UserAuthorize]
         public async Task<IActionResult> Create(
             string postId,
             [FromBody] Comment comment)
         {
             try
             {
+                if (HttpContext.Items["UserUid"]?.ToString() != comment.authorId)
+                {
+                    return Forbid();
+                }
+
                 var result = await _commentService.Create(postId, comment);
                 return Ok(result);
             }
@@ -39,6 +55,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("{postId}/{commentId}")]
+        [UserAuthorize]
         public async Task<IActionResult> Delete(
             string postId,
             string commentId,
@@ -47,11 +64,16 @@ namespace Backend.Controllers
         {
             try
             {
+                if (HttpContext.Items["UserUid"]?.ToString() != currentUserId)
+                {
+                    return Forbid();
+                }
+
                 var result = await _commentService.Delete(
                     postId,
                     commentId,
                     currentUserId,
-                    isAdmin
+                    false
                 );
 
                 return Ok(result);

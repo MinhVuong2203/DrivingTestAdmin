@@ -1,5 +1,6 @@
 ﻿using Backend.Service;
 using Backend.Service.Interface;
+using Backend.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CloudinaryDotNet;
@@ -28,12 +29,21 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
+        [UserAuthorize]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _postService.GetAll());
         }
 
+        [HttpGet("admin")]
+        [AdminAuthorize]
+        public async Task<IActionResult> GetAllForAdmin()
+        {
+            return Ok(await _postService.GetAll());
+        }
+
         [HttpGet("{id}")]
+        [UserAuthorize]
         public async Task<IActionResult> GetById(string id)
         {
             var post = await _postService.GetById(id);
@@ -45,6 +55,7 @@ namespace Backend.Controllers
         }
 
         [HttpGet("author/{authorId}")]
+        [UserAuthorize]
         public async Task<IActionResult> GetByAuthorId(string authorId)
         {
             var posts = await _postService.GetByAuthorID(authorId);
@@ -70,6 +81,7 @@ namespace Backend.Controllers
         //}
 
         [HttpPost]
+        [UserAuthorize]
         public async Task<IActionResult> Create([FromBody] Post post)
         {
             var result = await _postService.Create(post);
@@ -77,6 +89,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("{id}")]
+        [UserAuthorize]
         public async Task<IActionResult> Update(string id, Post post)
         {
             var existingPost = await _postService.GetById(id);
@@ -90,6 +103,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("{id}")]
+        [UserAuthorize]
         public async Task<IActionResult> Delete(string id)
         {
             var existingPost = await _postService.GetById(id);
@@ -101,11 +115,29 @@ namespace Backend.Controllers
             return NoContent();
         }
 
+        [HttpDelete("admin/{id}")]
+        [AdminAuthorize]
+        public async Task<IActionResult> DeleteForAdmin(string id)
+        {
+            var existingPost = await _postService.GetById(id);
+            if (existingPost == null)
+            {
+                return NotFound();
+            }
+
+            await _postService.Delete(id);
+            return NoContent();
+        }
+
         [HttpPost("{postId}/like")]
+        [UserAuthorize]
         public async Task<IActionResult> LikePost(string postId, [FromQuery] string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
                 return BadRequest("userId is required");
+
+            if (!IsCurrentUser(userId))
+                return Forbid();
 
             var existingPost = await _postService.GetById(postId);
             if (existingPost == null)
@@ -116,10 +148,14 @@ namespace Backend.Controllers
         }
 
         [HttpPost("{postId}/unlike")]
+        [UserAuthorize]
         public async Task<IActionResult> UnlikePost(string postId, [FromQuery] string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
                 return BadRequest("userId is required");
+
+            if (!IsCurrentUser(userId))
+                return Forbid();
 
             var existingPost = await _postService.GetById(postId);
             if (existingPost == null)
@@ -130,16 +166,21 @@ namespace Backend.Controllers
         }
 
         [HttpGet("{postId}/liked")]
+        [UserAuthorize]
         public async Task<IActionResult> IsLiked(string postId, [FromQuery] string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
                 return BadRequest("userId is required");
+
+            if (!IsCurrentUser(userId))
+                return Forbid();
 
             var isLiked = await _postService.IsLiked(postId, userId);
             return Ok(new { isLiked });
         }
 
         [HttpPost("upload-image")]
+        [UserAuthorize]
         public async Task<IActionResult> UploadImage(IFormFile file)
         {
             if (file == null || file.Length == 0)
@@ -166,12 +207,18 @@ namespace Backend.Controllers
         }
 
         [HttpGet("paged")]
+        [UserAuthorize]
         public async Task<IActionResult> GetPostsPaged(
         [FromQuery] int limit = 10,
         [FromQuery] DateTime? lastCreatedAt = null)
         {
             var posts = await _postService.GetPostsPaged(limit, lastCreatedAt);
             return Ok(posts);
+        }
+
+        private bool IsCurrentUser(string? uid)
+        {
+            return HttpContext.Items["UserUid"]?.ToString() == uid;
         }
     }
 }
