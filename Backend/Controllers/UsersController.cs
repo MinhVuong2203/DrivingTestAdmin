@@ -1,5 +1,6 @@
 ﻿using Backend.Service;
 using Backend.Service.Interface;
+using Backend.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AdminAuthorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _service;
