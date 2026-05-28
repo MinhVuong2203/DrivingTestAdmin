@@ -13,6 +13,7 @@ public class UserDto
     public string? email { get; set; }
     public string? role { get; set; }
     public string? status { get; set; }
+    public DateTime? unlockAt { get; set; }
     public string? photoURL { get; set; }
     public DateTime? createdAt { get; set; }
     public VipDto? vip { get; set; }
