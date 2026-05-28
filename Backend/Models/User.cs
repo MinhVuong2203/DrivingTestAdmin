@@ -34,6 +34,9 @@ public class User
     public string? status { get; set; }
 
     [FirestoreProperty]
+    public DateTime? unlockAt { get; set; }
+
+    [FirestoreProperty]
     public string? photoURL { get; set; }
 
     [FirestoreProperty]

@@ -52,10 +52,28 @@ public class UserRepository
     }
 
     // lock/unlock
-    public async Task UpdateStatus(string id, string status)
+    public async Task UpdateStatus(string id, string status, int? lockDays)
     {
+        var normalizedStatus = status.Trim().ToLowerInvariant();
+
+        var updates = new Dictionary<string, object>
+        {
+            { "status", normalizedStatus }
+        };
+
+        if (normalizedStatus == "locked")
+        {
+            updates["unlockAt"] = lockDays is > 0
+                ? DateTime.UtcNow.AddDays(lockDays.Value)
+                : FieldValue.Delete;
+        }
+        else if (normalizedStatus == "active")
+        {
+            updates["unlockAt"] = FieldValue.Delete;
+        }
+
         await _db.Collection("users")
             .Document(id)
-            .UpdateAsync("status", status);
+            .UpdateAsync(updates);
     }
 }

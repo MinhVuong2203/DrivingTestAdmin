@@ -36,9 +36,9 @@ namespace Backend.Service
             return _repo.Update(id, user);
         }
 
-        public Task UpdateStatus(string id, string status)
+        public Task UpdateStatus(string id, string status, int? lockDays)
         {
-            return _repo.UpdateStatus(id, status);
+            return _repo.UpdateStatus(id, status, lockDays);
         }
     }
 }

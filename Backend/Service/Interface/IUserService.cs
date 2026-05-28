@@ -12,6 +12,6 @@
 
         public Task Delete(string id);
 
-        Task UpdateStatus(string id, string status);
+        Task UpdateStatus(string id, string status, int? lockDays);
     }
 }
