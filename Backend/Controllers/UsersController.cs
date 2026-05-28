@@ -1,6 +1,7 @@
 ﻿using Backend.Service;
 using Backend.Service.Interface;
 using Backend.Filters;
+using Backend.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -54,9 +55,25 @@ namespace Backend.Controllers
         }
 
         [HttpPatch("{id}/status")]
-        public async Task<IActionResult> UpdateStatus(string id, [FromBody] string status)
+        public async Task<IActionResult> UpdateStatus(string id, [FromBody] UpdateUserStatusRequest request)
         {
-            await _service.UpdateStatus(id, status);
+            if (string.IsNullOrWhiteSpace(request.Status))
+            {
+                return BadRequest("Status is required.");
+            }
+
+            if (request.LockDays is <= 0)
+            {
+                return BadRequest("LockDays must be greater than 0.");
+            }
+
+            var status = request.Status.Trim().ToLowerInvariant();
+            if (status is not ("active" or "locked"))
+            {
+                return BadRequest("Status must be active or locked.");
+            }
+
+            await _service.UpdateStatus(id, status, request.LockDays);
             return Ok();
         }
 

@@ -122,6 +122,7 @@ builder.Services.AddScoped<IAdminAuthService, AdminAuthService>();
 builder.Services.AddScoped<ModerationRepository>();
 builder.Services.AddScoped<IModerationService, ModerationService>();
 builder.Services.AddHttpClient<IAiModerationService, AiModerationService>();
+builder.Services.AddHttpClient<ITrafficSignRecognitionService, TrafficSignRecognitionService>();
 
 var app = builder.Build();
 
@@ -135,11 +136,11 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// Port deloy
-//var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-//app.Urls.Add($"http://0.0.0.0:{port}");
+// Port deployment
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://0.0.0.0:{port}");
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseCors();
 
