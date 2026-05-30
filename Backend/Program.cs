@@ -118,6 +118,7 @@ builder.Services.AddHttpClient<IDrivingCenterImportService, DrivingCenterImportS
 builder.Services.AddHttpClient<IPayOsPaymentService, PayOsPaymentService>();
 builder.Services.AddHttpClient<IUserAuthService, UserAuthService>();
 builder.Services.AddScoped<IAdminAuthService, AdminAuthService>();
+builder.Services.AddHttpClient<IAdMobService, AdMobService>();
 
 builder.Services.AddScoped<ModerationRepository>();
 builder.Services.AddScoped<IModerationService, ModerationService>();
@@ -140,7 +141,7 @@ app.UseSwaggerUI();
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
-// app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors();
 
