@@ -1,7 +1,9 @@
 using Backend.Repository;
 using Backend.Service;
 using Backend.Service.Interface;
+using FirebaseAdmin;
 using Google.Cloud.Firestore;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +47,14 @@ else
         "GOOGLE_APPLICATION_CREDENTIALS",
         localFirebaseKeyPath
     );
+}
+
+if (FirebaseApp.DefaultInstance == null)
+{
+    FirebaseApp.Create(new AppOptions
+    {
+        Credential = GoogleCredential.GetApplicationDefault()
+    });
 }
 
 // Add services to the container.
@@ -106,7 +116,9 @@ builder.Services.AddCors(options =>
 // Auto register
 builder.Services.Scan(scan => scan
     .FromAssemblyOf<Program>()
-    .AddClasses(c => c.Where(t => t.Name.EndsWith("Service")))
+    .AddClasses(c => c.Where(t =>
+        t.Name.EndsWith("Service")
+        && !typeof(IHostedService).IsAssignableFrom(t)))
         .AsImplementedInterfaces()
         .WithScopedLifetime()
     .AddClasses(c => c.Where(t => t.Name.EndsWith("Repository")))
@@ -123,6 +135,9 @@ builder.Services.AddScoped<ModerationRepository>();
 builder.Services.AddScoped<IModerationService, ModerationService>();
 builder.Services.AddHttpClient<IAiModerationService, AiModerationService>();
 builder.Services.AddHttpClient<ITrafficSignRecognitionService, TrafficSignRecognitionService>();
+builder.Services.Configure<WrongQuestionReminderOptions>(
+    builder.Configuration.GetSection("WrongQuestionReminder"));
+builder.Services.AddHostedService<WrongQuestionReminderHostedService>();
 
 var app = builder.Build();
 
@@ -140,7 +155,7 @@ app.UseSwaggerUI();
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
-// app.UseHttpsRedirection();
+//  app.UseHttpsRedirection();
 
 app.UseCors();
 
