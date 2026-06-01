@@ -44,4 +44,13 @@ public class User
 
     [FirestoreProperty]
     public VipUser? vipUser { get; set; }
+
+    [FirestoreProperty]
+    public bool reminder_wrong { get; set; } = false;
+
+    [FirestoreProperty]
+    public bool wrong_reminder_enabled { get; set; } = true;
+
+    [FirestoreProperty]
+    public List<string>? fcm_tokens { get; set; }
 }
