@@ -64,7 +64,9 @@ namespace Backend.Service
                             Priority = Priority.High,
                             Notification = new AndroidNotification
                             {
-                                ClickAction = "FLUTTER_NOTIFICATION_CLICK"
+                                ClickAction = "FLUTTER_NOTIFICATION_CLICK",
+                                Icon = "ic_stat_wrong_question",
+                                Color = "#6366F1"
                             }
                         },
                         Apns = new ApnsConfig
