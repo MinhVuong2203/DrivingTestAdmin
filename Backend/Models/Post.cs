@@ -18,4 +18,6 @@ public class Post
     [FirestoreProperty] public string address { get; set; } = "";
     [FirestoreProperty] public string moderationReason { get; set; } = "";
     [FirestoreProperty] public DateTime? moderatedAt { get; set; }
+    [FirestoreProperty] public bool authorIsVip { get; set; } = false;
+    [FirestoreProperty] public string authorVipName { get; set; } = "";
 }

@@ -1,4 +1,5 @@
 ﻿using Backend.Models;
+using Backend.Service;
 using Backend.Service.Interface;
 using Google.Cloud.Firestore;
 
@@ -8,13 +9,19 @@ namespace Backend.Repository
     {
         private readonly FirestoreDb _db;
         private readonly IModerationService _moderationService;
+        private readonly INotificationPushService _pushService;
+        private readonly INotificationService _notificationService;
 
         public CommentRepository(
             FirestoreDb db,
-            IModerationService moderationService)
+            IModerationService moderationService,
+            INotificationPushService pushService,
+            INotificationService notificationService)
         {
             _db = db;
             _moderationService = moderationService;
+            _pushService = pushService;
+            _notificationService = notificationService;
         }
 
         public async Task<List<Comment>> GetByPostId(string postId)
@@ -86,6 +93,71 @@ namespace Backend.Repository
 
                 comment.isDeleted = true;
                 comment.status = false;
+            }
+
+            if (!comment.isDeleted && comment.status)
+            {
+                var postSnap = await postRef.GetSnapshotAsync();
+
+                if (postSnap.Exists)
+                {
+                    var post = postSnap.ConvertTo<Post>();
+
+                    // 1. Người khác comment vào bài viết của chủ bài
+                    if (string.IsNullOrWhiteSpace(comment.parentCommentId))
+                    {
+                        if (post.authorId != comment.authorId)
+                        {
+                            await _notificationService.Create(
+                                new Notification
+                                {
+                                    userId = post.authorId,
+                                    title = "Có bình luận mới",
+                                    message = $"{comment.authorName} đã bình luận bài viết của bạn",
+                                    type = "post_comment",
+                                    postId = postId,
+                                    isRead = false,
+                                    createdAt = DateTime.UtcNow
+                                });
+
+                            await _pushService.SendPushToUser(
+                                post.authorId,
+                                "Có bình luận mới",
+                                $"{comment.authorName} đã bình luận bài viết của bạn",
+                                postId,
+                                "post_comment"
+                            );
+                        }
+                    }
+
+                    // 2. Người khác reply comment
+                    if (!string.IsNullOrWhiteSpace(comment.parentCommentId)
+                        && !string.IsNullOrWhiteSpace(comment.replyToUserId))
+                    {
+                        if (comment.replyToUserId != comment.authorId)
+                        {
+                            await _notificationService.Create(
+                                new Notification
+                                {
+                                    userId = comment.replyToUserId,
+                                    title = "Có phản hồi mới",
+                                    message = $"{comment.authorName} đã phản hồi bình luận của bạn",
+                                    type = "comment_reply",
+                                    postId = postId,
+                                    isRead = false,
+                                    createdAt = DateTime.UtcNow
+                                });
+
+                            await _pushService.SendPushToUser(
+                                comment.replyToUserId,
+                                "Có phản hồi mới",
+                                $"{comment.authorName} đã phản hồi bình luận của bạn",
+                                postId,
+                                "comment_reply"
+                            );
+                        }
+                    }
+                }
             }
 
             return comment;
