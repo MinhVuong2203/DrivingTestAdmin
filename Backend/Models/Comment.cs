@@ -39,5 +39,13 @@ namespace Backend.Models
         public DateTime updatedAt { get; set; }
         [FirestoreProperty] public string moderationReason { get; set; } = "";
         [FirestoreProperty] public DateTime? moderatedAt { get; set; }
+        [FirestoreProperty]
+        public string parentCommentId { get; set; } = "";
+
+        [FirestoreProperty]
+        public string replyToUserId { get; set; } = "";
+
+        [FirestoreProperty]
+        public string replyToUserName { get; set; } = "";
     }
 }
