@@ -139,6 +139,9 @@ builder.Services.AddHttpClient<ITrafficSignRecognitionService, TrafficSignRecogn
 builder.Services.Configure<WrongQuestionReminderOptions>(
     builder.Configuration.GetSection("WrongQuestionReminder"));
 builder.Services.AddHostedService<WrongQuestionReminderHostedService>();
+builder.Services.AddScoped<INotificationPushService, NotificationPushService>();
+builder.Services.AddScoped<NotificationRepository>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 var app = builder.Build();
 

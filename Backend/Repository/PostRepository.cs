@@ -16,13 +16,77 @@ namespace Backend.Repository
             _moderationService = moderationService;
         }
 
+        private async Task ApplyVipInfo(Post post)
+        {
+            if (string.IsNullOrWhiteSpace(post.authorId))
+            {
+                post.authorIsVip = false;
+                post.authorVipName = "";
+                return;
+            }
+
+            var userSnap = await _db.Collection("users")
+                .Document(post.authorId)
+                .GetSnapshotAsync();
+
+            if (!userSnap.Exists)
+            {
+                post.authorIsVip = false;
+                post.authorVipName = "";
+                return;
+            }
+
+            var data = userSnap.ToDictionary();
+
+            if (!data.ContainsKey("vipUser") ||
+                data["vipUser"] is not Dictionary<string, object> vipUser)
+            {
+                post.authorIsVip = false;
+                post.authorVipName = "";
+                return;
+            }
+
+            var hasVipId = vipUser.ContainsKey("vipId") &&
+                           !string.IsNullOrWhiteSpace(vipUser["vipId"]?.ToString());
+
+            var stillActive = true;
+
+            if (vipUser.ContainsKey("endDate") &&
+                vipUser["endDate"] is Google.Cloud.Firestore.Timestamp endTimestamp)
+            {
+                stillActive = endTimestamp.ToDateTime() > DateTime.UtcNow;
+            }
+
+            post.authorIsVip = hasVipId && stillActive;
+
+            post.authorVipName = post.authorIsVip
+                ? vipUser.ContainsKey("name")
+                    ? vipUser["name"]?.ToString() ?? "VIP"
+                    : "VIP"
+                : "";
+        }
+
         public async Task<List<Post>> GetAll()
         {
-            var snapshot = await _db.Collection("posts").GetSnapshotAsync();
+            var snapshot = await _db.Collection("posts")
+                .OrderByDescending("createdAt")
+                .GetSnapshotAsync();
 
-            return snapshot.Documents
-                .Select(d => d.ConvertTo<Post>())
+            var posts = snapshot.Documents
+                .Select(doc =>
+                {
+                    var post = doc.ConvertTo<Post>();
+                    post.postId = doc.Id;
+                    return post;
+                })
                 .ToList();
+
+            foreach (var post in posts)
+            {
+                await ApplyVipInfo(post);
+            }
+
+            return posts;
         }
 
         public async Task<Post?> GetById(string id)
@@ -53,6 +117,32 @@ namespace Backend.Repository
             post.updatedAt = DateTime.UtcNow;
 
             var postRef = _db.Collection("posts").Document(post.postId);
+
+            var userSnap = await _db.Collection("users")
+                .Document(post.authorId)
+                .GetSnapshotAsync();
+
+            if (userSnap.Exists)
+            {
+                var data = userSnap.ToDictionary();
+
+                if (data.ContainsKey("vipUser") && data["vipUser"] is Dictionary<string, object> vipUser)
+                {
+                    var hasVipId = vipUser.ContainsKey("vipId") &&
+                                   !string.IsNullOrWhiteSpace(vipUser["vipId"]?.ToString());
+
+                    post.authorIsVip = hasVipId;
+
+                    post.authorVipName = vipUser.ContainsKey("name")
+                        ? vipUser["name"]?.ToString() ?? "VIP"
+                        : "VIP";
+                }
+                else
+                {
+                    post.authorIsVip = false;
+                    post.authorVipName = "";
+                }
+            }
 
             await postRef.SetAsync(post);
 
@@ -180,13 +270,16 @@ namespace Backend.Repository
                 query = _db.Collection("posts")
                     .WhereEqualTo("isDeleted", false)
                     .OrderByDescending("createdAt")
-                    .WhereLessThan("createdAt", Timestamp.FromDateTime(lastCreatedAt.Value.ToUniversalTime()))
+                    .WhereLessThan(
+                        "createdAt",
+                        Timestamp.FromDateTime(lastCreatedAt.Value.ToUniversalTime())
+                    )
                     .Limit(limit);
             }
 
             var snapshot = await query.GetSnapshotAsync();
 
-            return snapshot.Documents
+            var posts = snapshot.Documents
                 .Select(doc =>
                 {
                     var post = doc.ConvertTo<Post>();
@@ -194,6 +287,13 @@ namespace Backend.Repository
                     return post;
                 })
                 .ToList();
+
+            foreach (var post in posts)
+            {
+                await ApplyVipInfo(post);
+            }
+
+            return posts;
         }
     }
 }
