@@ -11,7 +11,7 @@ namespace Backend.Service
         {
             "Không hiển thị quảng cáo",
             "Không giới hạn truy cập nhận diện biển báo",
-            "Mở full bộ đề",
+            "Mở full bộ đề và làm lại đề",
             "Gắn sao trên diễn đàn"
         };
 
