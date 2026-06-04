@@ -5,13 +5,9 @@ namespace Backend.Service
 {
     public class WrongQuestionReminderHostedService : BackgroundService
     {
-        private static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(30);
-
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly IOptionsMonitor<WrongQuestionReminderOptions> _options;
         private readonly ILogger<WrongQuestionReminderHostedService> _logger;
-        private string? _lastRunKey;
-        private string? _lastLoggedScheduleKey;
 
         public WrongQuestionReminderHostedService(
             IServiceScopeFactory scopeFactory,
@@ -31,26 +27,12 @@ namespace Backend.Service
 
                 if (!options.Enabled)
                 {
-                    await Task.Delay(PollInterval, stoppingToken);
+                    await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
                     continue;
                 }
 
-                var timeZone = ResolveTimeZone(options.TimeZoneId);
-                var now = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, timeZone);
-                LogScheduleIfChanged(options, now);
-
-                if (!IsScheduledMinute(now, options))
-                {
-                    await Task.Delay(PollInterval, stoppingToken);
-                    continue;
-                }
-
-                var runKey = $"{now:yyyy-MM-dd}:{options.Hour:D2}:{options.Minute:D2}";
-                if (runKey == _lastRunKey)
-                {
-                    await Task.Delay(PollInterval, stoppingToken);
-                    continue;
-                }
+                var delay = GetDelayUntilNextRun(options);
+                await Task.Delay(delay, stoppingToken);
 
                 try
                 {
@@ -65,7 +47,6 @@ namespace Backend.Service
                         result.TokenCount,
                         result.SuccessCount,
                         result.FailureCount);
-                    _lastRunKey = runKey;
                 }
                 catch (OperationCanceledException)
                 {
@@ -76,41 +57,15 @@ namespace Backend.Service
                     _logger.LogError(ex, "Wrong question reminder job failed.");
                 }
 
-                await Task.Delay(PollInterval, stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             }
         }
 
-        private void LogScheduleIfChanged(
-            WrongQuestionReminderOptions options,
-            DateTimeOffset now)
-        {
-            var next = GetNextRun(options, now);
-            var scheduleKey =
-                $"{options.TimeZoneId}:{options.Hour:D2}:{options.Minute:D2}:{next:yyyy-MM-dd HH:mm}";
-
-            if (scheduleKey == _lastLoggedScheduleKey)
-            {
-                return;
-            }
-
-            _lastLoggedScheduleKey = scheduleKey;
-            _logger.LogInformation(
-                "Wrong question reminder scheduler enabled. NextRunLocal={NextRunLocal}, TimeZone={TimeZone}",
-                next,
-                options.TimeZoneId);
-        }
-
-        private static bool IsScheduledMinute(
-            DateTimeOffset now,
+        private static TimeSpan GetDelayUntilNextRun(
             WrongQuestionReminderOptions options)
         {
-            return now.Hour == options.Hour && now.Minute == options.Minute;
-        }
-
-        private static DateTimeOffset GetNextRun(
-            WrongQuestionReminderOptions options,
-            DateTimeOffset now)
-        {
+            var timeZone = ResolveTimeZone(options.TimeZoneId);
+            var now = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, timeZone);
             var next = new DateTimeOffset(
                 now.Year,
                 now.Month,
@@ -125,7 +80,7 @@ namespace Backend.Service
                 next = next.AddDays(1);
             }
 
-            return next;
+            return next.ToUniversalTime() - DateTimeOffset.UtcNow;
         }
 
         private static TimeZoneInfo ResolveTimeZone(string timeZoneId)
