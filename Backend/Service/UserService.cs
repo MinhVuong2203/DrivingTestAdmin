@@ -1,4 +1,5 @@
-﻿using Backend.Repository;
+using Backend.DTO;
+using Backend.Repository;
 using Backend.Service.Interface;
 
 namespace Backend.Service
@@ -26,6 +27,11 @@ namespace Backend.Service
             return _repo.GetAll();
         }
 
+        public Task<UserPageResult> GetPage(UserPageRequest request)
+        {
+            return _repo.GetPage(request);
+        }
+
         public Task<User?> GetById(string id)
         {
             return _repo.GetById(id);
@@ -39,6 +45,11 @@ namespace Backend.Service
         public Task UpdateStatus(string id, string status, int? lockDays)
         {
             return _repo.UpdateStatus(id, status, lockDays);
+        }
+
+        public Task UpdateRole(string id, string role)
+        {
+            return _repo.UpdateRole(id, role);
         }
     }
 }

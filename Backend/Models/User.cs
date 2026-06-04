@@ -31,6 +31,9 @@ public class User
     public string? role { get; set; }
 
     [FirestoreProperty]
+    public bool isImportant { get; set; } = false;
+
+    [FirestoreProperty]
     public string? status { get; set; }
 
     [FirestoreProperty]

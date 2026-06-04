@@ -49,6 +49,7 @@ namespace Backend.Service
             var role = user.TryGetValue("role", out var roleValue)
                 ? roleValue?.ToString()
                 : null;
+            var isImportant = TryReadBool(user, "isImportant");
 
             if (!string.Equals(role, "admin", StringComparison.OrdinalIgnoreCase))
             {
@@ -61,6 +62,7 @@ namespace Backend.Service
             }
 
             httpContext.Items["AdminUid"] = userAuth.Uid;
+            httpContext.Items["AdminIsImportant"] = isImportant;
 
             return new AdminAuthResult(
                 true,
@@ -68,6 +70,29 @@ namespace Backend.Service
                 "OK",
                 userAuth.Uid
             );
+        }
+
+        private static bool TryReadBool(IReadOnlyDictionary<string, object> data, string key)
+        {
+            foreach (var item in data)
+            {
+                if (!string.Equals(item.Key, key, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (item.Value is bool boolValue)
+                {
+                    return boolValue;
+                }
+
+                if (bool.TryParse(item.Value?.ToString(), out var parsedValue))
+                {
+                    return parsedValue;
+                }
+            }
+
+            return false;
         }
     }
 }
