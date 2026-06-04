@@ -1,8 +1,6 @@
-﻿using Backend.Service;
-using Backend.Service.Interface;
-using Backend.Filters;
 using Backend.DTO;
-using Microsoft.AspNetCore.Http;
+using Backend.Filters;
+using Backend.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -20,9 +18,9 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] UserPageRequest request)
         {
-            return Ok(await _service.GetAll());
+            return Ok(await _service.GetPage(request));
         }
 
         [HttpGet("{id}")]
@@ -36,6 +34,11 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(User user)
         {
+            if (IsAdminRole(user.role) && !CurrentAdminIsImportant())
+            {
+                return ForbiddenAdminAction();
+            }
+
             await _service.Create(user);
             return Ok();
         }
@@ -43,6 +46,11 @@ namespace Backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, User user)
         {
+            if (!await CanManageTargetAdmin(id) || (IsAdminRole(user.role) && !CurrentAdminIsImportant()))
+            {
+                return ForbiddenAdminAction();
+            }
+
             await _service.Update(id, user);
             return Ok();
         }
@@ -50,6 +58,11 @@ namespace Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!await CanManageTargetAdmin(id))
+            {
+                return ForbiddenAdminAction();
+            }
+
             await _service.Delete(id);
             return Ok();
         }
@@ -73,10 +86,84 @@ namespace Backend.Controllers
                 return BadRequest("Status must be active or locked.");
             }
 
+            if (!await CanManageTargetAdmin(id))
+            {
+                return ForbiddenAdminAction();
+            }
+
             await _service.UpdateStatus(id, status, request.LockDays);
             return Ok();
         }
 
+        [HttpPatch("{id}/role")]
+        public async Task<IActionResult> UpdateRole(string id, [FromBody] UpdateUserRoleRequest request)
+        {
+            if (!CurrentAdminIsImportant())
+            {
+                return ForbiddenAdminAction();
+            }
 
+            if (string.IsNullOrWhiteSpace(request.Role))
+            {
+                return BadRequest("Role is required.");
+            }
+
+            var role = request.Role.Trim().ToLowerInvariant();
+            if (role is not ("admin" or "user"))
+            {
+                return BadRequest("Role must be admin or user.");
+            }
+
+            var target = await _service.GetById(id);
+            if (target == null)
+            {
+                return NotFound();
+            }
+
+            if (target.uid == CurrentAdminUid() && target.isImportant && role != "admin")
+            {
+                return BadRequest("Root admin cannot demote itself.");
+            }
+
+            await _service.UpdateRole(id, role);
+            return Ok();
+        }
+
+        private async Task<bool> CanManageTargetAdmin(string id)
+        {
+            if (CurrentAdminIsImportant())
+            {
+                return true;
+            }
+
+            var target = await _service.GetById(id);
+            return target == null || !IsAdminRole(target.role);
+        }
+
+        private bool CurrentAdminIsImportant()
+        {
+            return HttpContext.Items["AdminIsImportant"] is bool isImportant && isImportant;
+        }
+
+        private string? CurrentAdminUid()
+        {
+            return HttpContext.Items["AdminUid"]?.ToString();
+        }
+
+        private static bool IsAdminRole(string? role)
+        {
+            return string.Equals(role, "admin", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private ObjectResult ForbiddenAdminAction()
+        {
+            return new ObjectResult(new
+            {
+                message = "Chi admin goc moi duoc thao tac tren admin khac."
+            })
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
+        }
     }
 }

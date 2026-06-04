@@ -12,6 +12,7 @@ public class UserDto
     public string? displayName { get; set; }
     public string? email { get; set; }
     public string? role { get; set; }
+    public bool isImportant { get; set; }
     public string? status { get; set; }
     public DateTime? unlockAt { get; set; }
     public string? photoURL { get; set; }
