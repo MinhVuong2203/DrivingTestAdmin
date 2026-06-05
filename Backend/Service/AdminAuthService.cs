@@ -49,6 +49,9 @@ namespace Backend.Service
             var role = user.TryGetValue("role", out var roleValue)
                 ? roleValue?.ToString()
                 : null;
+            var status = user.TryGetValue("status", out var statusValue)
+                ? statusValue?.ToString()
+                : "active";
             var isImportant = TryReadBool(user, "isImportant");
 
             if (!string.Equals(role, "admin", StringComparison.OrdinalIgnoreCase))
@@ -61,8 +64,19 @@ namespace Backend.Service
                 );
             }
 
+            if (!string.Equals(status ?? "active", "active", StringComparison.OrdinalIgnoreCase))
+            {
+                return new AdminAuthResult(
+                    false,
+                    StatusCodes.Status403Forbidden,
+                    "Tai khoan quan tri dang bi khoa.",
+                    userAuth.Uid
+                );
+            }
+
             httpContext.Items["AdminUid"] = userAuth.Uid;
             httpContext.Items["AdminIsImportant"] = isImportant;
+            httpContext.Items["AdminStatus"] = status ?? "active";
 
             return new AdminAuthResult(
                 true,
