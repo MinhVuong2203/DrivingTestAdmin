@@ -116,33 +116,9 @@ namespace Backend.Repository
             post.createdAt = DateTime.UtcNow;
             post.updatedAt = DateTime.UtcNow;
 
+            await ApplyVipInfo(post);
+
             var postRef = _db.Collection("posts").Document(post.postId);
-
-            var userSnap = await _db.Collection("users")
-                .Document(post.authorId)
-                .GetSnapshotAsync();
-
-            if (userSnap.Exists)
-            {
-                var data = userSnap.ToDictionary();
-
-                if (data.ContainsKey("vipUser") && data["vipUser"] is Dictionary<string, object> vipUser)
-                {
-                    var hasVipId = vipUser.ContainsKey("vipId") &&
-                                   !string.IsNullOrWhiteSpace(vipUser["vipId"]?.ToString());
-
-                    post.authorIsVip = hasVipId;
-
-                    post.authorVipName = vipUser.ContainsKey("name")
-                        ? vipUser["name"]?.ToString() ?? "VIP"
-                        : "VIP";
-                }
-                else
-                {
-                    post.authorIsVip = false;
-                    post.authorVipName = "";
-                }
-            }
 
             await postRef.SetAsync(post);
 
