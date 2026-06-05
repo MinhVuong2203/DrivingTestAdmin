@@ -27,9 +27,12 @@ namespace Backend.Service
             return _repo.GetAll();
         }
 
-        public Task<UserPageResult> GetPage(UserPageRequest request)
+        public Task<UserPageResult> GetPage(
+            UserPageRequest request,
+            string? currentAdminUid,
+            bool currentAdminIsImportant)
         {
-            return _repo.GetPage(request);
+            return _repo.GetPage(request, currentAdminUid, currentAdminIsImportant);
         }
 
         public Task<User?> GetById(string id)

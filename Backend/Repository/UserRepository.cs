@@ -20,80 +20,71 @@ public class UserRepository
             .ToList();
     }
 
-    public async Task<UserPageResult> GetPage(UserPageRequest request)
+    public async Task<UserPageResult> GetPage(
+        UserPageRequest request,
+        string? currentAdminUid,
+        bool currentAdminIsImportant)
     {
         var pageSize = Math.Clamp(request.PageSize, 1, 50);
         var search = request.Search?.Trim();
         var sortField = NormalizeSortField(request.SortField);
         var sortDescending = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
-
-        Query query = _db.Collection("users");
+        var snapshot = await _db.Collection("users").GetSnapshotAsync();
+        var usersQuery = snapshot.Documents
+            .Select(ConvertUser)
+            .Where(user => !ShouldHideRootAdmin(user, currentAdminUid, currentAdminIsImportant));
 
         if (!string.IsNullOrWhiteSpace(request.Status))
         {
-            query = query.WhereEqualTo("status", request.Status.Trim().ToLowerInvariant());
+            var status = request.Status.Trim().ToLowerInvariant();
+            usersQuery = usersQuery.Where(user =>
+                string.Equals(user.status, status, StringComparison.OrdinalIgnoreCase));
         }
 
         if (!string.IsNullOrWhiteSpace(request.Role))
         {
-            query = query.WhereEqualTo("role", request.Role.Trim().ToLowerInvariant());
+            var role = request.Role.Trim().ToLowerInvariant();
+            usersQuery = usersQuery.Where(user =>
+                string.Equals(user.role, role, StringComparison.OrdinalIgnoreCase));
         }
 
         if (request.FromDate.HasValue)
         {
-            query = query.WhereGreaterThanOrEqualTo("createdAt", request.FromDate.Value.ToUniversalTime());
+            var fromDate = request.FromDate.Value.ToUniversalTime();
+            usersQuery = usersQuery.Where(user =>
+                user.createdAt.HasValue && user.createdAt.Value.ToUniversalTime() >= fromDate);
         }
 
         if (request.ToDate.HasValue)
         {
-            query = query.WhereLessThanOrEqualTo("createdAt", request.ToDate.Value.ToUniversalTime());
+            var toDate = request.ToDate.Value.ToUniversalTime();
+            usersQuery = usersQuery.Where(user =>
+                user.createdAt.HasValue && user.createdAt.Value.ToUniversalTime() <= toDate);
         }
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            var searchField = search.Contains('@') ? "email" : "displayName";
-            sortField = searchField;
-            sortDescending = false;
-            query = query
-                .WhereGreaterThanOrEqualTo(searchField, search)
-                .WhereLessThanOrEqualTo(searchField, search + "\uf8ff");
-        }
-        else if ((request.FromDate.HasValue || request.ToDate.HasValue) && sortField != "createdAt")
-        {
-            sortField = "createdAt";
+            usersQuery = usersQuery.Where(user =>
+                ContainsIgnoreCase(user.displayName, search) ||
+                ContainsIgnoreCase(user.email, search));
         }
 
-        query = sortDescending
-            ? query.OrderByDescending(sortField)
-            : query.OrderBy(sortField);
-
-        if (!string.IsNullOrWhiteSpace(request.Cursor))
-        {
-            var cursorSnapshot = await _db.Collection("users")
-                .Document(request.Cursor)
-                .GetSnapshotAsync();
-
-            if (cursorSnapshot.Exists)
-            {
-                query = query.StartAfter(cursorSnapshot);
-            }
-        }
-
-        var snapshot = await query
-            .Limit(pageSize + 1)
-            .GetSnapshotAsync();
-
-        var hasNextPage = snapshot.Documents.Count > pageSize;
-        var pageDocuments = snapshot.Documents.Take(pageSize).ToList();
-        var users = pageDocuments
-            .Select(ConvertUser)
+        var sortedUsers = SortUsers(usersQuery, sortField, sortDescending).ToList();
+        var skip = int.TryParse(request.Cursor, out var parsedCursor) && parsedCursor > 0
+            ? parsedCursor
+            : 0;
+        var pageUsers = sortedUsers
+            .Skip(skip)
+            .Take(pageSize)
             .ToList();
+        var nextOffset = skip + pageUsers.Count;
+        var hasNextPage = nextOffset < sortedUsers.Count;
 
         return new UserPageResult
         {
-            Items = users,
+            Items = pageUsers,
             PageSize = pageSize,
-            NextCursor = hasNextPage && pageDocuments.Count > 0 ? pageDocuments[^1].Id : null,
+            NextCursor = hasNextPage ? nextOffset.ToString() : null,
             HasNextPage = hasNextPage
         };
     }
@@ -188,25 +179,77 @@ public class UserRepository
 
     private static User ConvertUser(DocumentSnapshot document)
     {
-        var dict = document.ToDictionary();
-
-        Console.WriteLine($"DOC ID: {document.Id}");
-
-        if (dict.TryGetValue("isImportant", out var rawIsImportant))
-        {
-            Console.WriteLine($"RAW isImportant = {rawIsImportant}, Type = {rawIsImportant?.GetType()}");
-        }
-        else
-        {
-            Console.WriteLine("Field isImportant not found");
-        }
-
         var user = document.ConvertTo<User>();
-
-        Console.WriteLine($"MAPPED isImportant = {user.isImportant}");
-
         user.uid = document.Id;
         return user;
+    }
+
+    private static bool ShouldHideRootAdmin(
+        User user,
+        string? currentAdminUid,
+        bool currentAdminIsImportant)
+    {
+        if (user.isImportant)
+        {
+            return true;
+        }
+
+        return currentAdminIsImportant &&
+            !string.IsNullOrWhiteSpace(currentAdminUid) &&
+            string.Equals(user.uid, currentAdminUid, StringComparison.Ordinal);
+    }
+
+    private static bool ContainsIgnoreCase(string? value, string search)
+    {
+        return !string.IsNullOrWhiteSpace(value) &&
+            value.Contains(search, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static IEnumerable<User> SortUsers(
+        IEnumerable<User> users,
+        string sortField,
+        bool sortDescending)
+    {
+        return sortField switch
+        {
+            "displayName" => SortByString(users, user => user.displayName, sortDescending),
+            "email" => SortByString(users, user => user.email, sortDescending),
+            "status" => SortByString(users, user => user.status, sortDescending),
+            "role" => SortByString(users, user => user.role, sortDescending),
+            _ => SortByDate(users, user => user.createdAt, sortDescending),
+        };
+    }
+
+    private static IEnumerable<User> SortByString(
+        IEnumerable<User> users,
+        Func<User, string?> selector,
+        bool descending)
+    {
+        return descending
+            ? users
+                .OrderBy(user => string.IsNullOrWhiteSpace(selector(user)))
+                .ThenByDescending(user => selector(user), StringComparer.OrdinalIgnoreCase)
+                .ThenBy(user => user.uid, StringComparer.Ordinal)
+            : users
+                .OrderBy(user => string.IsNullOrWhiteSpace(selector(user)))
+                .ThenBy(user => selector(user), StringComparer.OrdinalIgnoreCase)
+                .ThenBy(user => user.uid, StringComparer.Ordinal);
+    }
+
+    private static IEnumerable<User> SortByDate(
+        IEnumerable<User> users,
+        Func<User, DateTime?> selector,
+        bool descending)
+    {
+        return descending
+            ? users
+                .OrderBy(user => !selector(user).HasValue)
+                .ThenByDescending(user => selector(user))
+                .ThenBy(user => user.uid, StringComparer.Ordinal)
+            : users
+                .OrderBy(user => !selector(user).HasValue)
+                .ThenBy(user => selector(user))
+                .ThenBy(user => user.uid, StringComparer.Ordinal);
     }
     
     private static bool TryReadBool(

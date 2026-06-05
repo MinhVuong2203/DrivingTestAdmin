@@ -20,7 +20,10 @@ namespace Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] UserPageRequest request)
         {
-            return Ok(await _service.GetPage(request));
+            return Ok(await _service.GetPage(
+                request,
+                CurrentAdminUid(),
+                CurrentAdminIsImportant()));
         }
 
         [HttpGet("{id}")]

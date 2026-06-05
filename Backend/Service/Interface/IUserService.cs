@@ -6,7 +6,10 @@ namespace Backend.Service.Interface
     {
         public Task<List<User>> GetAll();
 
-        public Task<UserPageResult> GetPage(UserPageRequest request);
+        public Task<UserPageResult> GetPage(
+            UserPageRequest request,
+            string? currentAdminUid,
+            bool currentAdminIsImportant);
 
         public Task<User?> GetById(string id);
 
