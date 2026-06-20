@@ -17,6 +17,9 @@ namespace Backend.Repository
 
         public async Task<List<DrivingCenter>> GetAll()
         {
+            Console.WriteLine(
+                "[DrivingCenters][FirestoreRead] GetAll doc Collection(driving_centers).OrderByDescending(rating)");
+
             var snapshot = await _db.Collection("driving_centers")
                 .OrderByDescending("rating")
                 .GetSnapshotAsync();
@@ -91,6 +94,9 @@ namespace Backend.Repository
 
             try
             {
+                Console.WriteLine(
+                    $"[DrivingCenters][FirestoreRead] TrySearchByCityPaged doc Collection(driving_centers).WhereEqualTo(city={cityKeyword}).Offset({skip}).Limit({pageSize + 1})");
+
                 var snapshot = await _db.Collection("driving_centers")
                     .WhereEqualTo("city", cityKeyword)
                     .OrderByDescending("rating")
@@ -131,6 +137,9 @@ namespace Backend.Repository
 
         public async Task<DrivingCenter?> GetById(string id)
         {
+            Console.WriteLine(
+                $"[DrivingCenters][FirestoreRead] GetById doc Collection(driving_centers).Document({id})");
+
             var docRef = _db.Collection("driving_centers").Document(id);
             var snapshot = await docRef.GetSnapshotAsync();
 

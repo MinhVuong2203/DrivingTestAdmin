@@ -2,6 +2,8 @@
 using Backend.Models;
 using Backend.Repository;
 using Backend.Service.Interface;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 
 namespace Backend.Service
@@ -29,6 +31,30 @@ namespace Backend.Service
                 throw new ArgumentException("Query không được để trống.");
             }
 
+            var searchResult = await SearchLocalBusinessDataPaged(query, page: 1, pageSize: 50);
+            int savedCount = await _drivingCenterRepository.AddMany(searchResult.data);
+            Console.WriteLine($"Đã insert/update {savedCount} trung tâm vào Firestore.");
+
+            return new ImportDrivingCenterResult
+            {
+                message = "Import dữ liệu trung tâm đào tạo lái xe thành công.",
+                total_from_api = searchResult.data.Count,
+                saved_count = savedCount
+            };
+        }
+
+        public async Task<DrivingCenterSearchResult> SearchLocalBusinessDataPaged(string query, int page, int pageSize)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                throw new ArgumentException("Query không được để trống.");
+            }
+
+            page = Math.Max(page, 1);
+            pageSize = Math.Clamp(pageSize, 1, 50);
+            var offset = (page - 1) * pageSize;
+            var searchQuery = BuildDrivingCenterSearchQuery(query);
+
             string host = _configuration["RapidApi:LocalBusinessDataHost"] ?? "";
             string key = _configuration["RapidApi:LocalBusinessDataKey"] ?? "";
 
@@ -37,9 +63,12 @@ namespace Backend.Service
                 throw new Exception("Thiếu cấu hình RapidAPI host hoặc key.");
             }
 
-            string encodedQuery = Uri.EscapeDataString(query.Trim());
+            string encodedQuery = Uri.EscapeDataString(searchQuery);
 
-            string url = $"https://local-business-data.p.rapidapi.com/search?query={encodedQuery}";
+            string url = $"https://{host}/search?query={encodedQuery}&limit={pageSize}&offset={offset}";
+
+            Console.WriteLine(
+                $"[DrivingCenters] Goi RapidAPI | selected_province={query.Trim()} | search_query={searchQuery} | page={page} | page_size={pageSize} | offset={offset}");
 
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
@@ -65,20 +94,42 @@ namespace Backend.Service
 
             List<DrivingCenter> centers = new();
 
-            foreach (JsonElement item in dataElement.EnumerateArray())
+            foreach (JsonElement item in dataElement.EnumerateArray().Take(pageSize))
             {
-                var center = MapToDrivingCenter(item, query);
+                var center = MapToDrivingCenter(item, searchQuery);
                 centers.Add(center);
             }
 
-            int savedCount = await _drivingCenterRepository.AddMany(centers);
-            Console.WriteLine($"Đã insert/update {savedCount} trung tâm vào Firestore.");
-            return new ImportDrivingCenterResult
+            Console.WriteLine(
+                $"[DrivingCenters] RapidAPI tra ve {centers.Count} DrivingCenter | selected_province={query.Trim()} | centers={string.Join(" | ", centers.Select(c => c.name))}");
+
+            return new DrivingCenterSearchResult
             {
-                message = "Import dữ liệu trung tâm đào tạo lái xe thành công.",
-                total_from_api = centers.Count,
-                saved_count = savedCount
+                message = "Tìm kiếm trung tâm từ RapidAPI thành công.",
+                total = offset + centers.Count + (centers.Count >= pageSize ? 1 : 0),
+                page = page,
+                page_size = pageSize,
+                has_more = centers.Count >= pageSize,
+                data = centers
             };
+        }
+
+        private string BuildDrivingCenterSearchQuery(string province)
+        {
+            var trimmed = province.Trim();
+            var normalized = trimmed.ToLowerInvariant();
+
+            if (normalized.Contains("trung tâm")
+                || normalized.Contains("trung tam")
+                || normalized.Contains("đào tạo")
+                || normalized.Contains("dao tao")
+                || normalized.Contains("lái xe")
+                || normalized.Contains("lai xe"))
+            {
+                return trimmed;
+            }
+
+            return $"trung tâm đào tạo lái xe {trimmed}";
         }
 
         private DrivingCenter MapToDrivingCenter(JsonElement json, string query)
@@ -99,6 +150,7 @@ namespace Backend.Service
 
             return new DrivingCenter
             {
+                id = BuildStableId(json),
                 name = GetString(json, "name"),
                 phone_number = GetString(json, "phone_number"),
                 photo_url = photoUrl,
@@ -114,6 +166,26 @@ namespace Backend.Service
                 created_at = DateTime.UtcNow,
                 updated_at = DateTime.UtcNow
             };
+        }
+
+        private string BuildStableId(JsonElement json)
+        {
+            var source = FirstNonEmpty(
+                GetString(json, "business_id"),
+                GetString(json, "google_id"),
+                GetString(json, "place_id"),
+                $"{GetString(json, "name")}|{GetString(json, "address")}|{GetString(json, "phone_number")}");
+
+            if (string.IsNullOrWhiteSpace(source))
+                source = Guid.NewGuid().ToString("N");
+
+            var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(source));
+            return Convert.ToHexString(bytes).ToLowerInvariant();
+        }
+
+        private string FirstNonEmpty(params string[] values)
+        {
+            return values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value)) ?? "";
         }
 
         private string GetString(JsonElement json, string propertyName)

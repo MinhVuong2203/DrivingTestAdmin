@@ -49,7 +49,7 @@ namespace Backend.Controllers
             }
         }
 
-  
+
         // API Flutter gọi để tìm kiếm trung tâm
         // Ví dụ: /api/DrivingCenters/search?keyword=thu duc
         [HttpGet("search")]
@@ -58,8 +58,44 @@ namespace Backend.Controllers
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10)
         {
+            Console.WriteLine(
+                $"[DrivingCenters][FirestoreFallback] Endpoint /api/DrivingCenters/search duoc goi | keyword={keyword} | page={page} | pageSize={pageSize}");
+
             var result = await _drivingCenterService.SearchPaged(keyword, page, pageSize);
             return Ok(result);
+        }
+
+        [HttpGet("rapid-search")]
+        public async Task<IActionResult> RapidSearch(
+            [FromQuery] string? keyword,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 5)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(keyword))
+                    return BadRequest(new { message = "Keyword không được để trống." });
+
+                Console.WriteLine(
+                    $"[DrivingCenters][RapidAPI] Endpoint /api/DrivingCenters/rapid-search duoc goi | keyword={keyword} | page={page} | pageSize={pageSize}");
+
+                var result = await _drivingCenterImportService
+                    .SearchLocalBusinessDataPaged(keyword, page, pageSize);
+
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(502, new
+                {
+                    message = "Không thể lấy dữ liệu trung tâm từ RapidAPI.",
+                    error = ex.Message
+                });
+            }
         }
 
         // API Flutter gọi để xem chi tiết 1 trung tâm
