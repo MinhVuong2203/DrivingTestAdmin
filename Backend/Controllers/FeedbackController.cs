@@ -62,6 +62,44 @@ namespace Backend.Controllers
                     message = spamWarning
                 });
             }
+            [FromBody] FeedbackSubmitRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Content))
+            {
+                return BadRequest(new
+                {
+                    message = "Content is required."
+                });
+            }
+
+            var uid = HttpContext.Items["UserUid"]?.ToString();
+            if (string.IsNullOrWhiteSpace(uid))
+            {
+                return Unauthorized(new
+                {
+                    message = "Không có quyền"
+                });
+            }
+
+            var content = request.Content.Trim();
+            var feedbackRef = _firestoreDb.Collection("feedbacks").Document();
+
+            await feedbackRef.SetAsync(
+                new Dictionary<string, object?>
+                {
+                    { "userId", uid },
+                    { "email", request.Email ?? "" },
+                    { "displayName", request.DisplayName ?? "" },
+                    { "content", content },
+                    { "timestamp", FieldValue.ServerTimestamp },
+                    { "platform", string.IsNullOrWhiteSpace(request.Platform) ? "Android" : request.Platform },
+                    { "status", "open" },
+                    { "replyText", "" },
+                    { "replySource", "" },
+                    { "spamRisk", false },
+                    { "replies", new List<object>() }
+                }
+            );
 
             var aiResult = await _feedbackAiService.GenerateReplyAsync(
                 new FeedbackAiReplyRequest
@@ -100,6 +138,34 @@ namespace Backend.Controllers
                 ["spamReason"] = aiResult.SpamReason ?? "",
                 ["replies"] = new[] { replyEntry }
             }, cancellationToken: cancellationToken);
+                }
+            );
+
+            var now = Timestamp.GetCurrentTimestamp();
+            var replyEntry = new Dictionary<string, object>
+            {
+                { "id", Guid.NewGuid().ToString("N") },
+                { "content", aiResult.ReplyText },
+                { "authorName", "Trợ lý AI" },
+                { "source", "auto_ai" },
+                { "createdAt", now }
+            };
+
+            await feedbackRef.UpdateAsync(
+                new Dictionary<string, object>
+                {
+                    { "status", aiResult.SpamRisk ? "spam" : "replied" },
+                    { "replyText", aiResult.ReplyText },
+                    { "replyAuthor", "Trợ lý AI" },
+                    { "replySource", "auto_ai" },
+                    { "repliedAt", now },
+                    { "autoRepliedAt", now },
+                    { "spamRisk", aiResult.SpamRisk },
+                    { "spamReason", aiResult.SpamReason ?? "" },
+                    { "replies", FieldValue.ArrayUnion(replyEntry) },
+                    { "updatedAt", FieldValue.ServerTimestamp }
+                }
+            );
 
             return Ok(new
             {
@@ -120,6 +186,26 @@ namespace Backend.Controllers
 
             var feedbacks = await LoadUserFeedbacksAsync(uid);
             return Ok(feedbacks);
+            var uid = HttpContext.Items["UserUid"]?.ToString();
+            if (string.IsNullOrWhiteSpace(uid))
+            {
+                return Unauthorized(new
+                {
+                    message = "Không có quyền"
+                });
+            }
+
+            var snapshot = await _firestoreDb
+                .Collection("feedbacks")
+                .WhereEqualTo("userId", uid)
+                .OrderByDescending("timestamp")
+                .GetSnapshotAsync();
+
+            var result = snapshot.Documents
+                .Select(MapFeedbackItem)
+                .ToList();
+
+            return Ok(result);
         }
 
         [AdminAuthorize]
@@ -134,6 +220,17 @@ namespace Backend.Controllers
             }
 
             var result = await _feedbackAiService.GenerateReplyAsync(request, cancellationToken);
+            [FromBody] FeedbackAiReplyRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Content))
+            {
+                return BadRequest(new
+                {
+                    message = "Content is required."
+                });
+            }
+
+            var result = await _feedbackAiService.GenerateReplyAsync(request);
             return Ok(result);
         }
 
@@ -159,6 +256,33 @@ namespace Backend.Controllers
             var data = snapshot.ToDictionary();
             var currentUid = CurrentUserUid();
             var feedbackUserId = ReadString(data, "userId");
+            [FromBody] FeedbackAiReplyRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Content))
+            {
+                return BadRequest(new
+                {
+                    message = "Content is required."
+                });
+            }
+
+            var feedbackRef = FeedbackDocument(feedbackId);
+            var snapshot = await feedbackRef.GetSnapshotAsync();
+
+            if (!snapshot.Exists)
+            {
+                return NotFound(new
+                {
+                    message = "Feedback not found."
+                });
+            }
+
+            var currentUid = HttpContext.Items["UserUid"]?.ToString();
+            var data = snapshot.ToDictionary();
+            var feedbackUserId = data.TryGetValue("userId", out var userIdValue)
+                ? userIdValue?.ToString()
+                : null;
+
             if (!string.IsNullOrWhiteSpace(feedbackUserId)
                 && !string.Equals(feedbackUserId, currentUid, StringComparison.Ordinal))
             {
@@ -186,6 +310,32 @@ namespace Backend.Controllers
                 ["replies"] = FieldValue.ArrayUnion(replyEntry),
                 ["updatedAt"] = FieldValue.ServerTimestamp
             }, cancellationToken: cancellationToken);
+            var result = await _feedbackAiService.GenerateReplyAsync(request);
+            var now = Timestamp.GetCurrentTimestamp();
+            var replyEntry = new Dictionary<string, object>
+            {
+                { "id", Guid.NewGuid().ToString("N") },
+                { "content", result.ReplyText },
+                { "authorName", "Trợ lý AI" },
+                { "source", "auto_ai" },
+                { "createdAt", now }
+            };
+
+            await feedbackRef.UpdateAsync(
+                new Dictionary<string, object>
+                {
+                    { "status", result.SpamRisk ? "spam" : "replied" },
+                    { "replyText", result.ReplyText },
+                    { "replyAuthor", "Trợ lý AI" },
+                    { "replySource", "auto_ai" },
+                    { "repliedAt", now },
+                    { "autoRepliedAt", now },
+                    { "spamRisk", result.SpamRisk },
+                    { "spamReason", result.SpamReason ?? "" },
+                    { "replies", FieldValue.ArrayUnion(replyEntry) },
+                    { "updatedAt", FieldValue.ServerTimestamp }
+                }
+            );
 
             return Ok(result);
         }
@@ -220,6 +370,25 @@ namespace Backend.Controllers
             }, cancellationToken: cancellationToken);
 
             return Ok(result);
+            [FromBody] FeedbackAiReplyResponse request)
+        {
+            await FeedbackDocument(feedbackId).UpdateAsync(
+                new Dictionary<string, object>
+                {
+                    { "aiSuggestedReply", request.ReplyText ?? "" },
+                    { "aiSpamRisk", request.SpamRisk },
+                    { "aiSpamReason", request.SpamReason ?? "" },
+                    { "spamRisk", request.SpamRisk },
+                    { "spamReason", request.SpamReason ?? "" },
+                    { "aiGeneratedAt", FieldValue.ServerTimestamp },
+                    { "updatedAt", FieldValue.ServerTimestamp }
+                }
+            );
+
+            return Ok(new
+            {
+                message = "Đã lưu gợi ý AI."
+            });
         }
 
         [AdminAuthorize]
@@ -266,6 +435,44 @@ namespace Backend.Controllers
             {
                 message = "Đã lưu phản hồi.",
                 reply = replyEntry
+        public async Task<IActionResult> SaveReply(
+            string feedbackId,
+            [FromBody] FeedbackReplyRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.ReplyText))
+            {
+                return BadRequest(new
+                {
+                    message = "ReplyText is required."
+                });
+            }
+
+            var now = Timestamp.GetCurrentTimestamp();
+            var replyEntry = new Dictionary<string, object>
+            {
+                { "id", Guid.NewGuid().ToString("N") },
+                { "content", request.ReplyText.Trim() },
+                { "authorName", request.ReplyAuthor },
+                { "source", string.IsNullOrWhiteSpace(request.Source) ? "manual" : request.Source },
+                { "createdAt", now }
+            };
+
+            await FeedbackDocument(feedbackId).UpdateAsync(
+                new Dictionary<string, object>
+                {
+                    { "status", "replied" },
+                    { "replyText", request.ReplyText.Trim() },
+                    { "replyAuthor", request.ReplyAuthor },
+                    { "replySource", string.IsNullOrWhiteSpace(request.Source) ? "manual" : request.Source },
+                    { "repliedAt", now },
+                    { "replies", FieldValue.ArrayUnion(replyEntry) },
+                    { "updatedAt", FieldValue.ServerTimestamp }
+                }
+            );
+
+            return Ok(new
+            {
+                message = "Đã lưu câu trả lời."
             });
         }
 
@@ -294,6 +501,17 @@ namespace Backend.Controllers
                 ["spamReviewedAt"] = FieldValue.ServerTimestamp,
                 ["updatedAt"] = FieldValue.ServerTimestamp
             }, cancellationToken: cancellationToken);
+            [FromBody] FeedbackSpamRequest request)
+        {
+            await FeedbackDocument(feedbackId).UpdateAsync(
+                new Dictionary<string, object>
+                {
+                    { "status", request.IsSpam ? "spam" : request.StatusAfter },
+                    { "spamRisk", request.IsSpam },
+                    { "spamReason", request.IsSpam ? "Admin đánh dấu nội dung có dấu hiệu spam." : "" },
+                    { "updatedAt", FieldValue.ServerTimestamp }
+                }
+            );
 
             return Ok(new
             {
@@ -387,11 +605,14 @@ namespace Backend.Controllers
 
             if (replies.Count == 0
                 && !string.IsNullOrWhiteSpace(ReadString(data, "replyText")))
+                && data.TryGetValue("replyText", out var replyTextValue)
+                && !string.IsNullOrWhiteSpace(replyTextValue?.ToString()))
             {
                 replies.Add(new FeedbackReplyDto
                 {
                     Id = "legacy",
                     Content = ReadString(data, "replyText"),
+                    Content = replyTextValue?.ToString() ?? "",
                     AuthorName = ReadString(data, "replyAuthor"),
                     Source = ReadString(data, "replySource"),
                     CreatedAt = ReadTimestamp(data, "repliedAt")
@@ -424,6 +645,14 @@ namespace Backend.Controllers
                 AiGeneratedAt = ReadTimestamp(data, "aiGeneratedAt"),
                 SpamRisk = ReadBool(data, "spamRisk"),
                 SpamReason = ReadString(data, "spamReason")
+            return new FeedbackItemDto
+            {
+                FeedbackId = document.Id,
+                Content = ReadString(data, "content"),
+                Platform = ReadString(data, "platform"),
+                Status = ReadString(data, "status") == "" ? "open" : ReadString(data, "status"),
+                Timestamp = ReadTimestamp(data, "timestamp"),
+                Replies = replies
             };
         }
 
@@ -482,6 +711,9 @@ namespace Backend.Controllers
                 value.Trim().ToLowerInvariant().Split(
                     (char[]?)null,
                     StringSplitOptions.RemoveEmptyEntries));
+            return data.TryGetValue(key, out var value) && value is Timestamp timestamp
+                ? timestamp.ToDateTime()
+                : null;
         }
     }
 }

@@ -7,5 +7,6 @@ namespace Backend.Service.Interface
         Task<FeedbackAiReplyResponse> GenerateReplyAsync(
             FeedbackAiReplyRequest request,
             CancellationToken cancellationToken = default);
+            FeedbackAiReplyRequest request);
     }
 }
