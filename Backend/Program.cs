@@ -137,6 +137,7 @@ builder.Services.AddHttpClient<IFeedbackAiService, FeedbackAiService>();
 builder.Services.AddScoped<ModerationRepository>();
 builder.Services.AddScoped<IModerationService, ModerationService>();
 builder.Services.AddHttpClient<IAiModerationService, AiModerationService>();
+builder.Services.AddHttpClient<IFeedbackAiService, FeedbackAiService>();
 builder.Services.AddHttpClient<ITrafficSignRecognitionService, TrafficSignRecognitionService>();
 builder.Services.Configure<WrongQuestionReminderOptions>(
     builder.Configuration.GetSection("WrongQuestionReminder"));
