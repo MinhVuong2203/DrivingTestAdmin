@@ -11,9 +11,6 @@ namespace Backend.Service
         private readonly IConfiguration _configuration;
 
         public FeedbackAiService(HttpClient httpClient, IConfiguration configuration)
-        public FeedbackAiService(
-            HttpClient httpClient,
-            IConfiguration configuration)
         {
             _httpClient = httpClient;
             _configuration = configuration;
@@ -24,22 +21,7 @@ namespace Backend.Service
             CancellationToken cancellationToken = default)
         {
             var content = request.Content?.Trim() ?? "";
-            var localSpamReason = LocalSpamReason(content);
-            var fallback = BuildFallbackReply(request, localSpamReason);
-            FeedbackAiReplyRequest request)
-        {
-            var content = request.Content?.Trim() ?? "";
-
-            if (string.IsNullOrWhiteSpace(content))
-            {
-                return new FeedbackAiReplyResponse
-                {
-                    ReplyText = "Cảm ơn bạn đã liên hệ. Bạn vui lòng gửi thêm nội dung chi tiết để đội ngũ hỗ trợ kiểm tra tốt hơn.",
-                    SpamRisk = false,
-                    Source = "fallback"
-                };
-            }
-
+            var fallback = BuildFallbackReply(request, LocalSpamReason(content));
             var apiKey = _configuration["Gemini:ApiKey"];
             var model = _configuration["Gemini:Model"] ?? "gemini-2.5-flash";
 
@@ -48,17 +30,6 @@ namespace Backend.Service
                 return fallback;
             }
 
-            var prompt = BuildPrompt(request);
-            var payload = new
-            if (string.IsNullOrWhiteSpace(apiKey))
-            {
-                return BuildFallbackResponse(content, "fallback_no_api_key");
-            }
-
-            var url =
-                $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
-
-            var prompt = BuildPrompt(request);
             var body = new
             {
                 contents = new[]
@@ -67,14 +38,13 @@ namespace Backend.Service
                     {
                         parts = new[]
                         {
-                            new { text = prompt }
+                            new { text = BuildPrompt(request) }
                         }
                     }
                 },
                 generationConfig = new
                 {
                     temperature = 0.35,
-                    temperature = 0.25,
                     responseMimeType = "application/json"
                 }
             };
@@ -83,10 +53,12 @@ namespace Backend.Service
             {
                 var url =
                     $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
-                var json = JsonSerializer.Serialize(payload);
-                using var response = await _httpClient.PostAsync(
+                var response = await _httpClient.PostAsync(
                     url,
-                    new StringContent(json, Encoding.UTF8, "application/json"),
+                    new StringContent(
+                        JsonSerializer.Serialize(body),
+                        Encoding.UTF8,
+                        "application/json"),
                     cancellationToken);
 
                 if (!response.IsSuccessStatusCode)
@@ -95,13 +67,13 @@ namespace Backend.Service
                 }
 
                 var responseText = await response.Content.ReadAsStringAsync(cancellationToken);
-                var candidateText = ExtractCandidateText(responseText);
-                if (string.IsNullOrWhiteSpace(candidateText))
+                var aiText = ExtractAiText(responseText);
+                if (string.IsNullOrWhiteSpace(aiText))
                 {
                     return fallback;
                 }
 
-                using var resultDoc = JsonDocument.Parse(candidateText);
+                using var resultDoc = JsonDocument.Parse(aiText);
                 var root = resultDoc.RootElement;
                 var replyText = ReadString(root, "replyText");
                 if (string.IsNullOrWhiteSpace(replyText))
@@ -117,83 +89,42 @@ namespace Backend.Service
                     ReplyText = replyText.Trim(),
                     SpamRisk = fallback.SpamRisk || aiSpamRisk,
                     SpamReason = fallback.SpamRisk ? fallback.SpamReason : aiSpamReason,
-                var response = await _httpClient.PostAsync(
-                    url,
-                    new StringContent(
-                        JsonSerializer.Serialize(body),
-                        Encoding.UTF8,
-                        "application/json")
-                );
-
-                var responseText = await response.Content.ReadAsStringAsync();
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    return BuildFallbackResponse(
-                        content,
-                        $"fallback_ai_{(int)response.StatusCode}");
-                }
-
-                using var doc = JsonDocument.Parse(responseText);
-                var text = doc.RootElement
-                    .GetProperty("candidates")[0]
-                    .GetProperty("content")
-                    .GetProperty("parts")[0]
-                    .GetProperty("text")
-                    .GetString();
-
-                if (string.IsNullOrWhiteSpace(text))
-                {
-                    return BuildFallbackResponse(content, "fallback_empty_ai");
-                }
-
-                using var resultDoc = JsonDocument.Parse(text);
-                var root = resultDoc.RootElement;
-
-                return new FeedbackAiReplyResponse
-                {
-                    ReplyText = ReadString(root, "replyText"),
-                    SpamRisk = root.TryGetProperty("spamRisk", out var spamRisk)
-                        && spamRisk.GetBoolean(),
-                    SpamReason = ReadString(root, "spamReason"),
                     Source = "ai"
                 };
             }
             catch
             {
                 return fallback;
-                return BuildFallbackResponse(content, "fallback_exception");
             }
         }
 
         private static string BuildPrompt(FeedbackAiReplyRequest request)
         {
             var displayName = string.IsNullOrWhiteSpace(request.DisplayName)
-                ? "người dùng"
+                ? "nguoi dung"
                 : request.DisplayName.Trim();
             var platform = string.IsNullOrWhiteSpace(request.Platform)
-                ? "không rõ"
+                ? "khong ro"
                 : request.Platform.Trim();
+            var content = request.Content?.Trim() ?? "";
 
             return $$"""
-                Bạn là trợ lý chăm sóc người dùng cho app ôn thi lái xe "Kiến thức lái xe 600".
+                Ban la tro ly cham soc nguoi dung cho app on thi lai xe "Kien thuc lai xe 600".
+                Hay tra loi bang tieng Viet co dau, lich su, ngan gon va tu nhien.
+                Neu nguoi dung bao loi hoac app cham, hay xin loi, ghi nhan va noi doi ngu se kiem tra.
+                Neu noi dung co dau hieu spam, quang cao, xuc pham hoac vo nghia, danh dau spamRisk = true.
 
-                Hãy trả lời phản hồi của người dùng bằng tiếng Việt, giọng lịch sự, ngắn gọn, tự nhiên.
-                Nếu người dùng báo lỗi hoặc app chậm, hãy xin lỗi, ghi nhận, nói đội ngũ sẽ kiểm tra và gợi ý thử cập nhật app/khởi động lại nếu phù hợp.
-                Nếu người dùng khen, hãy cảm ơn.
-                Nếu nội dung có dấu hiệu spam, xúc phạm, vô nghĩa hoặc quảng cáo, vẫn trả lời lịch sự nhưng đánh dấu spamRisk = true.
-
-                Chỉ trả về JSON đúng format:
+                Chi tra ve JSON dung format:
                 {
-                  "replyText": "câu trả lời gửi cho người dùng",
+                  "replyText": "cau tra loi gui cho nguoi dung",
                   "spamRisk": true/false,
-                  "spamReason": "lý do ngắn nếu có"
+                  "spamReason": "ly do ngan neu co"
                 }
 
-                Tên người dùng: {{displayName}}
-                Nền tảng: {{platform}}
-                Nội dung phản hồi:
-                {{request.Content?.Trim() ?? ""}}
+                Ten nguoi dung: {{displayName}}
+                Nen tang: {{platform}}
+                Noi dung phan hoi:
+                {{content}}
                 """;
         }
 
@@ -202,13 +133,13 @@ namespace Backend.Service
             string spamReason)
         {
             var name = string.IsNullOrWhiteSpace(request.DisplayName)
-                ? "bạn"
+                ? "ban"
                 : request.DisplayName.Trim();
 
             return new FeedbackAiReplyResponse
             {
                 ReplyText =
-                    $"Cảm ơn {name} đã gửi góp ý. Đội ngũ quản trị đã ghi nhận phản hồi này và sẽ kiểm tra để cải thiện ứng dụng trong thời gian sớm nhất.",
+                    $"Cam on {name} da gui gop y. Doi ngu quan tri da ghi nhan phan hoi nay va se kiem tra de cai thien ung dung trong thoi gian som nhat.",
                 SpamRisk = !string.IsNullOrWhiteSpace(spamReason),
                 SpamReason = spamReason,
                 Source = "fallback"
@@ -220,29 +151,27 @@ namespace Backend.Service
             var normalized = Normalize(content);
             if (normalized.Length < 10)
             {
-                return "Nội dung quá ngắn.";
+                return "Noi dung qua ngan.";
             }
 
-            var urlCount = normalized.Split("http", StringSplitOptions.None).Length - 1;
-            if (urlCount >= 2 || normalized.Contains("bit.ly") || normalized.Contains("t.me/"))
+            if (normalized.Contains("bit.ly") || normalized.Contains("t.me/"))
             {
-                return "Nội dung có dấu hiệu quảng cáo hoặc spam liên kết.";
+                return "Noi dung co dau hieu spam lien ket.";
             }
 
             var distinctChars = normalized.Where(char.IsLetterOrDigit).Distinct().Count();
             if (normalized.Length >= 20 && distinctChars <= 3)
             {
-                return "Nội dung lặp ký tự bất thường.";
+                return "Noi dung lap ky tu bat thuong.";
             }
 
             return "";
         }
 
-        private static string ExtractCandidateText(string responseText)
+        private static string ExtractAiText(string responseText)
         {
             using var doc = JsonDocument.Parse(responseText);
-            var root = doc.RootElement;
-            return root
+            return doc.RootElement
                 .GetProperty("candidates")[0]
                 .GetProperty("content")
                 .GetProperty("parts")[0]
@@ -268,67 +197,8 @@ namespace Backend.Service
             return string.Join(
                 " ",
                 value.Trim().ToLowerInvariant().Split(
-                    ' ',
+                    (char[]?)null,
                     StringSplitOptions.RemoveEmptyEntries));
-        }
-            return $$"""
-                Bạn là trợ lý chăm sóc người dùng cho ứng dụng ôn thi GPLX.
-
-                Nhiệm vụ:
-                - Đọc phản hồi của user.
-                - Soạn câu trả lời tiếng Việt lịch sự, ngắn gọn, có hướng xử lý cụ thể.
-                - Không hứa chắc thời gian sửa lỗi.
-                - Nếu nội dung có dấu hiệu spam, quảng cáo, lặp vô nghĩa, link lừa đảo hoặc chửi bậy, đặt spamRisk=true và trả lời trung tính.
-
-                Chỉ trả về JSON đúng format:
-                {
-                  "replyText": "nội dung trả lời cho user",
-                  "spamRisk": true/false,
-                  "spamReason": "lý do ngắn gọn, để rỗng nếu không nghi spam"
-                }
-
-                Thông tin user:
-                - Tên: {{request.DisplayName}}
-                - Email: {{request.Email}}
-                - Nền tảng: {{request.Platform}}
-
-                Nội dung phản hồi:
-                {{request.Content}}
-                """;
-        }
-
-        private static FeedbackAiReplyResponse BuildFallbackResponse(
-            string content,
-            string source)
-        {
-            var normalized = content.ToLowerInvariant();
-            var spamRisk =
-                normalized.Length < 8
-                || normalized.Contains("http://")
-                || normalized.Contains("https://")
-                || normalized.Contains("www.")
-                || normalized.Contains("telegram")
-                || normalized.Contains("khuyến mãi")
-                || normalized.Contains("spam");
-
-            return new FeedbackAiReplyResponse
-            {
-                ReplyText = spamRisk
-                    ? "Cảm ơn bạn đã gửi phản hồi. Nội dung này đã được hệ thống ghi nhận và sẽ được kiểm tra trước khi xử lý."
-                    : "Cảm ơn bạn đã gửi phản hồi. Đội ngũ GPLX đã ghi nhận nội dung này và sẽ kiểm tra để cải thiện ứng dụng trong các bản cập nhật tới.",
-                SpamRisk = spamRisk,
-                SpamReason = spamRisk
-                    ? "Nội dung ngắn, chứa liên kết hoặc có dấu hiệu quảng cáo/lặp."
-                    : "",
-                Source = source
-            };
-        }
-
-        private static string ReadString(JsonElement root, string propertyName)
-        {
-            return root.TryGetProperty(propertyName, out var value)
-                ? value.GetString() ?? ""
-                : "";
         }
     }
 }
