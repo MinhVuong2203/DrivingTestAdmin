@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Backend.DTO;
 
 namespace Backend.Controllers
 {
@@ -84,22 +85,79 @@ namespace Backend.Controllers
         [UserAuthorize]
         public async Task<IActionResult> Create([FromBody] Post post)
         {
-            var result = await _postService.Create(post);
-            return Ok(result);
-        }
-
-        [HttpPut("{id}")]
-        [UserAuthorize]
-        public async Task<IActionResult> Update(string id, Post post)
-        {
-            var existingPost = await _postService.GetById(id);
-            if (existingPost == null)
+            if (post == null)
             {
-                return NotFound();
+                return BadRequest(new
+                {
+                    message = "Dữ liệu bài viết không hợp lệ"
+                });
             }
 
-            await _postService.Update(id, post);
-            return NoContent();
+            post.content = post.content?.Trim() ?? "";
+            post.imageUrl ??= "";
+            post.videoUrl ??= "";
+            post.videoPublicId ??= "";
+
+            var hasContent = !string.IsNullOrWhiteSpace(post.content);
+            var hasImage = !string.IsNullOrWhiteSpace(post.imageUrl);
+            var hasVideo = !string.IsNullOrWhiteSpace(post.videoUrl);
+
+            if (!hasContent && !hasImage && !hasVideo)
+            {
+                return BadRequest(new
+                {
+                    message = "Bài viết phải có nội dung, ảnh hoặc video"
+                });
+            }
+
+            // Một bài chỉ được có ảnh hoặc video, không có đồng thời cả hai.
+            if (hasImage && hasVideo)
+            {
+                return BadRequest(new
+                {
+                    message = "Mỗi bài viết chỉ được chọn ảnh hoặc video"
+                });
+            }
+
+            if (hasVideo)
+            {
+                if (string.IsNullOrWhiteSpace(post.videoPublicId))
+                {
+                    return BadRequest(new
+                    {
+                        message = "Thiếu mã video Cloudinary"
+                    });
+                }
+
+                if (post.videoDuration <= 0 || post.videoDuration > 30)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Thời lượng video không hợp lệ"
+                    });
+                }
+            }
+            else
+            {
+                post.videoUrl = "";
+                post.videoPublicId = "";
+                post.videoDuration = 0;
+                post.videoBytes = 0;
+            }
+
+            var currentUserId = HttpContext.Items["UserUid"]?.ToString();
+
+            if (string.IsNullOrWhiteSpace(currentUserId))
+            {
+                return Unauthorized();
+            }
+
+            // Không cho client tạo bài bằng UID của người khác.
+            post.authorId = currentUserId;
+
+            var result = await _postService.Create(post);
+
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
@@ -206,6 +264,121 @@ namespace Backend.Controllers
             });
         }
 
+        [HttpPost("upload-video")]
+        [UserAuthorize]
+        [Consumes("multipart/form-data")]
+        [RequestSizeLimit(50 * 1024 * 1024)]
+        public async Task<IActionResult> UploadVideo(IFormFile file)
+        {
+            const long maxFileSize = 50 * 1024 * 1024;
+            const double maxDurationSeconds = 30.0;
+
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest(new
+                {
+                    message = "Video không hợp lệ"
+                });
+            }
+
+            if (file.Length > maxFileSize)
+            {
+                return BadRequest(new
+                {
+                    message = "Video không được vượt quá 50 MB"
+                });
+            }
+
+            var allowedContentTypes = new HashSet<string>(
+                StringComparer.OrdinalIgnoreCase
+            )
+            {
+                "video/mp4",
+                "video/quicktime",
+                "video/webm",
+                "video/x-matroska"
+            };
+
+            var allowedExtensions = new HashSet<string>(
+                StringComparer.OrdinalIgnoreCase
+            )
+            {
+                ".mp4",
+                ".mov",
+                ".webm",
+                ".mkv"
+            };
+
+            var extension = Path.GetExtension(file.FileName);
+
+            if (!allowedContentTypes.Contains(file.ContentType) ||
+                !allowedExtensions.Contains(extension))
+            {
+                return BadRequest(new
+                {
+                    message = "Chỉ hỗ trợ video MP4, MOV, WEBM hoặc MKV"
+                });
+            }
+
+            await using var stream = file.OpenReadStream();
+
+            var uploadParams = new VideoUploadParams
+            {
+                File = new FileDescription(file.FileName, stream),
+                Folder = "posts/videos",
+
+                // Cloudinary tạo ID duy nhất.
+                UseFilename = false,
+                UniqueFilename = true,
+                Overwrite = false
+            };
+
+            var result = await _cloudinary.UploadAsync(uploadParams);
+
+            if (result.Error != null)
+            {
+                return BadRequest(new
+                {
+                    message = result.Error.Message
+                });
+            }
+
+            var duration = result.Duration;
+
+            // BE kiểm tra lại, không tin thời lượng Flutter gửi lên.
+            if (duration > maxDurationSeconds)
+            {
+                if (!string.IsNullOrWhiteSpace(result.PublicId))
+                {
+                    await _cloudinary.DestroyAsync(
+                        new DeletionParams(result.PublicId)
+                        {
+                            ResourceType = ResourceType.Video,
+                            Invalidate = true
+                        }
+                    );
+                }
+
+                return BadRequest(new
+                {
+                    message = $"Video chỉ được dài tối đa 30 giây. Video hiện tại dài {duration:F1} giây."
+                });
+            }
+
+            var response = new VideoUploadResponse
+            {
+                VideoUrl = result.SecureUrl?.ToString() ?? "",
+                VideoPublicId = result.PublicId ?? "",
+                Duration = duration,
+                Bytes = result.Bytes,
+                Format = result.Format ?? "",
+                Width = result.Width,
+                Height = result.Height
+            };
+
+            return Ok(response);
+        }
+
         [HttpGet("paged")]
         [UserAuthorize]
         public async Task<IActionResult> GetPostsPaged(
@@ -219,6 +392,76 @@ namespace Backend.Controllers
         private bool IsCurrentUser(string? uid)
         {
             return HttpContext.Items["UserUid"]?.ToString() == uid;
+        }
+
+        public class DeleteVideoRequest
+        {
+            public string PublicId { get; set; } = "";
+        }
+
+        [HttpDelete("video")]
+        [UserAuthorize]
+        public async Task<IActionResult> DeleteUploadedVideo(
+        [FromBody] DeleteVideoRequest request)
+        {
+            if (request == null ||
+                string.IsNullOrWhiteSpace(request.PublicId))
+            {
+                return BadRequest(new
+                {
+                    message = "PublicId không hợp lệ"
+                });
+            }
+
+            // Chỉ cho xóa video trong thư mục bài viết.
+            if (!request.PublicId.StartsWith(
+                    "posts/videos/",
+                    StringComparison.Ordinal))
+            {
+                return Forbid();
+            }
+
+            var result = await _cloudinary.DestroyAsync(
+                new DeletionParams(request.PublicId)
+                {
+                    ResourceType = ResourceType.Video,
+                    Invalidate = true
+                }
+            );
+
+            return Ok(new
+            {
+                result = result.Result
+            });
+        }
+
+        [HttpDelete("admin/permanent/{id}")]
+        [AdminAuthorize]
+        public async Task<IActionResult> PermanentDelete(string id)
+        {
+            var post = await _postService.GetById(id);
+
+            if (post == null)
+            {
+                return NotFound(new
+                {
+                    message = "Không tìm thấy bài viết"
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(post.videoPublicId))
+            {
+                await _cloudinary.DestroyAsync(
+                    new DeletionParams(post.videoPublicId)
+                    {
+                        ResourceType = ResourceType.Video,
+                        Invalidate = true
+                    }
+                );
+            }
+
+            // Sau này bổ sung PermanentDelete vào service/repository.
+            return NoContent();
         }
     }
 }

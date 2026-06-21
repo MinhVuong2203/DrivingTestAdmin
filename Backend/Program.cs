@@ -5,6 +5,7 @@ using FirebaseAdmin;
 using Google.Cloud.Firestore;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -142,6 +143,11 @@ builder.Services.AddHostedService<WrongQuestionReminderHostedService>();
 builder.Services.AddScoped<INotificationPushService, NotificationPushService>();
 builder.Services.AddScoped<NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 50 * 1024 * 1024;
+});
 
 var app = builder.Build();
 
