@@ -267,10 +267,10 @@ namespace Backend.Controllers
         [HttpPost("upload-video")]
         [UserAuthorize]
         [Consumes("multipart/form-data")]
-        [RequestSizeLimit(50 * 1024 * 1024)]
+        [RequestSizeLimit(100 * 1024 * 1024)]
         public async Task<IActionResult> UploadVideo(IFormFile file)
         {
-            const long maxFileSize = 50 * 1024 * 1024;
+            const long maxFileSize = 100 * 1024 * 1024;
             const double maxDurationSeconds = 30.0;
 
             if (file == null || file.Length == 0)
@@ -285,38 +285,22 @@ namespace Backend.Controllers
             {
                 return BadRequest(new
                 {
-                    message = "Video không được vượt quá 50 MB"
+                    message = "Video không được vượt quá 100 MB"
                 });
             }
 
-            var allowedContentTypes = new HashSet<string>(
-                StringComparer.OrdinalIgnoreCase
-            )
-            {
-                "video/mp4",
-                "video/quicktime",
-                "video/webm",
-                "video/x-matroska"
-            };
-
-            var allowedExtensions = new HashSet<string>(
-                StringComparer.OrdinalIgnoreCase
-            )
-            {
-                ".mp4",
-                ".mov",
-                ".webm",
-                ".mkv"
-            };
-
-            var extension = Path.GetExtension(file.FileName);
-
-            if (!allowedContentTypes.Contains(file.ContentType) ||
-                !allowedExtensions.Contains(extension))
+            /*
+             * Không giới hạn theo phần mở rộng như mp4, mov, mkv...
+             * Chấp nhận mọi MIME type video.
+             */
+            if (string.IsNullOrWhiteSpace(file.ContentType) ||
+                !file.ContentType.StartsWith(
+                    "video/",
+                    StringComparison.OrdinalIgnoreCase))
             {
                 return BadRequest(new
                 {
-                    message = "Chỉ hỗ trợ video MP4, MOV, WEBM hoặc MKV"
+                    message = "File được chọn không phải là video"
                 });
             }
 
@@ -324,59 +308,80 @@ namespace Backend.Controllers
 
             var uploadParams = new VideoUploadParams
             {
-                File = new FileDescription(file.FileName, stream),
+                File = new FileDescription(
+                    file.FileName,
+                    stream
+                ),
                 Folder = "posts/videos",
-
-                // Cloudinary tạo ID duy nhất.
                 UseFilename = false,
                 UniqueFilename = true,
                 Overwrite = false
             };
 
-            var result = await _cloudinary.UploadAsync(uploadParams);
+            var uploadResult = await _cloudinary.UploadAsync(
+                uploadParams
+            );
 
-            if (result.Error != null)
+            if (uploadResult.Error != null)
             {
                 return BadRequest(new
                 {
-                    message = result.Error.Message
+                    message =
+                        $"Cloudinary không hỗ trợ hoặc không thể xử lý video này: " +
+                        uploadResult.Error.Message
                 });
             }
 
-            var duration = result.Duration;
+            var duration = uploadResult.Duration;
 
-            // BE kiểm tra lại, không tin thời lượng Flutter gửi lên.
+            if (duration <= 0)
+            {
+                await DeleteCloudinaryVideo(uploadResult.PublicId);
+
+                return BadRequest(new
+                {
+                    message = "Không thể xác định thời lượng video"
+                });
+            }
+
             if (duration > maxDurationSeconds)
             {
-                if (!string.IsNullOrWhiteSpace(result.PublicId))
-                {
-                    await _cloudinary.DestroyAsync(
-                        new DeletionParams(result.PublicId)
-                        {
-                            ResourceType = ResourceType.Video,
-                            Invalidate = true
-                        }
-                    );
-                }
+                await DeleteCloudinaryVideo(uploadResult.PublicId);
 
                 return BadRequest(new
                 {
-                    message = $"Video chỉ được dài tối đa 30 giây. Video hiện tại dài {duration:F1} giây."
+                    message =
+                        $"Video chỉ được dài tối đa 30 giây. " +
+                        $"Video hiện tại dài {duration:F1} giây."
                 });
             }
 
-            var response = new VideoUploadResponse
-            {
-                VideoUrl = result.SecureUrl?.ToString() ?? "",
-                VideoPublicId = result.PublicId ?? "",
-                Duration = duration,
-                Bytes = result.Bytes,
-                Format = result.Format ?? "",
-                Width = result.Width,
-                Height = result.Height
-            };
+            /*
+             * URL gốc có thể là MOV, MKV, AVI...
+             * Tạo URL MP4 để Flutter dễ phát trên nhiều thiết bị hơn.
+             */
+            var playableVideoUrl = _cloudinary.Api.UrlVideoUp
+                .Secure(true)
+                .Transform(new Transformation()
+                    .FetchFormat("mp4")
+                    .Quality("auto"))
+                .BuildUrl(uploadResult.PublicId);
 
-            return Ok(response);
+            return Ok(new
+            {
+                videoUrl = playableVideoUrl,
+                originalVideoUrl =
+                    uploadResult.SecureUrl?.ToString() ?? "",
+                videoPublicId =
+                    uploadResult.PublicId ?? "",
+                duration,
+                bytes = uploadResult.Bytes,
+                originalFormat =
+                    uploadResult.Format ?? "",
+                deliveryFormat = "mp4",
+                width = uploadResult.Width,
+                height = uploadResult.Height
+            });
         }
 
         [HttpGet("paged")]
@@ -462,6 +467,22 @@ namespace Backend.Controllers
 
             // Sau này bổ sung PermanentDelete vào service/repository.
             return NoContent();
+        }
+
+        private async Task DeleteCloudinaryVideo(string? publicId)
+        {
+            if (string.IsNullOrWhiteSpace(publicId))
+            {
+                return;
+            }
+
+            await _cloudinary.DestroyAsync(
+                new DeletionParams(publicId)
+                {
+                    ResourceType = ResourceType.Video,
+                    Invalidate = true
+                }
+            );
         }
     }
 }
