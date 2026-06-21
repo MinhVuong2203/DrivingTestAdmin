@@ -132,6 +132,7 @@ builder.Services.AddHttpClient<IPayOsPaymentService, PayOsPaymentService>();
 builder.Services.AddHttpClient<IUserAuthService, UserAuthService>();
 builder.Services.AddScoped<IAdminAuthService, AdminAuthService>();
 builder.Services.AddHttpClient<IAdMobService, AdMobService>();
+builder.Services.AddHttpClient<IFeedbackAiService, FeedbackAiService>();
 
 builder.Services.AddScoped<ModerationRepository>();
 builder.Services.AddScoped<IModerationService, ModerationService>();
