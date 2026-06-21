@@ -144,10 +144,21 @@ builder.Services.AddScoped<INotificationPushService, NotificationPushService>();
 builder.Services.AddScoped<NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
-builder.Services.Configure<FormOptions>(options =>
-{
-    options.MultipartBodyLengthLimit = 50 * 1024 * 1024;
-});
+builder.Services.Configure<FormOptions>(
+    options =>
+    {
+        options.MultipartBodyLengthLimit =
+            100L * 1024 * 1024;
+    }
+);
+
+builder.WebHost.ConfigureKestrel(
+    options =>
+    {
+        options.Limits.MaxRequestBodySize =
+            100L * 1024 * 1024;
+    }
+);
 
 var app = builder.Build();
 
