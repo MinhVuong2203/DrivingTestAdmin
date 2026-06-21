@@ -1,11 +1,12 @@
-﻿using Backend.Service;
-using Backend.Service.Interface;
+﻿using Backend.DTO;
+using Backend.DTOs;
 using Backend.Filters;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Backend.Service;
+using Backend.Service.Interface;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Backend.DTO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
 {
@@ -268,16 +269,16 @@ namespace Backend.Controllers
         [UserAuthorize]
         [Consumes("multipart/form-data")]
         [RequestSizeLimit(100 * 1024 * 1024)]
-        public async Task<IActionResult> UploadVideo(IFormFile file)
+        public async Task<IActionResult> UploadVideo([FromForm] IFormFile file)
         {
-            const long maxFileSize = 100 * 1024 * 1024;
+            const long maxFileSize = 100L * 1024 * 1024;
             const double maxDurationSeconds = 30.0;
 
             if (file == null || file.Length == 0)
             {
                 return BadRequest(new
                 {
-                    message = "Video không hợp lệ"
+                    message = "File video không hợp lệ"
                 });
             }
 
@@ -289,27 +290,26 @@ namespace Backend.Controllers
                 });
             }
 
-            /*
-             * Không giới hạn theo phần mở rộng như mp4, mov, mkv...
-             * Chấp nhận mọi MIME type video.
-             */
-            if (string.IsNullOrWhiteSpace(file.ContentType) ||
-                !file.ContentType.StartsWith(
-                    "video/",
-                    StringComparison.OrdinalIgnoreCase))
+            var originalFileName = Path.GetFileName(file.FileName);
+
+            if (string.IsNullOrWhiteSpace(originalFileName))
             {
-                return BadRequest(new
-                {
-                    message = "File được chọn không phải là video"
-                });
+                originalFileName = $"video_{Guid.NewGuid():N}";
             }
+
+            Console.WriteLine(
+                $"Upload video: " +
+                $"Name={originalFileName}, " +
+                $"ContentType={file.ContentType}, " +
+                $"Length={file.Length}"
+            );
 
             await using var stream = file.OpenReadStream();
 
             var uploadParams = new VideoUploadParams
             {
                 File = new FileDescription(
-                    file.FileName,
+                    originalFileName,
                     stream
                 ),
                 Folder = "posts/videos",
@@ -318,17 +318,47 @@ namespace Backend.Controllers
                 Overwrite = false
             };
 
-            var uploadResult = await _cloudinary.UploadAsync(
-                uploadParams
-            );
+            VideoUploadResult uploadResult;
+
+            try
+            {
+                uploadResult = await _cloudinary.UploadAsync(
+                    uploadParams
+                );
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    message =
+                        "Không thể tải video lên Cloudinary",
+                    detail = ex.Message
+                });
+            }
 
             if (uploadResult.Error != null)
             {
                 return BadRequest(new
                 {
                     message =
-                        $"Cloudinary không hỗ trợ hoặc không thể xử lý video này: " +
-                        uploadResult.Error.Message
+                        "File không phải video hợp lệ hoặc Cloudinary " +
+                        "không hỗ trợ định dạng này",
+                    detail = uploadResult.Error.Message
+                });
+            }
+
+            if (string.IsNullOrWhiteSpace(
+                    uploadResult.SecureUrl?.ToString()
+                ))
+            {
+                await DeleteCloudinaryVideo(
+                    uploadResult.PublicId
+                );
+
+                return BadRequest(new
+                {
+                    message =
+                        "Cloudinary không trả về đường dẫn video"
                 });
             }
 
@@ -336,53 +366,101 @@ namespace Backend.Controllers
 
             if (duration <= 0)
             {
-                await DeleteCloudinaryVideo(uploadResult.PublicId);
+                await DeleteCloudinaryVideo(
+                    uploadResult.PublicId
+                );
 
                 return BadRequest(new
                 {
-                    message = "Không thể xác định thời lượng video"
+                    message =
+                        "Không thể xác định thời lượng video"
                 });
             }
 
             if (duration > maxDurationSeconds)
             {
-                await DeleteCloudinaryVideo(uploadResult.PublicId);
+                await DeleteCloudinaryVideo(
+                    uploadResult.PublicId
+                );
 
                 return BadRequest(new
                 {
                     message =
-                        $"Video chỉ được dài tối đa 30 giây. " +
+                        $"Video chỉ được tối đa 30 giây. " +
                         $"Video hiện tại dài {duration:F1} giây."
                 });
             }
 
             /*
-             * URL gốc có thể là MOV, MKV, AVI...
-             * Tạo URL MP4 để Flutter dễ phát trên nhiều thiết bị hơn.
+             * Video gốc có thể là MOV, AVI, MKV, WEBM...
+             *
+             * Tạo URL phát dưới định dạng MP4 để Flutter và các thiết bị
+             * có khả năng phát ổn định hơn.
              */
             var playableVideoUrl = _cloudinary.Api.UrlVideoUp
                 .Secure(true)
-                .Transform(new Transformation()
-                    .FetchFormat("mp4")
-                    .Quality("auto"))
+                .Transform(
+                    new Transformation()
+                        .FetchFormat("mp4")
+                        .Quality("auto")
+                )
                 .BuildUrl(uploadResult.PublicId);
 
-            return Ok(new
+            var response = new VideoUploadResponse
             {
-                videoUrl = playableVideoUrl,
-                originalVideoUrl =
+                VideoUrl = playableVideoUrl,
+
+                OriginalVideoUrl =
                     uploadResult.SecureUrl?.ToString() ?? "",
-                videoPublicId =
+
+                VideoPublicId =
                     uploadResult.PublicId ?? "",
-                duration,
-                bytes = uploadResult.Bytes,
-                originalFormat =
+
+                Duration = duration,
+
+                Bytes = uploadResult.Bytes,
+
+                OriginalFormat =
                     uploadResult.Format ?? "",
-                deliveryFormat = "mp4",
-                width = uploadResult.Width,
-                height = uploadResult.Height
-            });
+
+                DeliveryFormat = "mp4",
+
+                Width = uploadResult.Width,
+
+                Height = uploadResult.Height
+            };
+
+            return Ok(response);
         }
+
+        private async Task DeleteCloudinaryVideo(
+            string? publicId
+        )
+        {
+            if (string.IsNullOrWhiteSpace(publicId))
+            {
+                return;
+            }
+
+            try
+            {
+                await _cloudinary.DestroyAsync(
+                    new DeletionParams(publicId)
+                    {
+                        ResourceType = ResourceType.Video,
+                        Invalidate = true
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(
+                    $"Không thể xóa video Cloudinary " +
+                    $"{publicId}: {ex.Message}"
+                );
+            }
+        }
+
 
         [HttpGet("paged")]
         [UserAuthorize]
@@ -467,22 +545,6 @@ namespace Backend.Controllers
 
             // Sau này bổ sung PermanentDelete vào service/repository.
             return NoContent();
-        }
-
-        private async Task DeleteCloudinaryVideo(string? publicId)
-        {
-            if (string.IsNullOrWhiteSpace(publicId))
-            {
-                return;
-            }
-
-            await _cloudinary.DestroyAsync(
-                new DeletionParams(publicId)
-                {
-                    ResourceType = ResourceType.Video,
-                    Invalidate = true
-                }
-            );
         }
     }
 }
