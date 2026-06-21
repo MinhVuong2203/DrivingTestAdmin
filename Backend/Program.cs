@@ -5,6 +5,7 @@ using FirebaseAdmin;
 using Google.Cloud.Firestore;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -143,6 +144,11 @@ builder.Services.AddScoped<INotificationPushService, NotificationPushService>();
 builder.Services.AddScoped<NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 50 * 1024 * 1024;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -159,7 +165,7 @@ app.UseSwaggerUI();
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
-// app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors();
 

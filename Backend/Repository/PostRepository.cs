@@ -111,6 +111,18 @@ namespace Backend.Repository
 
         public async Task<Post> Create(Post post)
         {
+            post.postId = string.IsNullOrWhiteSpace(post.postId)
+                ? DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString()
+                : post.postId;
+
+            post.content ??= "";
+            post.imageUrl ??= "";
+            post.videoUrl ??= "";
+            post.videoPublicId ??= "";
+            post.address ??= "";
+
+            post.likeCount = 0;
+            post.commentCount = 0;
             post.isDeleted = false;
             post.status = true;
             post.createdAt = DateTime.UtcNow;
@@ -126,18 +138,29 @@ namespace Backend.Repository
             {
                 try
                 {
-                    var violated = await _moderationService.IsPostViolatedByAiFirst(post.content);
+                    if (string.IsNullOrWhiteSpace(post.content))
+                    {
+                        return;
+                    }
+
+                    var violated =
+                        await _moderationService.IsPostViolatedByAiFirst(post.content);
 
                     if (violated)
                     {
-                        await postRef.UpdateAsync(new Dictionary<string, object>
-                {
-                    { "isDeleted", true },
-                    { "status", false },
-                    { "moderationReason", "AI hoặc keyword phát hiện nội dung vi phạm" },
-                    { "moderatedAt", DateTime.UtcNow },
-                    { "updatedAt", DateTime.UtcNow }
-                });
+                        await postRef.UpdateAsync(
+                            new Dictionary<string, object>
+                            {
+                        { "isDeleted", true },
+                        { "status", false },
+                        {
+                            "moderationReason",
+                            "AI hoặc keyword phát hiện nội dung vi phạm"
+                        },
+                        { "moderatedAt", DateTime.UtcNow },
+                        { "updatedAt", DateTime.UtcNow }
+                            }
+                        );
                     }
                 }
                 catch (Exception ex)
