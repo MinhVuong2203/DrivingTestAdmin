@@ -1,0 +1,4322 @@
+[
+  {
+    "docId": "001",
+    "id": 1,
+    "title": "Tình huống 1",
+    "chapter": 1,
+    "duration": 27,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/1.mp4",
+    "scoreWindows": [
+      {
+        "from": 18,
+        "to": 18.5,
+        "score": 5
+      },
+      {
+        "from": 18.5,
+        "to": 19,
+        "score": 4
+      },
+      {
+        "from": 19,
+        "to": 19.5,
+        "score": 3
+      },
+      {
+        "from": 19.5,
+        "to": 20,
+        "score": 2
+      },
+      {
+        "from": 20,
+        "to": 20.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "002",
+    "id": 2,
+    "title": "Tình huống 2",
+    "chapter": 1,
+    "duration": 39,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/2.mp4",
+    "scoreWindows": [
+      {
+        "from": 25,
+        "to": 25.75,
+        "score": 5
+      },
+      {
+        "from": 25.75,
+        "to": 26.5,
+        "score": 4
+      },
+      {
+        "from": 26.5,
+        "to": 27.25,
+        "score": 3
+      },
+      {
+        "from": 27.25,
+        "to": 28,
+        "score": 2
+      },
+      {
+        "from": 28,
+        "to": 28.75,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "003",
+    "id": 3,
+    "title": "Tình huống 3",
+    "chapter": 1,
+    "duration": 34,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/3.mp4",
+    "scoreWindows": [
+      {
+        "from": 22.5,
+        "to": 23,
+        "score": 5
+      },
+      {
+        "from": 23,
+        "to": 23.5,
+        "score": 4
+      },
+      {
+        "from": 23.5,
+        "to": 24,
+        "score": 3
+      },
+      {
+        "from": 24,
+        "to": 24.5,
+        "score": 2
+      },
+      {
+        "from": 24.5,
+        "to": 25,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "004",
+    "id": 4,
+    "title": "Tình huống 4",
+    "chapter": 1,
+    "duration": 34,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/4.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.75,
+        "to": 18.7,
+        "score": 5
+      },
+      {
+        "from": 18.7,
+        "to": 19.65,
+        "score": 4
+      },
+      {
+        "from": 19.65,
+        "to": 20.6,
+        "score": 3
+      },
+      {
+        "from": 20.6,
+        "to": 21.55,
+        "score": 2
+      },
+      {
+        "from": 21.55,
+        "to": 22.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "005",
+    "id": 5,
+    "title": "Tình huống 5",
+    "chapter": 1,
+    "duration": 33,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/5.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.5,
+        "to": 20.3,
+        "score": 5
+      },
+      {
+        "from": 20.3,
+        "to": 21.1,
+        "score": 4
+      },
+      {
+        "from": 21.1,
+        "to": 21.9,
+        "score": 3
+      },
+      {
+        "from": 21.9,
+        "to": 22.7,
+        "score": 2
+      },
+      {
+        "from": 22.7,
+        "to": 23.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "006",
+    "id": 6,
+    "title": "Tình huống 6",
+    "chapter": 1,
+    "duration": 30,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/6.mp4",
+    "scoreWindows": [
+      {
+        "from": 20.4,
+        "to": 21.02,
+        "score": 5
+      },
+      {
+        "from": 21.02,
+        "to": 21.64,
+        "score": 4
+      },
+      {
+        "from": 21.64,
+        "to": 22.26,
+        "score": 3
+      },
+      {
+        "from": 22.26,
+        "to": 22.88,
+        "score": 2
+      },
+      {
+        "from": 22.88,
+        "to": 23.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "007",
+    "id": 7,
+    "title": "Tình huống 7",
+    "chapter": 1,
+    "duration": 33,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/7.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.7,
+        "to": 18.5,
+        "score": 5
+      },
+      {
+        "from": 18.5,
+        "to": 19.3,
+        "score": 4
+      },
+      {
+        "from": 19.3,
+        "to": 20.1,
+        "score": 3
+      },
+      {
+        "from": 20.1,
+        "to": 20.9,
+        "score": 2
+      },
+      {
+        "from": 20.9,
+        "to": 21.7,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "008",
+    "id": 8,
+    "title": "Tình huống 8",
+    "chapter": 1,
+    "duration": 34,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/8.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.5,
+        "to": 18.1,
+        "score": 5
+      },
+      {
+        "from": 18.1,
+        "to": 18.7,
+        "score": 4
+      },
+      {
+        "from": 18.7,
+        "to": 19.3,
+        "score": 3
+      },
+      {
+        "from": 19.3,
+        "to": 19.9,
+        "score": 2
+      },
+      {
+        "from": 19.9,
+        "to": 20.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "009",
+    "id": 9,
+    "title": "Tình huống 9",
+    "chapter": 1,
+    "duration": 23,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/9.mp4",
+    "scoreWindows": [
+      {
+        "from": 15.2,
+        "to": 15.76,
+        "score": 5
+      },
+      {
+        "from": 15.76,
+        "to": 16.32,
+        "score": 4
+      },
+      {
+        "from": 16.32,
+        "to": 16.88,
+        "score": 3
+      },
+      {
+        "from": 16.88,
+        "to": 17.44,
+        "score": 2
+      },
+      {
+        "from": 17.44,
+        "to": 18,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "010",
+    "id": 10,
+    "title": "Tình huống 10",
+    "chapter": 1,
+    "duration": 31,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/10.mp4",
+    "scoreWindows": [
+      {
+        "from": 19,
+        "to": 19.9,
+        "score": 5
+      },
+      {
+        "from": 19.9,
+        "to": 20.8,
+        "score": 4
+      },
+      {
+        "from": 20.8,
+        "to": 21.7,
+        "score": 3
+      },
+      {
+        "from": 21.7,
+        "to": 22.6,
+        "score": 2
+      },
+      {
+        "from": 22.6,
+        "to": 23.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "011",
+    "id": 11,
+    "title": "Tình huống 11",
+    "chapter": 1,
+    "duration": 32,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/11.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.3,
+        "to": 18.72,
+        "score": 5
+      },
+      {
+        "from": 18.72,
+        "to": 20.14,
+        "score": 4
+      },
+      {
+        "from": 20.14,
+        "to": 21.56,
+        "score": 3
+      },
+      {
+        "from": 21.56,
+        "to": 22.98,
+        "score": 2
+      },
+      {
+        "from": 22.98,
+        "to": 24.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "012",
+    "id": 12,
+    "title": "Tình huống 12",
+    "chapter": 1,
+    "duration": 36,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/12.mp4",
+    "scoreWindows": [
+      {
+        "from": 21,
+        "to": 21.6,
+        "score": 5
+      },
+      {
+        "from": 21.6,
+        "to": 22.2,
+        "score": 4
+      },
+      {
+        "from": 22.2,
+        "to": 22.8,
+        "score": 3
+      },
+      {
+        "from": 22.8,
+        "to": 23.4,
+        "score": 2
+      },
+      {
+        "from": 23.4,
+        "to": 24,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "013",
+    "id": 13,
+    "title": "Tình huống 13",
+    "chapter": 1,
+    "duration": 30,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/13.mp4",
+    "scoreWindows": [
+      {
+        "from": 18.4,
+        "to": 18.86,
+        "score": 5
+      },
+      {
+        "from": 18.86,
+        "to": 19.32,
+        "score": 4
+      },
+      {
+        "from": 19.32,
+        "to": 19.78,
+        "score": 3
+      },
+      {
+        "from": 19.78,
+        "to": 20.24,
+        "score": 2
+      },
+      {
+        "from": 20.24,
+        "to": 20.7,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "014",
+    "id": 14,
+    "title": "Tình huống 14",
+    "chapter": 1,
+    "duration": 34,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/14.mp4",
+    "scoreWindows": [
+      {
+        "from": 21.2,
+        "to": 21.96,
+        "score": 5
+      },
+      {
+        "from": 21.96,
+        "to": 22.72,
+        "score": 4
+      },
+      {
+        "from": 22.72,
+        "to": 23.48,
+        "score": 3
+      },
+      {
+        "from": 23.48,
+        "to": 24.24,
+        "score": 2
+      },
+      {
+        "from": 24.24,
+        "to": 25,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "015",
+    "id": 15,
+    "title": "Tình huống 15",
+    "chapter": 1,
+    "duration": 33,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/15.mp4",
+    "scoreWindows": [
+      {
+        "from": 20.2,
+        "to": 20.72,
+        "score": 5
+      },
+      {
+        "from": 20.72,
+        "to": 21.24,
+        "score": 4
+      },
+      {
+        "from": 21.24,
+        "to": 21.76,
+        "score": 3
+      },
+      {
+        "from": 21.76,
+        "to": 22.28,
+        "score": 2
+      },
+      {
+        "from": 22.28,
+        "to": 22.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "016",
+    "id": 16,
+    "title": "Tình huống 16",
+    "chapter": 1,
+    "duration": 30,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/16.mp4",
+    "scoreWindows": [
+      {
+        "from": 18.4,
+        "to": 18.88,
+        "score": 5
+      },
+      {
+        "from": 18.88,
+        "to": 19.36,
+        "score": 4
+      },
+      {
+        "from": 19.36,
+        "to": 19.84,
+        "score": 3
+      },
+      {
+        "from": 19.84,
+        "to": 20.32,
+        "score": 2
+      },
+      {
+        "from": 20.32,
+        "to": 20.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "017",
+    "id": 17,
+    "title": "Tình huống 17",
+    "chapter": 1,
+    "duration": 29,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/17.mp4",
+    "scoreWindows": [
+      {
+        "from": 15.5,
+        "to": 16.02,
+        "score": 5
+      },
+      {
+        "from": 16.02,
+        "to": 16.54,
+        "score": 4
+      },
+      {
+        "from": 16.54,
+        "to": 17.06,
+        "score": 3
+      },
+      {
+        "from": 17.06,
+        "to": 17.58,
+        "score": 2
+      },
+      {
+        "from": 17.58,
+        "to": 18.1,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "018",
+    "id": 18,
+    "title": "Tình huống 18",
+    "chapter": 1,
+    "duration": 31,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/18.mp4",
+    "scoreWindows": [
+      {
+        "from": 18.3,
+        "to": 18.9,
+        "score": 5
+      },
+      {
+        "from": 18.9,
+        "to": 19.5,
+        "score": 4
+      },
+      {
+        "from": 19.5,
+        "to": 20.1,
+        "score": 3
+      },
+      {
+        "from": 20.1,
+        "to": 20.7,
+        "score": 2
+      },
+      {
+        "from": 20.7,
+        "to": 21.3,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "019",
+    "id": 19,
+    "title": "Tình huống 19",
+    "chapter": 1,
+    "duration": 28,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/19.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.8,
+        "to": 20.34,
+        "score": 5
+      },
+      {
+        "from": 20.34,
+        "to": 20.88,
+        "score": 4
+      },
+      {
+        "from": 20.88,
+        "to": 21.42,
+        "score": 3
+      },
+      {
+        "from": 21.42,
+        "to": 21.96,
+        "score": 2
+      },
+      {
+        "from": 21.96,
+        "to": 22.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "020",
+    "id": 20,
+    "title": "Tình huống 20",
+    "chapter": 1,
+    "duration": 37,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/20.mp4",
+    "scoreWindows": [
+      {
+        "from": 25.6,
+        "to": 26.34,
+        "score": 5
+      },
+      {
+        "from": 26.34,
+        "to": 27.08,
+        "score": 4
+      },
+      {
+        "from": 27.08,
+        "to": 27.82,
+        "score": 3
+      },
+      {
+        "from": 27.82,
+        "to": 28.56,
+        "score": 2
+      },
+      {
+        "from": 28.56,
+        "to": 29.3,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "021",
+    "id": 21,
+    "title": "Tình huống 21",
+    "chapter": 1,
+    "duration": 39,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/21.mp4",
+    "scoreWindows": [
+      {
+        "from": 20.5,
+        "to": 21.14,
+        "score": 5
+      },
+      {
+        "from": 21.14,
+        "to": 21.78,
+        "score": 4
+      },
+      {
+        "from": 21.78,
+        "to": 22.42,
+        "score": 3
+      },
+      {
+        "from": 22.42,
+        "to": 23.06,
+        "score": 2
+      },
+      {
+        "from": 23.06,
+        "to": 23.7,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "022",
+    "id": 22,
+    "title": "Tình huống 22",
+    "chapter": 1,
+    "duration": 32,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/22.mp4",
+    "scoreWindows": [
+      {
+        "from": 20.4,
+        "to": 20.96,
+        "score": 5
+      },
+      {
+        "from": 20.96,
+        "to": 21.52,
+        "score": 4
+      },
+      {
+        "from": 21.52,
+        "to": 22.08,
+        "score": 3
+      },
+      {
+        "from": 22.08,
+        "to": 22.64,
+        "score": 2
+      },
+      {
+        "from": 22.64,
+        "to": 23.2,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "023",
+    "id": 23,
+    "title": "Tình huống 23",
+    "chapter": 1,
+    "duration": 32,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/23.mp4",
+    "scoreWindows": [
+      {
+        "from": 22.3,
+        "to": 22.8,
+        "score": 5
+      },
+      {
+        "from": 22.8,
+        "to": 23.3,
+        "score": 4
+      },
+      {
+        "from": 23.3,
+        "to": 23.8,
+        "score": 3
+      },
+      {
+        "from": 23.8,
+        "to": 24.3,
+        "score": 2
+      },
+      {
+        "from": 24.3,
+        "to": 24.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "024",
+    "id": 24,
+    "title": "Tình huống 24",
+    "chapter": 1,
+    "duration": 34,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/24.mp4",
+    "scoreWindows": [
+      {
+        "from": 20.8,
+        "to": 21.36,
+        "score": 5
+      },
+      {
+        "from": 21.36,
+        "to": 21.92,
+        "score": 4
+      },
+      {
+        "from": 21.92,
+        "to": 22.48,
+        "score": 3
+      },
+      {
+        "from": 22.48,
+        "to": 23.04,
+        "score": 2
+      },
+      {
+        "from": 23.04,
+        "to": 23.6,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "025",
+    "id": 25,
+    "title": "Tình huống 25",
+    "chapter": 1,
+    "duration": 45,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/25.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.6,
+        "to": 18.96,
+        "score": 5
+      },
+      {
+        "from": 18.96,
+        "to": 20.32,
+        "score": 4
+      },
+      {
+        "from": 20.32,
+        "to": 21.68,
+        "score": 3
+      },
+      {
+        "from": 21.68,
+        "to": 23.04,
+        "score": 2
+      },
+      {
+        "from": 23.04,
+        "to": 24.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "026",
+    "id": 26,
+    "title": "Tình huống 26",
+    "chapter": 1,
+    "duration": 43,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/26.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.7,
+        "to": 20.64,
+        "score": 5
+      },
+      {
+        "from": 20.64,
+        "to": 21.58,
+        "score": 4
+      },
+      {
+        "from": 21.58,
+        "to": 22.52,
+        "score": 3
+      },
+      {
+        "from": 22.52,
+        "to": 23.46,
+        "score": 2
+      },
+      {
+        "from": 23.46,
+        "to": 24.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "027",
+    "id": 27,
+    "title": "Tình huống 27",
+    "chapter": 1,
+    "duration": 34,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/27.mp4",
+    "scoreWindows": [
+      {
+        "from": 21.4,
+        "to": 21.96,
+        "score": 5
+      },
+      {
+        "from": 21.96,
+        "to": 22.52,
+        "score": 4
+      },
+      {
+        "from": 22.52,
+        "to": 23.08,
+        "score": 3
+      },
+      {
+        "from": 23.08,
+        "to": 23.64,
+        "score": 2
+      },
+      {
+        "from": 23.64,
+        "to": 24.2,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "028",
+    "id": 28,
+    "title": "Tình huống 28",
+    "chapter": 1,
+    "duration": 35,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/28.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.2,
+        "to": 19.84,
+        "score": 5
+      },
+      {
+        "from": 19.84,
+        "to": 20.48,
+        "score": 4
+      },
+      {
+        "from": 20.48,
+        "to": 21.12,
+        "score": 3
+      },
+      {
+        "from": 21.12,
+        "to": 21.76,
+        "score": 2
+      },
+      {
+        "from": 21.76,
+        "to": 22.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "029",
+    "id": 29,
+    "title": "Tình huống 29",
+    "chapter": 1,
+    "duration": 33,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/29.mp4",
+    "scoreWindows": [
+      {
+        "from": 19,
+        "to": 19.7,
+        "score": 5
+      },
+      {
+        "from": 19.7,
+        "to": 20.4,
+        "score": 4
+      },
+      {
+        "from": 20.4,
+        "to": 21.1,
+        "score": 3
+      },
+      {
+        "from": 21.1,
+        "to": 21.8,
+        "score": 2
+      },
+      {
+        "from": 21.8,
+        "to": 22.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "030",
+    "id": 30,
+    "title": "Tình huống 30",
+    "chapter": 2,
+    "duration": 37,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/30.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.8,
+        "to": 18.72,
+        "score": 5
+      },
+      {
+        "from": 18.72,
+        "to": 19.64,
+        "score": 4
+      },
+      {
+        "from": 19.64,
+        "to": 20.56,
+        "score": 3
+      },
+      {
+        "from": 20.56,
+        "to": 21.48,
+        "score": 2
+      },
+      {
+        "from": 21.48,
+        "to": 22.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "031",
+    "id": 31,
+    "title": "Tình huống 31",
+    "chapter": 2,
+    "duration": 37,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/31.mp4",
+    "scoreWindows": [
+      {
+        "from": 16.7,
+        "to": 17.76,
+        "score": 5
+      },
+      {
+        "from": 17.76,
+        "to": 18.82,
+        "score": 4
+      },
+      {
+        "from": 18.82,
+        "to": 19.88,
+        "score": 3
+      },
+      {
+        "from": 19.88,
+        "to": 20.94,
+        "score": 2
+      },
+      {
+        "from": 20.94,
+        "to": 22,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "032",
+    "id": 32,
+    "title": "Tình huống 32",
+    "chapter": 2,
+    "duration": 29,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/32.mp4",
+    "scoreWindows": [
+      {
+        "from": 18.6,
+        "to": 19.36,
+        "score": 5
+      },
+      {
+        "from": 19.36,
+        "to": 20.12,
+        "score": 4
+      },
+      {
+        "from": 20.12,
+        "to": 20.88,
+        "score": 3
+      },
+      {
+        "from": 20.88,
+        "to": 21.64,
+        "score": 2
+      },
+      {
+        "from": 21.64,
+        "to": 22.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "033",
+    "id": 33,
+    "title": "Tình huống 33",
+    "chapter": 2,
+    "duration": 33,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/33.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.4,
+        "to": 20.06,
+        "score": 5
+      },
+      {
+        "from": 20.06,
+        "to": 20.72,
+        "score": 4
+      },
+      {
+        "from": 20.72,
+        "to": 21.38,
+        "score": 3
+      },
+      {
+        "from": 21.38,
+        "to": 22.04,
+        "score": 2
+      },
+      {
+        "from": 22.04,
+        "to": 22.7,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "034",
+    "id": 34,
+    "title": "Tình huống 34",
+    "chapter": 2,
+    "duration": 27,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/34.mp4",
+    "scoreWindows": [
+      {
+        "from": 15.7,
+        "to": 16.52,
+        "score": 5
+      },
+      {
+        "from": 16.52,
+        "to": 17.34,
+        "score": 4
+      },
+      {
+        "from": 17.34,
+        "to": 18.16,
+        "score": 3
+      },
+      {
+        "from": 18.16,
+        "to": 18.98,
+        "score": 2
+      },
+      {
+        "from": 18.98,
+        "to": 19.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "035",
+    "id": 35,
+    "title": "Tình huống 35",
+    "chapter": 2,
+    "duration": 27,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/35.mp4",
+    "scoreWindows": [
+      {
+        "from": 13.5,
+        "to": 14.2,
+        "score": 5
+      },
+      {
+        "from": 14.2,
+        "to": 14.9,
+        "score": 4
+      },
+      {
+        "from": 14.9,
+        "to": 15.6,
+        "score": 3
+      },
+      {
+        "from": 15.6,
+        "to": 16.3,
+        "score": 2
+      },
+      {
+        "from": 16.3,
+        "to": 17,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "036",
+    "id": 36,
+    "title": "Tình huống 36",
+    "chapter": 2,
+    "duration": 34,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/36.mp4",
+    "scoreWindows": [
+      {
+        "from": 23.9,
+        "to": 24.42,
+        "score": 5
+      },
+      {
+        "from": 24.42,
+        "to": 24.94,
+        "score": 4
+      },
+      {
+        "from": 24.94,
+        "to": 25.46,
+        "score": 3
+      },
+      {
+        "from": 25.46,
+        "to": 25.98,
+        "score": 2
+      },
+      {
+        "from": 25.98,
+        "to": 26.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "037",
+    "id": 37,
+    "title": "Tình huống 37",
+    "chapter": 2,
+    "duration": 35,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/37.mp4",
+    "scoreWindows": [
+      {
+        "from": 15,
+        "to": 17.56,
+        "score": 5
+      },
+      {
+        "from": 17.56,
+        "to": 20.12,
+        "score": 4
+      },
+      {
+        "from": 20.12,
+        "to": 22.68,
+        "score": 3
+      },
+      {
+        "from": 22.68,
+        "to": 25.24,
+        "score": 2
+      },
+      {
+        "from": 25.24,
+        "to": 27.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "038",
+    "id": 38,
+    "title": "Tình huống 38",
+    "chapter": 2,
+    "duration": 32,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/38.mp4",
+    "scoreWindows": [
+      {
+        "from": 18.5,
+        "to": 19.1,
+        "score": 5
+      },
+      {
+        "from": 19.1,
+        "to": 19.7,
+        "score": 4
+      },
+      {
+        "from": 19.7,
+        "to": 20.3,
+        "score": 3
+      },
+      {
+        "from": 20.3,
+        "to": 20.9,
+        "score": 2
+      },
+      {
+        "from": 20.9,
+        "to": 21.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "039",
+    "id": 39,
+    "title": "Tình huống 39",
+    "chapter": 2,
+    "duration": 31,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/39.mp4",
+    "scoreWindows": [
+      {
+        "from": 22.2,
+        "to": 22.8,
+        "score": 5
+      },
+      {
+        "from": 22.8,
+        "to": 23.4,
+        "score": 4
+      },
+      {
+        "from": 23.4,
+        "to": 24,
+        "score": 3
+      },
+      {
+        "from": 24,
+        "to": 24.6,
+        "score": 2
+      },
+      {
+        "from": 24.6,
+        "to": 25.2,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "040",
+    "id": 40,
+    "title": "Tình huống 40",
+    "chapter": 2,
+    "duration": 34,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/40.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.2,
+        "to": 17.86,
+        "score": 5
+      },
+      {
+        "from": 17.86,
+        "to": 18.52,
+        "score": 4
+      },
+      {
+        "from": 18.52,
+        "to": 19.18,
+        "score": 3
+      },
+      {
+        "from": 19.18,
+        "to": 19.84,
+        "score": 2
+      },
+      {
+        "from": 19.84,
+        "to": 20.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "041",
+    "id": 41,
+    "title": "Tình huống 41",
+    "chapter": 2,
+    "duration": 33,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/41.mp4",
+    "scoreWindows": [
+      {
+        "from": 20,
+        "to": 20.36,
+        "score": 5
+      },
+      {
+        "from": 20.36,
+        "to": 20.72,
+        "score": 4
+      },
+      {
+        "from": 20.72,
+        "to": 21.08,
+        "score": 3
+      },
+      {
+        "from": 21.08,
+        "to": 21.44,
+        "score": 2
+      },
+      {
+        "from": 21.44,
+        "to": 21.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "042",
+    "id": 42,
+    "title": "Tình huống 42",
+    "chapter": 2,
+    "duration": 31,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/42.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.6,
+        "to": 18.16,
+        "score": 5
+      },
+      {
+        "from": 18.16,
+        "to": 18.72,
+        "score": 4
+      },
+      {
+        "from": 18.72,
+        "to": 19.28,
+        "score": 3
+      },
+      {
+        "from": 19.28,
+        "to": 19.84,
+        "score": 2
+      },
+      {
+        "from": 19.84,
+        "to": 20.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "043",
+    "id": 43,
+    "title": "Tình huống 43",
+    "chapter": 2,
+    "duration": 35,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/43.mp4",
+    "scoreWindows": [
+      {
+        "from": 16.7,
+        "to": 17.56,
+        "score": 5
+      },
+      {
+        "from": 17.56,
+        "to": 18.42,
+        "score": 4
+      },
+      {
+        "from": 18.42,
+        "to": 19.28,
+        "score": 3
+      },
+      {
+        "from": 19.28,
+        "to": 20.14,
+        "score": 2
+      },
+      {
+        "from": 20.14,
+        "to": 21,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "044",
+    "id": 44,
+    "title": "Tình huống 44",
+    "chapter": 3,
+    "duration": 27,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/44.mp4",
+    "scoreWindows": [
+      {
+        "from": 15.4,
+        "to": 16.16,
+        "score": 5
+      },
+      {
+        "from": 16.16,
+        "to": 16.92,
+        "score": 4
+      },
+      {
+        "from": 16.92,
+        "to": 17.68,
+        "score": 3
+      },
+      {
+        "from": 17.68,
+        "to": 18.44,
+        "score": 2
+      },
+      {
+        "from": 18.44,
+        "to": 19.2,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "045",
+    "id": 45,
+    "title": "Tình huống 45",
+    "chapter": 3,
+    "duration": 29,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/45.mp4",
+    "scoreWindows": [
+      {
+        "from": 20.2,
+        "to": 20.76,
+        "score": 5
+      },
+      {
+        "from": 20.76,
+        "to": 21.32,
+        "score": 4
+      },
+      {
+        "from": 21.32,
+        "to": 21.88,
+        "score": 3
+      },
+      {
+        "from": 21.88,
+        "to": 22.44,
+        "score": 2
+      },
+      {
+        "from": 22.44,
+        "to": 23,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "046",
+    "id": 46,
+    "title": "Tình huống 46",
+    "chapter": 3,
+    "duration": 37,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/46.mp4",
+    "scoreWindows": [
+      {
+        "from": 27.4,
+        "to": 28,
+        "score": 5
+      },
+      {
+        "from": 28,
+        "to": 28.6,
+        "score": 4
+      },
+      {
+        "from": 28.6,
+        "to": 29.2,
+        "score": 3
+      },
+      {
+        "from": 29.2,
+        "to": 29.8,
+        "score": 2
+      },
+      {
+        "from": 29.8,
+        "to": 30.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "047",
+    "id": 47,
+    "title": "Tình huống 47",
+    "chapter": 3,
+    "duration": 36,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/47.mp4",
+    "scoreWindows": [
+      {
+        "from": 25.4,
+        "to": 26,
+        "score": 5
+      },
+      {
+        "from": 26,
+        "to": 26.6,
+        "score": 4
+      },
+      {
+        "from": 26.6,
+        "to": 27.2,
+        "score": 3
+      },
+      {
+        "from": 27.2,
+        "to": 27.8,
+        "score": 2
+      },
+      {
+        "from": 27.8,
+        "to": 28.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "048",
+    "id": 48,
+    "title": "Tình huống 48",
+    "chapter": 3,
+    "duration": 33,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/48.mp4",
+    "scoreWindows": [
+      {
+        "from": 15.4,
+        "to": 15.88,
+        "score": 5
+      },
+      {
+        "from": 15.88,
+        "to": 16.36,
+        "score": 4
+      },
+      {
+        "from": 16.36,
+        "to": 16.84,
+        "score": 3
+      },
+      {
+        "from": 16.84,
+        "to": 17.32,
+        "score": 2
+      },
+      {
+        "from": 17.32,
+        "to": 17.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "049",
+    "id": 49,
+    "title": "Tình huống 49",
+    "chapter": 3,
+    "duration": 33,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/49.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.4,
+        "to": 18.42,
+        "score": 5
+      },
+      {
+        "from": 18.42,
+        "to": 19.44,
+        "score": 4
+      },
+      {
+        "from": 19.44,
+        "to": 20.46,
+        "score": 3
+      },
+      {
+        "from": 20.46,
+        "to": 21.48,
+        "score": 2
+      },
+      {
+        "from": 21.48,
+        "to": 22.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "050",
+    "id": 50,
+    "title": "Tình huống 50",
+    "chapter": 3,
+    "duration": 35,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/50.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.4,
+        "to": 20.18,
+        "score": 5
+      },
+      {
+        "from": 20.18,
+        "to": 20.96,
+        "score": 4
+      },
+      {
+        "from": 20.96,
+        "to": 21.74,
+        "score": 3
+      },
+      {
+        "from": 21.74,
+        "to": 22.52,
+        "score": 2
+      },
+      {
+        "from": 22.52,
+        "to": 23.3,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "051",
+    "id": 51,
+    "title": "Tình huống 51",
+    "chapter": 3,
+    "duration": 36,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/51.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.4,
+        "to": 20.42,
+        "score": 5
+      },
+      {
+        "from": 20.42,
+        "to": 21.44,
+        "score": 4
+      },
+      {
+        "from": 21.44,
+        "to": 22.46,
+        "score": 3
+      },
+      {
+        "from": 22.46,
+        "to": 23.48,
+        "score": 2
+      },
+      {
+        "from": 23.48,
+        "to": 24.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "052",
+    "id": 52,
+    "title": "Tình huống 52",
+    "chapter": 3,
+    "duration": 34,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/52.mp4",
+    "scoreWindows": [
+      {
+        "from": 23,
+        "to": 23.7,
+        "score": 5
+      },
+      {
+        "from": 23.7,
+        "to": 24.4,
+        "score": 4
+      },
+      {
+        "from": 24.4,
+        "to": 25.1,
+        "score": 3
+      },
+      {
+        "from": 25.1,
+        "to": 25.8,
+        "score": 2
+      },
+      {
+        "from": 25.8,
+        "to": 26.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "053",
+    "id": 53,
+    "title": "Tình huống 53",
+    "chapter": 3,
+    "duration": 35,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/53.mp4",
+    "scoreWindows": [
+      {
+        "from": 23.4,
+        "to": 24.12,
+        "score": 5
+      },
+      {
+        "from": 24.12,
+        "to": 24.84,
+        "score": 4
+      },
+      {
+        "from": 24.84,
+        "to": 25.56,
+        "score": 3
+      },
+      {
+        "from": 25.56,
+        "to": 26.28,
+        "score": 2
+      },
+      {
+        "from": 26.28,
+        "to": 27,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "054",
+    "id": 54,
+    "title": "Tình huống 54",
+    "chapter": 3,
+    "duration": 31,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/54.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.8,
+        "to": 20.64,
+        "score": 5
+      },
+      {
+        "from": 20.64,
+        "to": 21.48,
+        "score": 4
+      },
+      {
+        "from": 21.48,
+        "to": 22.32,
+        "score": 3
+      },
+      {
+        "from": 22.32,
+        "to": 23.16,
+        "score": 2
+      },
+      {
+        "from": 23.16,
+        "to": 24,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "055",
+    "id": 55,
+    "title": "Tình huống 55",
+    "chapter": 3,
+    "duration": 36,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/55.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.8,
+        "to": 18.58,
+        "score": 5
+      },
+      {
+        "from": 18.58,
+        "to": 19.36,
+        "score": 4
+      },
+      {
+        "from": 19.36,
+        "to": 20.14,
+        "score": 3
+      },
+      {
+        "from": 20.14,
+        "to": 20.92,
+        "score": 2
+      },
+      {
+        "from": 20.92,
+        "to": 21.7,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "056",
+    "id": 56,
+    "title": "Tình huống 56",
+    "chapter": 3,
+    "duration": 27,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/56.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.8,
+        "to": 18.34,
+        "score": 5
+      },
+      {
+        "from": 18.34,
+        "to": 18.88,
+        "score": 4
+      },
+      {
+        "from": 18.88,
+        "to": 19.42,
+        "score": 3
+      },
+      {
+        "from": 19.42,
+        "to": 19.96,
+        "score": 2
+      },
+      {
+        "from": 19.96,
+        "to": 20.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "057",
+    "id": 57,
+    "title": "Tình huống 57",
+    "chapter": 3,
+    "duration": 59,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/57.mp4",
+    "scoreWindows": [
+      {
+        "from": 30.7,
+        "to": 32.06,
+        "score": 5
+      },
+      {
+        "from": 32.06,
+        "to": 33.42,
+        "score": 4
+      },
+      {
+        "from": 33.42,
+        "to": 34.78,
+        "score": 3
+      },
+      {
+        "from": 34.78,
+        "to": 36.14,
+        "score": 2
+      },
+      {
+        "from": 36.14,
+        "to": 37.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "058",
+    "id": 58,
+    "title": "Tình huống 58",
+    "chapter": 3,
+    "duration": 46,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/58.mp4",
+    "scoreWindows": [
+      {
+        "from": 24.7,
+        "to": 25.66,
+        "score": 5
+      },
+      {
+        "from": 25.66,
+        "to": 26.62,
+        "score": 4
+      },
+      {
+        "from": 26.62,
+        "to": 27.58,
+        "score": 3
+      },
+      {
+        "from": 27.58,
+        "to": 28.54,
+        "score": 2
+      },
+      {
+        "from": 28.54,
+        "to": 29.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "059",
+    "id": 59,
+    "title": "Tình huống 59",
+    "chapter": 3,
+    "duration": 38,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/59.mp4",
+    "scoreWindows": [
+      {
+        "from": 27.4,
+        "to": 28.02,
+        "score": 5
+      },
+      {
+        "from": 28.02,
+        "to": 28.64,
+        "score": 4
+      },
+      {
+        "from": 28.64,
+        "to": 29.26,
+        "score": 3
+      },
+      {
+        "from": 29.26,
+        "to": 29.88,
+        "score": 2
+      },
+      {
+        "from": 29.88,
+        "to": 30.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "060",
+    "id": 60,
+    "title": "Tình huống 60",
+    "chapter": 3,
+    "duration": 33,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/60.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.8,
+        "to": 18.54,
+        "score": 5
+      },
+      {
+        "from": 18.54,
+        "to": 19.28,
+        "score": 4
+      },
+      {
+        "from": 19.28,
+        "to": 20.02,
+        "score": 3
+      },
+      {
+        "from": 20.02,
+        "to": 20.76,
+        "score": 2
+      },
+      {
+        "from": 20.76,
+        "to": 21.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "061",
+    "id": 61,
+    "title": "Tình huống 61",
+    "chapter": 3,
+    "duration": 37,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/61.mp4",
+    "scoreWindows": [
+      {
+        "from": 27.4,
+        "to": 28.2,
+        "score": 5
+      },
+      {
+        "from": 28.2,
+        "to": 29,
+        "score": 4
+      },
+      {
+        "from": 29,
+        "to": 29.8,
+        "score": 3
+      },
+      {
+        "from": 29.8,
+        "to": 30.6,
+        "score": 2
+      },
+      {
+        "from": 30.6,
+        "to": 31.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "062",
+    "id": 62,
+    "title": "Tình huống 62",
+    "chapter": 3,
+    "duration": 36,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/62.mp4",
+    "scoreWindows": [
+      {
+        "from": 26.4,
+        "to": 27.22,
+        "score": 5
+      },
+      {
+        "from": 27.22,
+        "to": 28.04,
+        "score": 4
+      },
+      {
+        "from": 28.04,
+        "to": 28.86,
+        "score": 3
+      },
+      {
+        "from": 28.86,
+        "to": 29.68,
+        "score": 2
+      },
+      {
+        "from": 29.68,
+        "to": 30.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "063",
+    "id": 63,
+    "title": "Tình huống 63",
+    "chapter": 3,
+    "duration": 30,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/63.mp4",
+    "scoreWindows": [
+      {
+        "from": 15,
+        "to": 15.8,
+        "score": 5
+      },
+      {
+        "from": 15.8,
+        "to": 16.6,
+        "score": 4
+      },
+      {
+        "from": 16.6,
+        "to": 17.4,
+        "score": 3
+      },
+      {
+        "from": 17.4,
+        "to": 18.2,
+        "score": 2
+      },
+      {
+        "from": 18.2,
+        "to": 19,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "064",
+    "id": 64,
+    "title": "Tình huống 64",
+    "chapter": 4,
+    "duration": 33,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/64.mp4",
+    "scoreWindows": [
+      {
+        "from": 20.7,
+        "to": 21.54,
+        "score": 5
+      },
+      {
+        "from": 21.54,
+        "to": 22.38,
+        "score": 4
+      },
+      {
+        "from": 22.38,
+        "to": 23.22,
+        "score": 3
+      },
+      {
+        "from": 23.22,
+        "to": 24.06,
+        "score": 2
+      },
+      {
+        "from": 24.06,
+        "to": 24.9,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "065",
+    "id": 65,
+    "title": "Tình huống 65",
+    "chapter": 4,
+    "duration": 42,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/65.mp4",
+    "scoreWindows": [
+      {
+        "from": 27.4,
+        "to": 28.4,
+        "score": 5
+      },
+      {
+        "from": 28.4,
+        "to": 29.4,
+        "score": 4
+      },
+      {
+        "from": 29.4,
+        "to": 30.4,
+        "score": 3
+      },
+      {
+        "from": 30.4,
+        "to": 31.4,
+        "score": 2
+      },
+      {
+        "from": 31.4,
+        "to": 32.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "066",
+    "id": 66,
+    "title": "Tình huống 66",
+    "chapter": 4,
+    "duration": 28,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/66.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.8,
+        "to": 20.52,
+        "score": 5
+      },
+      {
+        "from": 20.52,
+        "to": 21.24,
+        "score": 4
+      },
+      {
+        "from": 21.24,
+        "to": 21.96,
+        "score": 3
+      },
+      {
+        "from": 21.96,
+        "to": 22.68,
+        "score": 2
+      },
+      {
+        "from": 22.68,
+        "to": 23.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "067",
+    "id": 67,
+    "title": "Tình huống 67",
+    "chapter": 4,
+    "duration": 38,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/67.mp4",
+    "scoreWindows": [
+      {
+        "from": 23.3,
+        "to": 24.08,
+        "score": 5
+      },
+      {
+        "from": 24.08,
+        "to": 24.86,
+        "score": 4
+      },
+      {
+        "from": 24.86,
+        "to": 25.64,
+        "score": 3
+      },
+      {
+        "from": 25.64,
+        "to": 26.42,
+        "score": 2
+      },
+      {
+        "from": 26.42,
+        "to": 27.2,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "068",
+    "id": 68,
+    "title": "Tình huống 68",
+    "chapter": 4,
+    "duration": 32,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/68.mp4",
+    "scoreWindows": [
+      {
+        "from": 21.5,
+        "to": 22.08,
+        "score": 5
+      },
+      {
+        "from": 22.08,
+        "to": 22.66,
+        "score": 4
+      },
+      {
+        "from": 22.66,
+        "to": 23.24,
+        "score": 3
+      },
+      {
+        "from": 23.24,
+        "to": 23.82,
+        "score": 2
+      },
+      {
+        "from": 23.82,
+        "to": 24.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "069",
+    "id": 69,
+    "title": "Tình huống 69",
+    "chapter": 4,
+    "duration": 37,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/69.mp4",
+    "scoreWindows": [
+      {
+        "from": 25.3,
+        "to": 25.76,
+        "score": 5
+      },
+      {
+        "from": 25.76,
+        "to": 26.22,
+        "score": 4
+      },
+      {
+        "from": 26.22,
+        "to": 26.68,
+        "score": 3
+      },
+      {
+        "from": 26.68,
+        "to": 27.14,
+        "score": 2
+      },
+      {
+        "from": 27.14,
+        "to": 27.6,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "070",
+    "id": 70,
+    "title": "Tình huống 70",
+    "chapter": 4,
+    "duration": 58,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/70.mp4",
+    "scoreWindows": [
+      {
+        "from": 38.5,
+        "to": 39.34,
+        "score": 5
+      },
+      {
+        "from": 39.34,
+        "to": 40.18,
+        "score": 4
+      },
+      {
+        "from": 40.18,
+        "to": 41.02,
+        "score": 3
+      },
+      {
+        "from": 41.02,
+        "to": 41.86,
+        "score": 2
+      },
+      {
+        "from": 41.86,
+        "to": 42.7,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "071",
+    "id": 71,
+    "title": "Tình huống 71",
+    "chapter": 4,
+    "duration": 36,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/71.mp4",
+    "scoreWindows": [
+      {
+        "from": 22.4,
+        "to": 23.28,
+        "score": 5
+      },
+      {
+        "from": 23.28,
+        "to": 24.16,
+        "score": 4
+      },
+      {
+        "from": 24.16,
+        "to": 25.04,
+        "score": 3
+      },
+      {
+        "from": 25.04,
+        "to": 25.92,
+        "score": 2
+      },
+      {
+        "from": 25.92,
+        "to": 26.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "072",
+    "id": 72,
+    "title": "Tình huống 72",
+    "chapter": 4,
+    "duration": 36,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/72.mp4",
+    "scoreWindows": [
+      {
+        "from": 25.4,
+        "to": 26.26,
+        "score": 5
+      },
+      {
+        "from": 26.26,
+        "to": 27.12,
+        "score": 4
+      },
+      {
+        "from": 27.12,
+        "to": 27.98,
+        "score": 3
+      },
+      {
+        "from": 27.98,
+        "to": 28.84,
+        "score": 2
+      },
+      {
+        "from": 28.84,
+        "to": 29.7,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "073",
+    "id": 73,
+    "title": "Tình huống 73",
+    "chapter": 4,
+    "duration": 37,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/73.mp4",
+    "scoreWindows": [
+      {
+        "from": 25.6,
+        "to": 26.16,
+        "score": 5
+      },
+      {
+        "from": 26.16,
+        "to": 26.72,
+        "score": 4
+      },
+      {
+        "from": 26.72,
+        "to": 27.28,
+        "score": 3
+      },
+      {
+        "from": 27.28,
+        "to": 27.84,
+        "score": 2
+      },
+      {
+        "from": 27.84,
+        "to": 28.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "074",
+    "id": 74,
+    "title": "Tình huống 74",
+    "chapter": 5,
+    "duration": 38,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/74.mp4",
+    "scoreWindows": [
+      {
+        "from": 21.6,
+        "to": 22.44,
+        "score": 5
+      },
+      {
+        "from": 22.44,
+        "to": 23.28,
+        "score": 4
+      },
+      {
+        "from": 23.28,
+        "to": 24.12,
+        "score": 3
+      },
+      {
+        "from": 24.12,
+        "to": 24.96,
+        "score": 2
+      },
+      {
+        "from": 24.96,
+        "to": 25.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "075",
+    "id": 75,
+    "title": "Tình huống 75",
+    "chapter": 5,
+    "duration": 29,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/75.mp4",
+    "scoreWindows": [
+      {
+        "from": 15.6,
+        "to": 16.18,
+        "score": 5
+      },
+      {
+        "from": 16.18,
+        "to": 16.76,
+        "score": 4
+      },
+      {
+        "from": 16.76,
+        "to": 17.34,
+        "score": 3
+      },
+      {
+        "from": 17.34,
+        "to": 17.92,
+        "score": 2
+      },
+      {
+        "from": 17.92,
+        "to": 18.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "076",
+    "id": 76,
+    "title": "Tình huống 76",
+    "chapter": 5,
+    "duration": 32,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/76.mp4",
+    "scoreWindows": [
+      {
+        "from": 16.7,
+        "to": 17.44,
+        "score": 5
+      },
+      {
+        "from": 17.44,
+        "to": 18.18,
+        "score": 4
+      },
+      {
+        "from": 18.18,
+        "to": 18.92,
+        "score": 3
+      },
+      {
+        "from": 18.92,
+        "to": 19.66,
+        "score": 2
+      },
+      {
+        "from": 19.66,
+        "to": 20.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "077",
+    "id": 77,
+    "title": "Tình huống 77",
+    "chapter": 5,
+    "duration": 32,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/77.mp4",
+    "scoreWindows": [
+      {
+        "from": 16.5,
+        "to": 17.28,
+        "score": 5
+      },
+      {
+        "from": 17.28,
+        "to": 18.06,
+        "score": 4
+      },
+      {
+        "from": 18.06,
+        "to": 18.84,
+        "score": 3
+      },
+      {
+        "from": 18.84,
+        "to": 19.62,
+        "score": 2
+      },
+      {
+        "from": 19.62,
+        "to": 20.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "078",
+    "id": 78,
+    "title": "Tình huống 78",
+    "chapter": 5,
+    "duration": 30,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/78.mp4",
+    "scoreWindows": [
+      {
+        "from": 21.8,
+        "to": 22.34,
+        "score": 5
+      },
+      {
+        "from": 22.34,
+        "to": 22.88,
+        "score": 4
+      },
+      {
+        "from": 22.88,
+        "to": 23.42,
+        "score": 3
+      },
+      {
+        "from": 23.42,
+        "to": 23.96,
+        "score": 2
+      },
+      {
+        "from": 23.96,
+        "to": 24.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "079",
+    "id": 79,
+    "title": "Tình huống 79",
+    "chapter": 5,
+    "duration": 34,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/79.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.8,
+        "to": 20.4,
+        "score": 5
+      },
+      {
+        "from": 20.4,
+        "to": 21,
+        "score": 4
+      },
+      {
+        "from": 21,
+        "to": 21.6,
+        "score": 3
+      },
+      {
+        "from": 21.6,
+        "to": 22.2,
+        "score": 2
+      },
+      {
+        "from": 22.2,
+        "to": 22.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "080",
+    "id": 80,
+    "title": "Tình huống 80",
+    "chapter": 5,
+    "duration": 26,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/80.mp4",
+    "scoreWindows": [
+      {
+        "from": 17,
+        "to": 17.48,
+        "score": 5
+      },
+      {
+        "from": 17.48,
+        "to": 17.96,
+        "score": 4
+      },
+      {
+        "from": 17.96,
+        "to": 18.44,
+        "score": 3
+      },
+      {
+        "from": 18.44,
+        "to": 18.92,
+        "score": 2
+      },
+      {
+        "from": 18.92,
+        "to": 19.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "081",
+    "id": 81,
+    "title": "Tình huống 81",
+    "chapter": 5,
+    "duration": 34,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/81.mp4",
+    "scoreWindows": [
+      {
+        "from": 25.7,
+        "to": 26.32,
+        "score": 5
+      },
+      {
+        "from": 26.32,
+        "to": 26.94,
+        "score": 4
+      },
+      {
+        "from": 26.94,
+        "to": 27.56,
+        "score": 3
+      },
+      {
+        "from": 27.56,
+        "to": 28.18,
+        "score": 2
+      },
+      {
+        "from": 28.18,
+        "to": 28.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "082",
+    "id": 82,
+    "title": "Tình huống 82",
+    "chapter": 5,
+    "duration": 35,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/82.mp4",
+    "scoreWindows": [
+      {
+        "from": 16.9,
+        "to": 17.88,
+        "score": 5
+      },
+      {
+        "from": 17.88,
+        "to": 18.86,
+        "score": 4
+      },
+      {
+        "from": 18.86,
+        "to": 19.84,
+        "score": 3
+      },
+      {
+        "from": 19.84,
+        "to": 20.82,
+        "score": 2
+      },
+      {
+        "from": 20.82,
+        "to": 21.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "083",
+    "id": 83,
+    "title": "Tình huống 83",
+    "chapter": 5,
+    "duration": 30,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/83.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.8,
+        "to": 18.58,
+        "score": 5
+      },
+      {
+        "from": 18.58,
+        "to": 19.36,
+        "score": 4
+      },
+      {
+        "from": 19.36,
+        "to": 20.14,
+        "score": 3
+      },
+      {
+        "from": 20.14,
+        "to": 20.92,
+        "score": 2
+      },
+      {
+        "from": 20.92,
+        "to": 21.7,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "084",
+    "id": 84,
+    "title": "Tình huống 84",
+    "chapter": 5,
+    "duration": 31,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/84.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.8,
+        "to": 20.52,
+        "score": 5
+      },
+      {
+        "from": 20.52,
+        "to": 21.24,
+        "score": 4
+      },
+      {
+        "from": 21.24,
+        "to": 21.96,
+        "score": 3
+      },
+      {
+        "from": 21.96,
+        "to": 22.68,
+        "score": 2
+      },
+      {
+        "from": 22.68,
+        "to": 23.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "085",
+    "id": 85,
+    "title": "Tình huống 85",
+    "chapter": 5,
+    "duration": 39,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/85.mp4",
+    "scoreWindows": [
+      {
+        "from": 26.7,
+        "to": 27.16,
+        "score": 5
+      },
+      {
+        "from": 27.16,
+        "to": 27.62,
+        "score": 4
+      },
+      {
+        "from": 27.62,
+        "to": 28.08,
+        "score": 3
+      },
+      {
+        "from": 28.08,
+        "to": 28.54,
+        "score": 2
+      },
+      {
+        "from": 28.54,
+        "to": 29,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "086",
+    "id": 86,
+    "title": "Tình huống 86",
+    "chapter": 5,
+    "duration": 30,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/86.mp4",
+    "scoreWindows": [
+      {
+        "from": 14.7,
+        "to": 15.52,
+        "score": 5
+      },
+      {
+        "from": 15.52,
+        "to": 16.34,
+        "score": 4
+      },
+      {
+        "from": 16.34,
+        "to": 17.16,
+        "score": 3
+      },
+      {
+        "from": 17.16,
+        "to": 17.98,
+        "score": 2
+      },
+      {
+        "from": 17.98,
+        "to": 18.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "087",
+    "id": 87,
+    "title": "Tình huống 87",
+    "chapter": 5,
+    "duration": 34,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/87.mp4",
+    "scoreWindows": [
+      {
+        "from": 13.9,
+        "to": 14.8,
+        "score": 5
+      },
+      {
+        "from": 14.8,
+        "to": 15.7,
+        "score": 4
+      },
+      {
+        "from": 15.7,
+        "to": 16.6,
+        "score": 3
+      },
+      {
+        "from": 16.6,
+        "to": 17.5,
+        "score": 2
+      },
+      {
+        "from": 17.5,
+        "to": 18.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "088",
+    "id": 88,
+    "title": "Tình huống 88",
+    "chapter": 5,
+    "duration": 31,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/88.mp4",
+    "scoreWindows": [
+      {
+        "from": 21.7,
+        "to": 22.24,
+        "score": 5
+      },
+      {
+        "from": 22.24,
+        "to": 22.78,
+        "score": 4
+      },
+      {
+        "from": 22.78,
+        "to": 23.32,
+        "score": 3
+      },
+      {
+        "from": 23.32,
+        "to": 23.86,
+        "score": 2
+      },
+      {
+        "from": 23.86,
+        "to": 24.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "089",
+    "id": 89,
+    "title": "Tình huống 89",
+    "chapter": 5,
+    "duration": 30,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/89.mp4",
+    "scoreWindows": [
+      {
+        "from": 19,
+        "to": 19.7,
+        "score": 5
+      },
+      {
+        "from": 19.7,
+        "to": 20.4,
+        "score": 4
+      },
+      {
+        "from": 20.4,
+        "to": 21.1,
+        "score": 3
+      },
+      {
+        "from": 21.1,
+        "to": 21.8,
+        "score": 2
+      },
+      {
+        "from": 21.8,
+        "to": 22.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "090",
+    "id": 90,
+    "title": "Tình huống 90",
+    "chapter": 5,
+    "duration": 29,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/90.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.2,
+        "to": 17.92,
+        "score": 5
+      },
+      {
+        "from": 17.92,
+        "to": 18.64,
+        "score": 4
+      },
+      {
+        "from": 18.64,
+        "to": 19.36,
+        "score": 3
+      },
+      {
+        "from": 19.36,
+        "to": 20.08,
+        "score": 2
+      },
+      {
+        "from": 20.08,
+        "to": 20.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "091",
+    "id": 91,
+    "title": "Tình huống 91",
+    "chapter": 6,
+    "duration": 31,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/91.mp4",
+    "scoreWindows": [
+      {
+        "from": 16,
+        "to": 16.88,
+        "score": 5
+      },
+      {
+        "from": 16.88,
+        "to": 17.76,
+        "score": 4
+      },
+      {
+        "from": 17.76,
+        "to": 18.64,
+        "score": 3
+      },
+      {
+        "from": 18.64,
+        "to": 19.52,
+        "score": 2
+      },
+      {
+        "from": 19.52,
+        "to": 20.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "092",
+    "id": 92,
+    "title": "Tình huống 92",
+    "chapter": 6,
+    "duration": 25,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/92.mp4",
+    "scoreWindows": [
+      {
+        "from": 15.6,
+        "to": 16.24,
+        "score": 5
+      },
+      {
+        "from": 16.24,
+        "to": 16.88,
+        "score": 4
+      },
+      {
+        "from": 16.88,
+        "to": 17.52,
+        "score": 3
+      },
+      {
+        "from": 17.52,
+        "to": 18.16,
+        "score": 2
+      },
+      {
+        "from": 18.16,
+        "to": 18.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "093",
+    "id": 93,
+    "title": "Tình huống 93",
+    "chapter": 6,
+    "duration": 36,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/93.mp4",
+    "scoreWindows": [
+      {
+        "from": 23.4,
+        "to": 24.04,
+        "score": 5
+      },
+      {
+        "from": 24.04,
+        "to": 24.68,
+        "score": 4
+      },
+      {
+        "from": 24.68,
+        "to": 25.32,
+        "score": 3
+      },
+      {
+        "from": 25.32,
+        "to": 25.96,
+        "score": 2
+      },
+      {
+        "from": 25.96,
+        "to": 26.6,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "094",
+    "id": 94,
+    "title": "Tình huống 94",
+    "chapter": 6,
+    "duration": 40,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/94.mp4",
+    "scoreWindows": [
+      {
+        "from": 27.4,
+        "to": 28.22,
+        "score": 5
+      },
+      {
+        "from": 28.22,
+        "to": 29.04,
+        "score": 4
+      },
+      {
+        "from": 29.04,
+        "to": 29.86,
+        "score": 3
+      },
+      {
+        "from": 29.86,
+        "to": 30.68,
+        "score": 2
+      },
+      {
+        "from": 30.68,
+        "to": 31.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "095",
+    "id": 95,
+    "title": "Tình huống 95",
+    "chapter": 6,
+    "duration": 28,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/95.mp4",
+    "scoreWindows": [
+      {
+        "from": 15.6,
+        "to": 16.6,
+        "score": 5
+      },
+      {
+        "from": 16.6,
+        "to": 17.6,
+        "score": 4
+      },
+      {
+        "from": 17.6,
+        "to": 18.6,
+        "score": 3
+      },
+      {
+        "from": 18.6,
+        "to": 19.6,
+        "score": 2
+      },
+      {
+        "from": 19.6,
+        "to": 20.6,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "096",
+    "id": 96,
+    "title": "Tình huống 96",
+    "chapter": 6,
+    "duration": 33,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/96.mp4",
+    "scoreWindows": [
+      {
+        "from": 27.8,
+        "to": 28.44,
+        "score": 5
+      },
+      {
+        "from": 28.44,
+        "to": 29.08,
+        "score": 4
+      },
+      {
+        "from": 29.08,
+        "to": 29.72,
+        "score": 3
+      },
+      {
+        "from": 29.72,
+        "to": 30.36,
+        "score": 2
+      },
+      {
+        "from": 30.36,
+        "to": 31,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "097",
+    "id": 97,
+    "title": "Tình huống 97",
+    "chapter": 6,
+    "duration": 46,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/97.mp4",
+    "scoreWindows": [
+      {
+        "from": 29.6,
+        "to": 30.08,
+        "score": 5
+      },
+      {
+        "from": 30.08,
+        "to": 30.56,
+        "score": 4
+      },
+      {
+        "from": 30.56,
+        "to": 31.04,
+        "score": 3
+      },
+      {
+        "from": 31.04,
+        "to": 31.52,
+        "score": 2
+      },
+      {
+        "from": 31.52,
+        "to": 32,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "098",
+    "id": 98,
+    "title": "Tình huống 98",
+    "chapter": 6,
+    "duration": 39,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/98.mp4",
+    "scoreWindows": [
+      {
+        "from": 24.2,
+        "to": 24.9,
+        "score": 5
+      },
+      {
+        "from": 24.9,
+        "to": 25.6,
+        "score": 4
+      },
+      {
+        "from": 25.6,
+        "to": 26.3,
+        "score": 3
+      },
+      {
+        "from": 26.3,
+        "to": 27,
+        "score": 2
+      },
+      {
+        "from": 27,
+        "to": 27.7,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "099",
+    "id": 99,
+    "title": "Tình huống 99",
+    "chapter": 6,
+    "duration": 38,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/99.mp4",
+    "scoreWindows": [
+      {
+        "from": 26.8,
+        "to": 27.4,
+        "score": 5
+      },
+      {
+        "from": 27.4,
+        "to": 28,
+        "score": 4
+      },
+      {
+        "from": 28,
+        "to": 28.6,
+        "score": 3
+      },
+      {
+        "from": 28.6,
+        "to": 29.2,
+        "score": 2
+      },
+      {
+        "from": 29.2,
+        "to": 29.8,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "100",
+    "id": 100,
+    "title": "Tình huống 100",
+    "chapter": 6,
+    "duration": 30,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/100.mp4",
+    "scoreWindows": [
+      {
+        "from": 18.4,
+        "to": 19,
+        "score": 5
+      },
+      {
+        "from": 19,
+        "to": 19.6,
+        "score": 4
+      },
+      {
+        "from": 19.6,
+        "to": 20.2,
+        "score": 3
+      },
+      {
+        "from": 20.2,
+        "to": 20.8,
+        "score": 2
+      },
+      {
+        "from": 20.8,
+        "to": 21.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "101",
+    "id": 101,
+    "title": "Tình huống 101",
+    "chapter": 6,
+    "duration": 36,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/101.mp4",
+    "scoreWindows": [
+      {
+        "from": 22,
+        "to": 22.5,
+        "score": 5
+      },
+      {
+        "from": 22.5,
+        "to": 23,
+        "score": 4
+      },
+      {
+        "from": 23,
+        "to": 23.5,
+        "score": 3
+      },
+      {
+        "from": 23.5,
+        "to": 24,
+        "score": 2
+      },
+      {
+        "from": 24,
+        "to": 24.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "102",
+    "id": 102,
+    "title": "Tình huống 102",
+    "chapter": 6,
+    "duration": 31,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/102.mp4",
+    "scoreWindows": [
+      {
+        "from": 22.4,
+        "to": 23.06,
+        "score": 5
+      },
+      {
+        "from": 23.06,
+        "to": 23.72,
+        "score": 4
+      },
+      {
+        "from": 23.72,
+        "to": 24.38,
+        "score": 3
+      },
+      {
+        "from": 24.38,
+        "to": 25.04,
+        "score": 2
+      },
+      {
+        "from": 25.04,
+        "to": 25.7,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "103",
+    "id": 103,
+    "title": "Tình huống 103",
+    "chapter": 6,
+    "duration": 36,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/103.mp4",
+    "scoreWindows": [
+      {
+        "from": 26.7,
+        "to": 27.36,
+        "score": 5
+      },
+      {
+        "from": 27.36,
+        "to": 28.02,
+        "score": 4
+      },
+      {
+        "from": 28.02,
+        "to": 28.68,
+        "score": 3
+      },
+      {
+        "from": 28.68,
+        "to": 29.34,
+        "score": 2
+      },
+      {
+        "from": 29.34,
+        "to": 30,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "104",
+    "id": 104,
+    "title": "Tình huống 104",
+    "chapter": 6,
+    "duration": 40,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/104.mp4",
+    "scoreWindows": [
+      {
+        "from": 29.5,
+        "to": 30.04,
+        "score": 5
+      },
+      {
+        "from": 30.04,
+        "to": 30.58,
+        "score": 4
+      },
+      {
+        "from": 30.58,
+        "to": 31.12,
+        "score": 3
+      },
+      {
+        "from": 31.12,
+        "to": 31.66,
+        "score": 2
+      },
+      {
+        "from": 31.66,
+        "to": 32.2,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "105",
+    "id": 105,
+    "title": "Tình huống 105",
+    "chapter": 6,
+    "duration": 30,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/105.mp4",
+    "scoreWindows": [
+      {
+        "from": 20.8,
+        "to": 21.28,
+        "score": 5
+      },
+      {
+        "from": 21.28,
+        "to": 21.76,
+        "score": 4
+      },
+      {
+        "from": 21.76,
+        "to": 22.24,
+        "score": 3
+      },
+      {
+        "from": 22.24,
+        "to": 22.72,
+        "score": 2
+      },
+      {
+        "from": 22.72,
+        "to": 23.2,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "106",
+    "id": 106,
+    "title": "Tình huống 106",
+    "chapter": 6,
+    "duration": 40,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/106.mp4",
+    "scoreWindows": [
+      {
+        "from": 26.5,
+        "to": 27.1,
+        "score": 5
+      },
+      {
+        "from": 27.1,
+        "to": 27.7,
+        "score": 4
+      },
+      {
+        "from": 27.7,
+        "to": 28.3,
+        "score": 3
+      },
+      {
+        "from": 28.3,
+        "to": 28.9,
+        "score": 2
+      },
+      {
+        "from": 28.9,
+        "to": 29.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "107",
+    "id": 107,
+    "title": "Tình huống 107",
+    "chapter": 6,
+    "duration": 41,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/107.mp4",
+    "scoreWindows": [
+      {
+        "from": 22.2,
+        "to": 22.82,
+        "score": 5
+      },
+      {
+        "from": 22.82,
+        "to": 23.44,
+        "score": 4
+      },
+      {
+        "from": 23.44,
+        "to": 24.06,
+        "score": 3
+      },
+      {
+        "from": 24.06,
+        "to": 24.68,
+        "score": 2
+      },
+      {
+        "from": 24.68,
+        "to": 25.3,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "108",
+    "id": 108,
+    "title": "Tình huống 108",
+    "chapter": 6,
+    "duration": 36,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/108.mp4",
+    "scoreWindows": [
+      {
+        "from": 30.2,
+        "to": 30.6,
+        "score": 5
+      },
+      {
+        "from": 30.6,
+        "to": 31,
+        "score": 4
+      },
+      {
+        "from": 31,
+        "to": 31.4,
+        "score": 3
+      },
+      {
+        "from": 31.4,
+        "to": 31.8,
+        "score": 2
+      },
+      {
+        "from": 31.8,
+        "to": 32.2,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "109",
+    "id": 109,
+    "title": "Tình huống 109",
+    "chapter": 6,
+    "duration": 31,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/109.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.5,
+        "to": 20.1,
+        "score": 5
+      },
+      {
+        "from": 20.1,
+        "to": 20.7,
+        "score": 4
+      },
+      {
+        "from": 20.7,
+        "to": 21.3,
+        "score": 3
+      },
+      {
+        "from": 21.3,
+        "to": 21.9,
+        "score": 2
+      },
+      {
+        "from": 21.9,
+        "to": 22.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "110",
+    "id": 110,
+    "title": "Tình huống 110",
+    "chapter": 6,
+    "duration": 32,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/110.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.4,
+        "to": 20,
+        "score": 5
+      },
+      {
+        "from": 20,
+        "to": 20.6,
+        "score": 4
+      },
+      {
+        "from": 20.6,
+        "to": 21.2,
+        "score": 3
+      },
+      {
+        "from": 21.2,
+        "to": 21.8,
+        "score": 2
+      },
+      {
+        "from": 21.8,
+        "to": 22.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "111",
+    "id": 111,
+    "title": "Tình huống 111",
+    "chapter": 6,
+    "duration": 24,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/111.mp4",
+    "scoreWindows": [
+      {
+        "from": 18.7,
+        "to": 19.3,
+        "score": 5
+      },
+      {
+        "from": 19.3,
+        "to": 19.9,
+        "score": 4
+      },
+      {
+        "from": 19.9,
+        "to": 20.5,
+        "score": 3
+      },
+      {
+        "from": 20.5,
+        "to": 21.1,
+        "score": 2
+      },
+      {
+        "from": 21.1,
+        "to": 21.7,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "112",
+    "id": 112,
+    "title": "Tình huống 112",
+    "chapter": 6,
+    "duration": 27,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/112.mp4",
+    "scoreWindows": [
+      {
+        "from": 14.4,
+        "to": 15.16,
+        "score": 5
+      },
+      {
+        "from": 15.16,
+        "to": 15.92,
+        "score": 4
+      },
+      {
+        "from": 15.92,
+        "to": 16.68,
+        "score": 3
+      },
+      {
+        "from": 16.68,
+        "to": 17.44,
+        "score": 2
+      },
+      {
+        "from": 17.44,
+        "to": 18.2,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "113",
+    "id": 113,
+    "title": "Tình huống 113",
+    "chapter": 6,
+    "duration": 32,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/113.mp4",
+    "scoreWindows": [
+      {
+        "from": 24.2,
+        "to": 24.76,
+        "score": 5
+      },
+      {
+        "from": 24.76,
+        "to": 25.32,
+        "score": 4
+      },
+      {
+        "from": 25.32,
+        "to": 25.88,
+        "score": 3
+      },
+      {
+        "from": 25.88,
+        "to": 26.44,
+        "score": 2
+      },
+      {
+        "from": 26.44,
+        "to": 27,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "114",
+    "id": 114,
+    "title": "Tình huống 114",
+    "chapter": 6,
+    "duration": 37,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/114.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.4,
+        "to": 20.22,
+        "score": 5
+      },
+      {
+        "from": 20.22,
+        "to": 21.04,
+        "score": 4
+      },
+      {
+        "from": 21.04,
+        "to": 21.86,
+        "score": 3
+      },
+      {
+        "from": 21.86,
+        "to": 22.68,
+        "score": 2
+      },
+      {
+        "from": 22.68,
+        "to": 23.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "115",
+    "id": 115,
+    "title": "Tình huống 115",
+    "chapter": 6,
+    "duration": 30,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/115.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.8,
+        "to": 20.48,
+        "score": 5
+      },
+      {
+        "from": 20.48,
+        "to": 21.16,
+        "score": 4
+      },
+      {
+        "from": 21.16,
+        "to": 21.84,
+        "score": 3
+      },
+      {
+        "from": 21.84,
+        "to": 22.52,
+        "score": 2
+      },
+      {
+        "from": 22.52,
+        "to": 23.2,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "116",
+    "id": 116,
+    "title": "Tình huống 116",
+    "chapter": 6,
+    "duration": 30,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/116.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.8,
+        "to": 18.72,
+        "score": 5
+      },
+      {
+        "from": 18.72,
+        "to": 19.64,
+        "score": 4
+      },
+      {
+        "from": 19.64,
+        "to": 20.56,
+        "score": 3
+      },
+      {
+        "from": 20.56,
+        "to": 21.48,
+        "score": 2
+      },
+      {
+        "from": 21.48,
+        "to": 22.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "117",
+    "id": 117,
+    "title": "Tình huống 117",
+    "chapter": 6,
+    "duration": 25,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/117.mp4",
+    "scoreWindows": [
+      {
+        "from": 18.2,
+        "to": 18.68,
+        "score": 5
+      },
+      {
+        "from": 18.68,
+        "to": 19.16,
+        "score": 4
+      },
+      {
+        "from": 19.16,
+        "to": 19.64,
+        "score": 3
+      },
+      {
+        "from": 19.64,
+        "to": 20.12,
+        "score": 2
+      },
+      {
+        "from": 20.12,
+        "to": 20.6,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "118",
+    "id": 118,
+    "title": "Tình huống 118",
+    "chapter": 6,
+    "duration": 29,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/118.mp4",
+    "scoreWindows": [
+      {
+        "from": 17.8,
+        "to": 18.74,
+        "score": 5
+      },
+      {
+        "from": 18.74,
+        "to": 19.68,
+        "score": 4
+      },
+      {
+        "from": 19.68,
+        "to": 20.62,
+        "score": 3
+      },
+      {
+        "from": 20.62,
+        "to": 21.56,
+        "score": 2
+      },
+      {
+        "from": 21.56,
+        "to": 22.5,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "119",
+    "id": 119,
+    "title": "Tình huống 119",
+    "chapter": 6,
+    "duration": 36,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/119.mp4",
+    "scoreWindows": [
+      {
+        "from": 19.2,
+        "to": 19.68,
+        "score": 5
+      },
+      {
+        "from": 19.68,
+        "to": 20.16,
+        "score": 4
+      },
+      {
+        "from": 20.16,
+        "to": 20.64,
+        "score": 3
+      },
+      {
+        "from": 20.64,
+        "to": 21.12,
+        "score": 2
+      },
+      {
+        "from": 21.12,
+        "to": 21.6,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  },
+  {
+    "docId": "120",
+    "id": 120,
+    "title": "Tình huống 120",
+    "chapter": 6,
+    "duration": 40,
+    "videoUrl": "https://res.cloudinary.com/djfgmo94t/video/upload/v1781929213/120.mp4",
+    "scoreWindows": [
+      {
+        "from": 20.75,
+        "to": 21.28,
+        "score": 5
+      },
+      {
+        "from": 21.28,
+        "to": 21.81,
+        "score": 4
+      },
+      {
+        "from": 21.81,
+        "to": 22.34,
+        "score": 3
+      },
+      {
+        "from": 22.34,
+        "to": 22.87,
+        "score": 2
+      },
+      {
+        "from": 22.87,
+        "to": 23.4,
+        "score": 1
+      }
+    ],
+    "isActive": true
+  }
+]
