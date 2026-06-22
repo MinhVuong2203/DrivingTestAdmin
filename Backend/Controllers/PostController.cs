@@ -269,7 +269,7 @@ namespace Backend.Controllers
         [UserAuthorize]
         [Consumes("multipart/form-data")]
         [RequestSizeLimit(100 * 1024 * 1024)]
-        public async Task<IActionResult> UploadVideo([FromForm] IFormFile file)
+        public async Task<IActionResult> UploadVideo(IFormFile file)
         {
             const long maxFileSize = 100L * 1024 * 1024;
             const double maxDurationSeconds = 30.0;
