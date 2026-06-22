@@ -239,6 +239,11 @@ namespace Backend.Controllers
 
             foreach (var item in feedbacks)
             {
+                if (item.SpamRisk || string.Equals(item.Status, "spam", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "Ban khong the gui them phan hoi vi da co phan hoi khong phu hop.";
+                }
+
                 var createdAt = item.Timestamp;
                 if (createdAt.HasValue && now - createdAt.Value.ToUniversalTime() <= SpamWindow)
                 {
