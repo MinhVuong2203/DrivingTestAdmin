@@ -102,29 +102,30 @@ namespace Backend.Service
         private static string BuildPrompt(FeedbackAiReplyRequest request)
         {
             var displayName = string.IsNullOrWhiteSpace(request.DisplayName)
-                ? "nguoi dung"
+                ? "người dùng"
                 : request.DisplayName.Trim();
             var platform = string.IsNullOrWhiteSpace(request.Platform)
-                ? "khong ro"
+                ? "không rõ"
                 : request.Platform.Trim();
             var content = request.Content?.Trim() ?? "";
 
             return $$"""
-                Ban la tro ly cham soc nguoi dung cho app on thi lai xe "Kien thuc lai xe 600".
-                Hay tra loi bang tieng Viet co dau, lich su, ngan gon va tu nhien.
-                Neu nguoi dung bao loi hoac app cham, hay xin loi, ghi nhan va noi doi ngu se kiem tra.
-                Neu noi dung co dau hieu spam, quang cao, xuc pham hoac vo nghia, danh dau spamRisk = true.
+                Bạn là trợ lý chăm sóc người dùng cho app ôn thi lái xe "Kiến thức lái xe 600".
+                Hãy trả lời bằng tiếng Việt có dấu, lịch sự, ngắn gọn và tự nhiên.
+                Tuyệt đối không trả lời tiếng Việt không dấu.
+                Nếu người dùng báo lỗi hoặc app chậm, hãy xin lỗi, ghi nhận và nói đội ngũ sẽ kiểm tra.
+                Nếu nội dung có dấu hiệu spam, quảng cáo, xúc phạm hoặc vô nghĩa, đánh dấu spamRisk = true.
 
-                Chi tra ve JSON dung format:
+                Chỉ trả về JSON đúng format:
                 {
-                  "replyText": "cau tra loi gui cho nguoi dung",
+                  "replyText": "câu trả lời gửi cho người dùng bằng tiếng Việt có dấu",
                   "spamRisk": true/false,
-                  "spamReason": "ly do ngan neu co"
+                  "spamReason": "lý do ngắn nếu có"
                 }
 
-                Ten nguoi dung: {{displayName}}
-                Nen tang: {{platform}}
-                Noi dung phan hoi:
+                Tên người dùng: {{displayName}}
+                Nền tảng: {{platform}}
+                Nội dung phản hồi:
                 {{content}}
                 """;
         }
@@ -134,15 +135,15 @@ namespace Backend.Service
             string spamReason)
         {
             var name = string.IsNullOrWhiteSpace(request.DisplayName)
-                ? "ban"
+                ? "bạn"
                 : request.DisplayName.Trim();
             var isSpam = !string.IsNullOrWhiteSpace(spamReason);
 
             return new FeedbackAiReplyResponse
             {
                 ReplyText = isSpam
-                    ? "Phan hoi khong phu hop."
-                    : $"Cam on {name} da gui gop y. Doi ngu quan tri da ghi nhan phan hoi nay va se kiem tra de cai thien ung dung trong thoi gian som nhat.",
+                    ? "Phản hồi không phù hợp."
+                    : $"Cảm ơn {name} đã gửi góp ý. Đội ngũ quản trị đã ghi nhận phản hồi này và sẽ kiểm tra để cải thiện ứng dụng trong thời gian sớm nhất.",
                 SpamRisk = isSpam,
                 SpamReason = spamReason,
                 Source = "fallback"
@@ -154,23 +155,23 @@ namespace Backend.Service
             var normalized = Normalize(content);
             if (normalized.Length < 10)
             {
-                return "Noi dung qua ngan.";
+                return "Nội dung quá ngắn.";
             }
 
             if (ContainsOffensiveOrNegativeTerm(content))
             {
-                return "Noi dung co tu ngu phan cam hoac tieu cuc.";
+                return "Nội dung có từ ngữ phản cảm hoặc tiêu cực.";
             }
 
             if (normalized.Contains("bit.ly") || normalized.Contains("t.me/"))
             {
-                return "Noi dung co dau hieu spam lien ket.";
+                return "Nội dung có dấu hiệu spam liên kết.";
             }
 
             var distinctChars = normalized.Where(char.IsLetterOrDigit).Distinct().Count();
             if (normalized.Length >= 20 && distinctChars <= 3)
             {
-                return "Noi dung lap ky tu bat thuong.";
+                return "Nội dung lặp ký tự bất thường.";
             }
 
             return "";
