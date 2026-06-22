@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Backend.DTO;
 using Backend.Service.Interface;
 
@@ -135,12 +136,14 @@ namespace Backend.Service
             var name = string.IsNullOrWhiteSpace(request.DisplayName)
                 ? "ban"
                 : request.DisplayName.Trim();
+            var isSpam = !string.IsNullOrWhiteSpace(spamReason);
 
             return new FeedbackAiReplyResponse
             {
-                ReplyText =
-                    $"Cam on {name} da gui gop y. Doi ngu quan tri da ghi nhan phan hoi nay va se kiem tra de cai thien ung dung trong thoi gian som nhat.",
-                SpamRisk = !string.IsNullOrWhiteSpace(spamReason),
+                ReplyText = isSpam
+                    ? "Phan hoi khong phu hop."
+                    : $"Cam on {name} da gui gop y. Doi ngu quan tri da ghi nhan phan hoi nay va se kiem tra de cai thien ung dung trong thoi gian som nhat.",
+                SpamRisk = isSpam,
                 SpamReason = spamReason,
                 Source = "fallback"
             };
@@ -152,6 +155,11 @@ namespace Backend.Service
             if (normalized.Length < 10)
             {
                 return "Noi dung qua ngan.";
+            }
+
+            if (ContainsOffensiveOrNegativeTerm(content))
+            {
+                return "Noi dung co tu ngu phan cam hoac tieu cuc.";
             }
 
             if (normalized.Contains("bit.ly") || normalized.Contains("t.me/"))
@@ -166,6 +174,71 @@ namespace Backend.Service
             }
 
             return "";
+        }
+
+        private static bool ContainsOffensiveOrNegativeTerm(string content)
+        {
+            var original = Normalize(content);
+            var folded = FoldVietnamese(original);
+            var padded = $" {folded} ";
+
+            var phraseTerms = new[]
+            {
+                "dit me",
+                "du ma",
+                "me may",
+                "oc cho",
+                "nhu lon",
+                "nhu cc",
+                "nhu cut",
+                "vo dung",
+                "do rac",
+                "rac ruoi",
+                "lam an nhu",
+                "app rac"
+            };
+
+            if (phraseTerms.Any(term => padded.Contains($" {term} ")))
+            {
+                return true;
+            }
+
+            var tokenTerms = new HashSet<string>(StringComparer.Ordinal)
+            {
+                "dm",
+                "dmm",
+                "dkm",
+                "clgt",
+                "vcl",
+                "vl",
+                "dit",
+                "du",
+                "lon",
+                "buoi",
+                "deo",
+                "ngu",
+                "dot",
+                "fuck",
+                "shit"
+            };
+
+            if (folded.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Any(token => tokenTerms.Contains(token)))
+            {
+                return true;
+            }
+
+            var accentedTerms = new[]
+            {
+                "\u0111\u1ecbt",
+                "\u0111\u1ee5",
+                "l\u1ed3n",
+                "bu\u1ed3i",
+                "\u0111\u00e9o",
+                "\u00f3c ch\u00f3"
+            };
+
+            return accentedTerms.Any(original.Contains);
         }
 
         private static string ExtractAiText(string responseText)
@@ -199,6 +272,30 @@ namespace Backend.Service
                 value.Trim().ToLowerInvariant().Split(
                     (char[]?)null,
                     StringSplitOptions.RemoveEmptyEntries));
+        }
+
+        private static string FoldVietnamese(string value)
+        {
+            var replaced = value
+                .Replace('\u0111', 'd')
+                .Replace('\u0110', 'D');
+            var formD = replaced.Normalize(NormalizationForm.FormD);
+            var builder = new StringBuilder(formD.Length);
+
+            foreach (var character in formD)
+            {
+                var unicodeCategory = System.Globalization.CharUnicodeInfo
+                    .GetUnicodeCategory(character);
+                if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
+                {
+                    builder.Append(character);
+                }
+            }
+
+            return Regex.Replace(
+                builder.ToString().Normalize(NormalizationForm.FormC).ToLowerInvariant(),
+                @"\s+",
+                " ").Trim();
         }
     }
 }
