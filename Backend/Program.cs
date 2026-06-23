@@ -2,10 +2,10 @@ using Backend.Repository;
 using Backend.Service;
 using Backend.Service.Interface;
 using FirebaseAdmin;
-using Google.Cloud.Firestore;
 using Google.Apis.Auth.OAuth2;
-using Microsoft.OpenApi.Models;
+using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -159,6 +159,19 @@ builder.WebHost.ConfigureKestrel(
             100L * 1024 * 1024;
     }
 );
+
+// OTP và gửi email
+builder.Services.AddHttpClient<
+    IEmailService,
+    ResendEmailService
+>();
+
+builder.Services.AddMemoryCache();
+
+builder.Services.AddScoped<
+    IOtpService,
+    OtpService
+>();
 
 var app = builder.Build();
 
