@@ -98,8 +98,13 @@ namespace Backend.Service
                 throw new SecurityTokenException("Invalid basic credentials.");
             }
 
-            var email = decodedCredentials[..separatorIndex];
+            var email = NormalizeGmail(decodedCredentials[..separatorIndex]);
             var password = decodedCredentials[(separatorIndex + 1)..];
+
+            if (email == null)
+            {
+                throw new SecurityTokenException("Firebase sign in requires a Gmail address.");
+            }
 
             var url =
                 "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword"
@@ -134,6 +139,19 @@ namespace Backend.Service
 
             return localIdElement.GetString()
                 ?? throw new SecurityTokenException("Firebase sign in uid is empty.");
+        }
+
+        private static string? NormalizeGmail(string? email)
+        {
+            var normalizedEmail = email?.Trim().ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(normalizedEmail))
+            {
+                return null;
+            }
+
+            return normalizedEmail.EndsWith("@gmail.com", StringComparison.OrdinalIgnoreCase)
+                ? normalizedEmail
+                : null;
         }
 
         private async Task<string> VerifyFirebaseTokenAsync(
