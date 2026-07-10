@@ -62,34 +62,7 @@ if (FirebaseApp.DefaultInstance == null)
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-
-    options.AddSecurityDefinition("FirebaseEmailPassword", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "basic",
-        In = ParameterLocation.Header,
-        Description = "Chi dung de test Swagger: nhap email Firebase vao username va password Firebase vao password."
-    });
-
-
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "FirebaseEmailPassword"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
+builder.Services.AddSwaggerGen();
 
 
 // Firestore (Singleton)
@@ -108,7 +81,10 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
     {
         policy
-            .AllowAnyOrigin()
+            .WithOrigins(
+                "https://drivingtestadminfe-production.up.railway.app",
+                "http://localhost:5173" // Vue khi chạy local
+            )
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -178,8 +154,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-   app.UseSwagger();
-   app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 // Port deployment
